@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getLocaleFromUrl, localizedPath } from '../../i18n/utils';
+import { t } from '../../i18n/ui';
+import { listEvents } from '../../lib/events';
+
+export async function getStaticPaths() {
+  const { events } = await listEvents({ limit: 50 });
+  const ids = events.length ? events.map((e) => e.id) : ['placeholder'];
+  return ids.map((id) => ({ params: { id } }));
+}
+
+const locale = getLocaleFromUrl(Astro.url);
+const { id } = Astro.params;
+---
+
+<BaseLayout locale={locale} title={`${t(locale, 'activitats.stub')} | Muixeranga d'Elx`}>
+  <section class="mx-auto max-w-3xl px-4 py-24 text-center">
+    <p class="text-sm text-elx-red font-semibold uppercase tracking-wide">#{id}</p>
+    <h1 class="mt-4 text-4xl font-bold">{t(locale, 'activitats.stub')}</h1>
+    <a
+      href={localizedPath(locale, '/activitats')}
+      class="mt-10 inline-block bg-elx-dark text-white px-6 py-3 font-semibold hover:bg-elx-red transition-colors"
+    >
+      {t(locale, 'nav.activitats')}
+    </a>
+  </section>
+</BaseLayout>

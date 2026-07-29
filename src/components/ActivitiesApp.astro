@@ -1,0 +1,199 @@
+---
+import { t, type Locale } from '../i18n/ui';
+import { EVENTS_API } from '../lib/site';
+import { localizedPath } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const filters = [
+  { id: 'all', label: t(locale, 'activitats.filters.all') },
+  { id: 'assajos', label: t(locale, 'activitats.filters.assajos') },
+  { id: 'actuacions', label: t(locale, 'activitats.filters.actuacions') },
+  { id: 'trobades', label: t(locale, 'activitats.filters.trobades') },
+  { id: 'tallers', label: t(locale, 'activitats.filters.tallers') },
+];
+
+const detailBase = localizedPath(locale, '/activitats');
+const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES' : 'en-GB';
+---
+
+<section
+  class="bg-white py-10 px-4 sm:px-6"
+  data-activities-app
+  data-api={EVENTS_API}
+  data-detail-base={detailBase}
+  data-locale={localeTag}
+  data-empty={t(locale, 'activitats.empty')}
+  data-loading={t(locale, 'activitats.loading')}
+>
+  <div class="mx-auto max-w-7xl">
+    <div class="flex flex-wrap gap-2 mb-8" role="tablist">
+      {
+        filters.map((f, i) => (
+          <button
+            type="button"
+            class:list={[
+              'px-4 py-2 text-sm font-semibold border transition-colors',
+              i === 0
+                ? 'bg-elx-dark text-white border-elx-dark'
+                : 'bg-white text-elx-dark border-elx-dark/30 hover:border-elx-dark',
+            ]}
+            data-filter={f.id}
+          >
+            {f.label}
+          </button>
+        ))
+      }
+    </div>
+
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+      data-activities-grid
+    ></div>
+    <p class="text-center text-elx-muted py-8 hidden" data-activities-empty></p>
+    <p class="text-center text-elx-muted py-6" data-activities-status></p>
+    <div data-activities-sentinel class="h-8"></div>
+  </div>
+</section>
+
+<script>
+  type Ev = {
+    id: string;
+    name: string;
+    image?: string | null;
+    date?: string;
+    type?: string;
+  };
+
+  const FALLBACK_TYPES = ['assajos', 'actuacions', 'trobades', 'tallers'];
+  const root = document.querySelector('[data-activities-app]') as HTMLElement | null;
+  if (!root) throw new Error('activities root missing');
+
+  const api = root.dataset.api!;
+  const detailBase = root.dataset.detailBase!;
+  const localeTag = root.dataset.locale!;
+  const emptyMsg = root.dataset.empty!;
+  const loadingMsg = root.dataset.loading!;
+  const grid = root.querySelector('[data-activities-grid]')!;
+  const emptyEl = root.querySelector('[data-activities-empty]') as HTMLElement;
+  const statusEl = root.querySelector('[data-activities-status]') as HTMLElement;
+  const sentinel = root.querySelector('[data-activities-sentinel]')!;
+
+  let allEvents: Ev[] = [];
+  let lastId: string | null = null;
+  let filter = 'all';
+  let loading = false;
+  let exhausted = false;
+
+  const withDefaults = (event: Ev, index: number): Ev => {
+    const base = new Date();
+    base.setDate(base.getDate() + index * 3);
+    const image =
+      event.image && event.image.trim() !== '' && !event.image.includes('example.com')
+        ? event.image
+        : null;
+    return {
+      ...event,
+      date: event.date ?? base.toISOString().slice(0, 10),
+      type: event.type ?? FALLBACK_TYPES[index % FALLBACK_TYPES.length],
+      image,
+    };
+  };
+
+  const formatDate = (dateStr?: string) => {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    if (Number.isNaN(d.getTime())) return dateStr;
+    return new Intl.DateTimeFormat(localeTag, {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(d);
+  };
+
+  const filtered = () =>
+    filter === 'all' ? allEvents : allEvents.filter((e) => e.type === filter);
+
+  const emitCalendar = () => {
+    window.dispatchEvent(
+      new CustomEvent('activities:filtered', { detail: { events: filtered() } }),
+    );
+  };
+
+  const cardHtml = (event: Ev) => {
+    const img = event.image || '/images/placeholders/event.svg';
+    return `<a href="${detailBase}/${event.id}" class="group relative block aspect-[3/4] overflow-hidden bg-[#1a1a1a]">
+      <img src="${img}" alt="" class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+      <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/40"></div>
+      <div class="absolute top-0 left-0 right-0 p-4 text-white">
+        <p class="text-xs uppercase tracking-wide text-[#ffd700]">${formatDate(event.date)}</p>
+        <h3 class="mt-1 text-lg font-bold leading-tight">${event.name}</h3>
+      </div>
+    </a>`;
+  };
+
+  const render = () => {
+    const items = filtered();
+    grid.innerHTML = items.map(cardHtml).join('');
+    emptyEl.classList.toggle('hidden', items.length > 0);
+    emptyEl.textContent = emptyMsg;
+    emitCalendar();
+  };
+
+  const loadMore = async () => {
+    if (loading || exhausted) return;
+    loading = true;
+    statusEl.textContent = loadingMsg;
+    try {
+      const url = new URL(api);
+      url.searchParams.set('limit', '12');
+      if (lastId) url.searchParams.set('lastId', lastId);
+      const res = await fetch(url.toString());
+      const data = await res.json();
+      const batch = (data.events || []).map((e: Ev, i: number) =>
+        withDefaults(e, allEvents.length + i),
+      );
+      if (!batch.length) {
+        exhausted = true;
+      } else {
+        allEvents = [...allEvents, ...batch];
+        lastId = data.lastId ?? batch[batch.length - 1]?.id ?? null;
+        // If API returns same set without pagination support, stop after first page growth stalls
+        if (batch.length < 12) exhausted = true;
+      }
+      render();
+    } catch {
+      exhausted = true;
+      render();
+    } finally {
+      loading = false;
+      statusEl.textContent = '';
+    }
+  };
+
+  root.querySelectorAll('[data-filter]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      filter = (btn as HTMLElement).dataset.filter || 'all';
+      root.querySelectorAll('[data-filter]').forEach((b) => {
+        const active = b === btn;
+        b.classList.toggle('bg-elx-dark', active);
+        b.classList.toggle('text-white', active);
+        b.classList.toggle('border-elx-dark', active);
+        b.classList.toggle('bg-white', !active);
+        b.classList.toggle('text-elx-dark', !active);
+      });
+      render();
+    });
+  });
+
+  const io = new IntersectionObserver((entries) => {
+    if (entries.some((e) => e.isIntersecting)) loadMore();
+  });
+  io.observe(sentinel);
+
+  loadMore();
+</script>

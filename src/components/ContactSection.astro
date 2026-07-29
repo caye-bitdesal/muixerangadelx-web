@@ -1,0 +1,137 @@
+---
+import { t, type Locale } from '../i18n/ui';
+import SocialLinks from './SocialLinks.astro';
+import { CONTACT_ADDRESS, CONTACT_EMAIL, CONTACT_API_URL, MAP_EMBED_URL } from '../lib/site';
+import { localizedPath } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<section class="bg-white py-16 px-4 sm:px-6" data-contact-page>
+  <div class="mx-auto max-w-7xl grid lg:grid-cols-2 gap-12">
+    <div>
+      <h2 class="text-3xl font-bold mb-6">{t(locale, 'contacte.heading')}</h2>
+      <p class="text-lg">{CONTACT_ADDRESS}</p>
+      <p class="mt-3">
+        <a href={`mailto:${CONTACT_EMAIL}`} class="text-elx-red underline underline-offset-2">
+          {CONTACT_EMAIL}
+        </a>
+      </p>
+      <p class="mt-3">
+        <a href="#" class="text-elx-dark underline underline-offset-2" aria-disabled="true">
+          {t(locale, 'contacte.whatsapp')}
+        </a>
+      </p>
+
+      <h3 class="mt-10 text-xl font-bold mb-4">{t(locale, 'contacte.follow')}</h3>
+      <SocialLinks variant="dark" />
+
+      <button
+        type="button"
+        class="mt-8 bg-elx-dark text-white px-6 py-3 font-semibold uppercase tracking-wide hover:bg-elx-red transition-colors"
+        data-map-toggle
+      >
+        {t(locale, 'contacte.map')}
+      </button>
+    </div>
+
+    <form class="space-y-4" data-contact-form novalidate>
+      <div>
+        <label class="block text-sm font-medium mb-1" for="name">{t(locale, 'contacte.form.name')}*</label>
+        <input id="name" name="name" required class="w-full border border-black/20 bg-neutral-100 px-3 py-2" />
+      </div>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium mb-1" for="email">{t(locale, 'contacte.form.email')}*</label>
+          <input id="email" name="email" type="email" required class="w-full border border-black/20 bg-neutral-100 px-3 py-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1" for="phone">{t(locale, 'contacte.form.phone')}*</label>
+          <input id="phone" name="phone" type="tel" required class="w-full border border-black/20 bg-neutral-100 px-3 py-2" />
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1" for="subject">{t(locale, 'contacte.form.subject')}*</label>
+        <input id="subject" name="subject" required class="w-full border border-black/20 bg-neutral-100 px-3 py-2" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1" for="message">{t(locale, 'contacte.form.message')}*</label>
+        <textarea id="message" name="message" rows="6" required class="w-full border border-black/20 bg-neutral-100 px-3 py-2"></textarea>
+      </div>
+      <label class="flex items-start gap-2 text-sm">
+        <input type="checkbox" name="privacy" required class="mt-1" />
+        <span>
+          {t(locale, 'contacte.form.privacy')}
+          (<a href={localizedPath(locale, '/politica-privacitat')} class="underline">{t(locale, 'footer.privacy')}</a>)
+        </span>
+      </label>
+      <div class="flex justify-end">
+        <button type="submit" class="bg-elx-dark text-white px-6 py-3 font-semibold uppercase tracking-wide hover:bg-elx-red transition-colors">
+          {t(locale, 'contacte.form.submit')}
+        </button>
+      </div>
+      <p class="text-sm text-elx-muted hidden" data-form-status></p>
+    </form>
+  </div>
+</section>
+
+<section class="hidden w-full" data-map-panel>
+  <iframe
+    title="Mapa"
+    src={MAP_EMBED_URL}
+    class="w-full h-[420px] border-0"
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+  ></iframe>
+</section>
+
+<script define:vars={{
+  pendingMsg: t(locale, 'contacte.form.pending'),
+  errorMsg: t(locale, 'contacte.form.error'),
+  apiUrl: CONTACT_API_URL,
+}}>
+  const toggle = document.querySelector('[data-map-toggle]');
+  const panel = document.querySelector('[data-map-panel]');
+  toggle?.addEventListener('click', () => {
+    panel?.classList.toggle('hidden');
+    panel?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+
+  const form = document.querySelector('[data-contact-form]');
+  const status = document.querySelector('[data-form-status]');
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!(form instanceof HTMLFormElement)) return;
+    if (!form.checkValidity()) {
+      status.textContent = errorMsg;
+      status.classList.remove('hidden');
+      form.reportValidity();
+      return;
+    }
+
+    const data = Object.fromEntries(new FormData(form).entries());
+    if (!apiUrl) {
+      status.textContent = pendingMsg;
+      status.classList.remove('hidden');
+      return;
+    }
+
+    try {
+      const res = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      status.textContent = res.ok ? pendingMsg : errorMsg;
+      status.classList.remove('hidden');
+      if (res.ok) form.reset();
+    } catch {
+      status.textContent = errorMsg;
+      status.classList.remove('hidden');
+    }
+  });
+</script>

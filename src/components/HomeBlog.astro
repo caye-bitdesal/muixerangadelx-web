@@ -1,0 +1,57 @@
+---
+import { t, type Locale } from '../i18n/ui';
+import { localizedPath } from '../i18n/utils';
+import BlogCard from './BlogCard.astro';
+
+interface PostCard {
+  title: string;
+  excerpt: string;
+  date: string;
+  image: string;
+}
+
+interface Props {
+  locale: Locale;
+  posts: PostCard[];
+}
+
+const { locale, posts } = Astro.props;
+const items = posts.slice(0, 4);
+---
+
+<section class="bg-white py-16 px-4 sm:px-6">
+  <div class="mx-auto max-w-7xl">
+    <div class="mb-8">
+      <h2 class="text-3xl sm:text-4xl font-bold">{t(locale, 'home.blog')}</h2>
+      <p class="mt-2 text-elx-red">{t(locale, 'home.blog.subtitle')}</p>
+    </div>
+
+    <div
+      class="grid grid-cols-2 gap-3 lg:flex lg:gap-4 lg:overflow-x-auto lg:pb-2"
+    >
+      {
+        items.map((post) => (
+          <div class="min-w-0 lg:shrink-0 lg:w-[calc((100%-2rem)/3)] [&_article]:w-full">
+            <BlogCard
+              locale={locale}
+              title={post.title}
+              excerpt={post.excerpt}
+              date={post.date}
+              image={post.image}
+              readLabel={t(locale, 'blog.read')}
+            />
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="mt-10 flex justify-center">
+      <a
+        href={localizedPath(locale, '/blog')}
+        class="inline-block bg-elx-dark text-white px-6 py-3 font-semibold hover:bg-elx-red transition-colors"
+      >
+        {t(locale, 'home.seeAll')}
+      </a>
+    </div>
+  </div>
+</section>

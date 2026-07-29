@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/PageHero.astro';
+import DocsApp from '../../../components/DocsApp.astro';
+import { t } from '../../../i18n/ui';
+
+const locale = 'en' as const;
+---
+
+<BaseLayout locale={locale} overlayNav title={`${t(locale, 'docs.title')} | Muixeranga d'Elx`}>
+  <PageHero title={t(locale, 'docs.title')} subtitle={t(locale, 'docs.subtitle')} />
+  <DocsApp locale={locale} />
+</BaseLayout>

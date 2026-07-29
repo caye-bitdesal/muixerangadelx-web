@@ -1,0 +1,121 @@
+---
+import { t, languages, type Locale } from '../i18n/ui';
+import { localizedPath, switchLocalePath } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+  overlay?: boolean;
+  currentPath: string;
+}
+
+const { locale, overlay = false, currentPath } = Astro.props;
+
+const links = [
+  { key: 'nav.portada' as const, path: '/' },
+  { key: 'nav.activitats' as const, path: '/activitats' },
+  { key: 'nav.blog' as const, path: '/blog' },
+  { key: 'nav.documentacio' as const, path: '/documentacio' },
+  { key: 'nav.contacte' as const, path: '/contacte' },
+];
+
+function isActive(path: string): boolean {
+  const localized = localizedPath(locale, path);
+  if (path === '/') {
+    return currentPath === localized || currentPath === `/${locale}`;
+  }
+  return currentPath === localized || currentPath.startsWith(`${localized}/`);
+}
+---
+
+<header
+  class:list={[
+    'site-header w-full z-50',
+    overlay ? 'absolute top-0 left-0 right-0' : 'fixed top-0 left-0 right-0 bg-elx-dark/95 backdrop-blur',
+  ]}
+>
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+    <a href={localizedPath(locale, '/')} class="flex items-center gap-3 shrink-0">
+      <img
+        src="/images/logo.png"
+        alt="Muixeranga d'Elx"
+        class="logo-mask h-12 w-12 sm:h-14 sm:w-14"
+        width="56"
+        height="56"
+      />
+      <span class="text-white">Muixeranga d'Elx</span>
+    </a>
+
+    <nav class="hidden lg:flex items-center gap-5" aria-label="Main">
+      {
+        links.map((link) => (
+          <a
+            href={localizedPath(locale, link.path)}
+            class:list={[
+              'transition-colors',
+              overlay ? 'text-white/90 hover:text-elx-yellow' : 'text-white/90 hover:text-elx-yellow',
+              isActive(link.path) && 'text-elx-yellow',
+            ]}
+          >
+            {t(locale, link.key)}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-1">
+        {
+          (Object.keys(languages) as Locale[]).map((lang) => (
+            <a
+              href={switchLocalePath(Astro.url, lang)}
+              class:list={[
+                'px-1.5 py-0.5 uppercase tracking-wide',
+                lang === locale ? 'text-elx-yellow' : 'text-white/70 hover:text-white',
+              ]}
+              hreflang={lang}
+            >
+              {lang}
+            </a>
+          ))
+        }
+      </div>
+      <button
+        type="button"
+        class="lg:hidden text-white p-2"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="Menu"
+      >
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 7h16M4 12h16M4 17h16"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="hidden lg:hidden bg-elx-dark border-t border-white/10 px-4 py-3 space-y-2">
+    {
+      links.map((link) => (
+        <a
+          href={localizedPath(locale, link.path)}
+          class:list={[
+            'block py-2 text-white/90',
+            isActive(link.path) && 'text-elx-yellow',
+          ]}
+        >
+          {t(locale, link.key)}
+        </a>
+      ))
+    }
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector('[data-menu-toggle]');
+  const menu = document.getElementById('mobile-menu');
+  toggle?.addEventListener('click', () => {
+    const open = menu?.classList.toggle('hidden') === false;
+    toggle.setAttribute('aria-expanded', String(open));
+  });
+</script>

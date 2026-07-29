@@ -1,0 +1,42 @@
+---
+import { t, type Locale } from '../i18n/ui';
+import { localizedPath } from '../i18n/utils';
+import type { MuixerangaEvent } from '../lib/events';
+import ActivityCard from './ActivityCard.astro';
+
+interface Props {
+  locale: Locale;
+  events: MuixerangaEvent[];
+}
+
+const { locale, events } = Astro.props;
+const items = events.slice(0, 4);
+---
+
+<section class="bg-elx-yellow py-16 px-4 sm:px-6">
+  <div class="mx-auto max-w-7xl">
+    <div class="mb-8 text-center sm:text-left">
+      <h2 class="text-3xl sm:text-4xl font-bold text-elx-dark">{t(locale, 'home.activitats')}</h2>
+      <p class="mt-2 text-elx-red">{t(locale, 'home.activitats.subtitle')}</p>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 lg:flex lg:gap-4 lg:overflow-x-auto lg:pb-2">
+      {
+        items.map((event) => (
+          <div class="min-w-0 lg:shrink-0 lg:w-[calc((100%-2rem)/3)] [&>a]:w-full">
+            <ActivityCard locale={locale} event={event} />
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="mt-10 flex justify-center">
+      <a
+        href={localizedPath(locale, '/activitats')}
+        class="inline-block bg-elx-dark text-white px-6 py-3 font-semibold hover:bg-elx-red transition-colors"
+      >
+        {t(locale, 'home.seeAll')}
+      </a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/PageHero.astro';
+import ContactSection from '../../../components/ContactSection.astro';
+import { t } from '../../../i18n/ui';
+
+const locale = 'en' as const;
+---
+
+<BaseLayout locale={locale} overlayNav title={`${t(locale, 'contacte.title')} | Muixeranga d'Elx`}>
+  <PageHero title={t(locale, 'contacte.title')} subtitle={t(locale, 'contacte.subtitle')} />
+  <ContactSection locale={locale} />
+</BaseLayout>

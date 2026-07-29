@@ -1,0 +1,29 @@
+---
+import type { Locale } from '../i18n/ui';
+import { formatEventDate, eventImage, type MuixerangaEvent } from '../lib/events';
+import { localizedPath } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+  event: MuixerangaEvent;
+}
+
+const { locale, event } = Astro.props;
+---
+
+<a
+  href={localizedPath(locale, `/activitats/${event.id}`)}
+  class="group relative block aspect-[3/4] overflow-hidden bg-elx-dark w-full"
+>
+  <img
+    src={eventImage(event)}
+    alt={event.name}
+    class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+    loading="lazy"
+  />
+  <div class="absolute inset-0 bg-gradient-to-b from-elx-dark/80 via-transparent to-elx-dark/50"></div>
+  <div class="absolute top-0 left-0 right-0 p-4 text-white">
+    <p class="text-xs uppercase tracking-wide text-elx-yellow">{formatEventDate(event.date, locale)}</p>
+    <h3 class="mt-1 text-lg font-bold leading-tight">{event.name}</h3>
+  </div>
+</a>

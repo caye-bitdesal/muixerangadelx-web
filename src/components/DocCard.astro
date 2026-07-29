@@ -1,0 +1,30 @@
+---
+import type { Locale } from '../i18n/ui';
+import type { DocItem } from '../lib/docs';
+
+interface Props {
+  locale: Locale;
+  doc: DocItem;
+  downloadLabel: string;
+}
+
+const { doc, downloadLabel } = Astro.props;
+---
+
+<article class="flex flex-col border border-black/10 bg-white">
+  <div class="aspect-[3/4] bg-neutral-100 overflow-hidden">
+    <img src={doc.thumbnail} alt="" class="h-full w-full object-cover" loading="lazy" />
+  </div>
+  <div class="p-4 flex flex-col flex-1 gap-2">
+    <h3 class="font-bold text-lg leading-snug">{doc.title}</h3>
+    <p class="text-sm text-elx-muted">{doc.description}</p>
+    <p class="text-xs text-elx-muted">{doc.issuer} · {doc.date}</p>
+    <button
+      type="button"
+      class="mt-auto self-start bg-elx-dark text-white px-4 py-2 text-sm font-semibold uppercase tracking-wide cursor-default opacity-90"
+      aria-disabled="true"
+    >
+      {downloadLabel}
+    </button>
+  </div>
+</article>

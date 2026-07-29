@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Carousel from '../../components/Carousel.astro';
+import QuiSom from '../../components/QuiSom.astro';
+import HomeActivities from '../../components/HomeActivities.astro';
+import HomeBlog from '../../components/HomeBlog.astro';
+import { listEvents } from '../../lib/events';
+import { getBlogPosts } from '../../lib/blog';
+
+const locale = 'es' as const;
+const { events } = await listEvents({ limit: 12 });
+const posts = await getBlogPosts(locale);
+---
+
+<BaseLayout locale={locale} overlayNav title="Muixeranga d'Elx">
+  <Carousel locale={locale} />
+  <QuiSom locale={locale} />
+  <HomeActivities locale={locale} events={events} />
+  <HomeBlog locale={locale} posts={posts} />
+</BaseLayout>

@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ActivitiesCalendar from '../../../components/ActivitiesCalendar.astro';
+import ActivitiesApp from '../../../components/ActivitiesApp.astro';
+import { t } from '../../../i18n/ui';
+
+const locale = 'en' as const;
+---
+
+<BaseLayout locale={locale} overlayNav title={`${t(locale, 'nav.activitats')} | Muixeranga d'Elx`}>
+  <ActivitiesCalendar locale={locale} />
+  <ActivitiesApp locale={locale} />
+</BaseLayout>

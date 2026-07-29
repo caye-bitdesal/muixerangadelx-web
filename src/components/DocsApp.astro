@@ -1,0 +1,126 @@
+---
+import { t, type Locale } from '../i18n/ui';
+import { placeholderDocs } from '../lib/docs';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const filters = [
+  { id: 'all', label: t(locale, 'docs.filters.all') },
+  { id: 'protocols', label: t(locale, 'docs.filters.protocols') },
+  { id: 'guies', label: t(locale, 'docs.filters.guies') },
+  { id: 'assegurances', label: t(locale, 'docs.filters.assegurances') },
+  { id: 'altres', label: t(locale, 'docs.filters.altres') },
+];
+---
+
+<section
+  class="bg-white py-12 px-4 sm:px-6"
+  data-docs-app
+  data-docs={JSON.stringify(placeholderDocs)}
+  data-page-size="12"
+>
+  <div class="mx-auto max-w-7xl">
+    <div class="flex flex-wrap gap-2 mb-8">
+      {
+        filters.map((f, i) => (
+          <button
+            type="button"
+            class:list={[
+              'px-4 py-2 text-sm font-semibold border transition-colors',
+              i === 0
+                ? 'bg-elx-dark text-white border-elx-dark'
+                : 'bg-white text-elx-dark border-elx-dark/30 hover:border-elx-dark',
+            ]}
+            data-doc-filter={f.id}
+          >
+            {f.label}
+          </button>
+        ))
+      }
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" data-docs-grid></div>
+    <div data-docs-sentinel class="h-8 mt-8"></div>
+  </div>
+</section>
+
+<template id="doc-card-template">
+  <article class="flex flex-col border border-black/10 bg-white">
+    <div class="aspect-[3/4] bg-neutral-100 overflow-hidden">
+      <img src="" alt="" class="h-full w-full object-cover" loading="lazy" data-thumb />
+    </div>
+    <div class="p-4 flex flex-col flex-1 gap-2">
+      <h3 class="font-bold text-lg leading-snug" data-title></h3>
+      <p class="text-sm text-[#666]" data-desc></p>
+      <p class="text-xs text-[#666]" data-meta></p>
+      <button
+        type="button"
+        class="mt-auto self-start bg-[#1a1a1a] text-white px-4 py-2 text-sm font-semibold uppercase tracking-wide cursor-default opacity-90"
+        aria-disabled="true"
+        data-download
+      ></button>
+    </div>
+  </article>
+</template>
+
+<script define:vars={{ downloadLabel: t(locale, 'docs.download') }}>
+  const root = document.querySelector('[data-docs-app]');
+  if (root) {
+    const all = JSON.parse(root.dataset.docs || '[]');
+    const pageSize = Number(root.dataset.pageSize || 12);
+    const grid = root.querySelector('[data-docs-grid]');
+    const tpl = document.getElementById('doc-card-template');
+    let filter = 'all';
+    let shown = 0;
+
+    const filtered = () => (filter === 'all' ? all : all.filter((d) => d.type === filter));
+
+    const append = (items) => {
+      items.forEach((doc) => {
+        const node = tpl.content.firstElementChild.cloneNode(true);
+        node.querySelector('[data-thumb]').src = doc.thumbnail;
+        node.querySelector('[data-title]').textContent = doc.title;
+        node.querySelector('[data-desc]').textContent = doc.description;
+        node.querySelector('[data-meta]').textContent = `${doc.issuer} · ${doc.date}`;
+        node.querySelector('[data-download]').textContent = downloadLabel;
+        grid.appendChild(node);
+      });
+    };
+
+    const reset = () => {
+      grid.innerHTML = '';
+      shown = 0;
+      loadMore();
+    };
+
+    const loadMore = () => {
+      const items = filtered();
+      const next = items.slice(shown, shown + pageSize);
+      append(next);
+      shown += next.length;
+    };
+
+    root.querySelectorAll('[data-doc-filter]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        filter = btn.dataset.docFilter || 'all';
+        root.querySelectorAll('[data-doc-filter]').forEach((b) => {
+          const active = b === btn;
+          b.classList.toggle('bg-elx-dark', active);
+          b.classList.toggle('text-white', active);
+          b.classList.toggle('bg-white', !active);
+          b.classList.toggle('text-elx-dark', !active);
+        });
+        reset();
+      });
+    });
+
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting) && shown < filtered().length) loadMore();
+    });
+    io.observe(root.querySelector('[data-docs-sentinel]'));
+    loadMore();
+  }
+</script>

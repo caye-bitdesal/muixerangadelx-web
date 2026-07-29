@@ -1,0 +1,58 @@
+---
+import { t, type Locale } from '../i18n/ui';
+import { localizedPath } from '../i18n/utils';
+import SocialLinks from './SocialLinks.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<footer class="mt-auto">
+  <div class="bg-elx-dark text-white py-12 px-4">
+    <div class="mx-auto max-w-7xl flex flex-col items-center gap-4">
+      <img
+        src="/images/logo.png"
+        alt="Muixeranga d'Elx"
+        class="logo-mask h-28 w-28"
+        width="112"
+        height="112"
+      />
+      <SocialLinks variant="light" />
+    </div>
+  </div>
+
+  <div class="bg-elx-red text-elx-dark">
+    <div class="mx-auto max-w-7xl px-4 py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3 text-sm">
+      <p class="flex flex-wrap items-center gap-x-2 gap-y-1">
+        <span>{t(locale, 'footer.copyright')}</span>
+        <span aria-hidden="true">|</span>
+        <a href={localizedPath(locale, '/avis-legal')} class="underline-offset-2 hover:underline">
+          {t(locale, 'footer.legal')}
+        </a>
+        <span aria-hidden="true">|</span>
+        <a href={localizedPath(locale, '/politica-privacitat')} class="underline-offset-2 hover:underline">
+          {t(locale, 'footer.privacy')}
+        </a>
+        <span aria-hidden="true">|</span>
+        <a href={localizedPath(locale, '/us-cookies')} class="underline-offset-2 hover:underline">
+          {t(locale, 'footer.cookies')}
+        </a>
+      </p>
+      <p class="flex items-center gap-2">
+        <span>{t(locale, 'footer.design')}</span>
+        <a
+          href="https://bitdesal.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 underline-offset-2 hover:underline"
+        >
+          <img src="/images/bitdesal.png" alt="" class="h-8 w-8 rounded" width="32" height="32" />
+          <span class="font-bold">Bitdesal</span>
+        </a>
+      </p>
+    </div>
+  </div>
+</footer>

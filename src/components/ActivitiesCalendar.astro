@@ -1,0 +1,99 @@
+---
+import { t, type Locale } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const monthNames = Array.from({ length: 12 }, (_, i) =>
+  t(locale, `months.${i}` as Parameters<typeof t>[1]),
+);
+const weekdays = Array.from({ length: 7 }, (_, i) =>
+  t(locale, `weekdays.${i}` as Parameters<typeof t>[1]),
+);
+---
+
+<section
+  class="relative bg-elx-dark text-white overflow-hidden"
+  data-activities-calendar
+  data-months={JSON.stringify(monthNames)}
+  data-weekdays={JSON.stringify(weekdays)}
+>
+  <div class="absolute inset-0 opacity-30">
+    <img src="/images/carousel/1.png" alt="" class="h-full w-full object-cover" />
+  </div>
+  <div class="absolute inset-0 bg-gradient-to-b from-elx-dark/70 to-elx-dark/90"></div>
+
+  <div class="relative z-10 mx-auto max-w-5xl px-4 py-16 sm:py-20">
+    <div class="flex items-center justify-between mb-6">
+      <button type="button" class="text-2xl px-3 py-1 hover:text-elx-yellow" data-cal-prev aria-label="Previous month">‹</button>
+      <h1 class="text-2xl sm:text-4xl font-bold capitalize" data-cal-title></h1>
+      <button type="button" class="text-2xl px-3 py-1 hover:text-elx-yellow" data-cal-next aria-label="Next month">›</button>
+    </div>
+    <div class="grid grid-cols-7 gap-1 sm:gap-2 text-center text-xs sm:text-sm uppercase tracking-wide text-white/70 mb-2" data-cal-weekdays></div>
+    <div class="grid grid-cols-7 gap-1 sm:gap-2" data-cal-grid></div>
+  </div>
+</section>
+
+<script>
+  type EventLite = { date?: string; type?: string };
+
+  const root = document.querySelector('[data-activities-calendar]') as HTMLElement | null;
+  if (root) {
+    const months: string[] = JSON.parse(root.dataset.months || '[]');
+    const weekdays: string[] = JSON.parse(root.dataset.weekdays || '[]');
+    const titleEl = root.querySelector('[data-cal-title]')!;
+    const gridEl = root.querySelector('[data-cal-grid]')!;
+    const weekEl = root.querySelector('[data-cal-weekdays]')!;
+    let cursor = new Date();
+    cursor.setDate(1);
+    let eventDays = new Set<string>();
+
+    weekEl.innerHTML = weekdays.map((d) => `<div>${d}</div>`).join('');
+
+    const key = (y: number, m: number, d: number) =>
+      `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+
+    const render = () => {
+      const y = cursor.getFullYear();
+      const m = cursor.getMonth();
+      titleEl.textContent = `${months[m]} ${y}`;
+      const firstDow = (new Date(y, m, 1).getDay() + 6) % 7; // Monday-first
+      const daysInMonth = new Date(y, m + 1, 0).getDate();
+      const cells: string[] = [];
+      for (let i = 0; i < firstDow; i++) cells.push('<div></div>');
+      for (let d = 1; d <= daysInMonth; d++) {
+        const k = key(y, m, d);
+        const active = eventDays.has(k);
+        cells.push(
+          `<div class="aspect-square flex items-center justify-center text-sm sm:text-base border border-white/10 ${
+            active ? 'bg-elx-yellow text-elx-dark font-bold' : 'bg-white/5'
+          }">${d}</div>`,
+        );
+      }
+      gridEl.innerHTML = cells.join('');
+    };
+
+    root.querySelector('[data-cal-prev]')?.addEventListener('click', () => {
+      cursor.setMonth(cursor.getMonth() - 1);
+      render();
+    });
+    root.querySelector('[data-cal-next]')?.addEventListener('click', () => {
+      cursor.setMonth(cursor.getMonth() + 1);
+      render();
+    });
+
+    window.addEventListener('activities:filtered', ((e: CustomEvent<{ events: EventLite[] }>) => {
+      eventDays = new Set(
+        (e.detail.events || [])
+          .map((ev) => ev.date?.slice(0, 10))
+          .filter(Boolean) as string[],
+      );
+      render();
+    }) as EventListener);
+
+    render();
+  }
+</script>

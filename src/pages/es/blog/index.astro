@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/PageHero.astro';
+import BlogApp from '../../../components/BlogApp.astro';
+import { t } from '../../../i18n/ui';
+import { getBlogPosts } from '../../../lib/blog';
+
+const locale = 'es' as const;
+const posts = await getBlogPosts(locale);
+---
+
+<BaseLayout locale={locale} overlayNav title={`${t(locale, 'blog.title')} | Muixeranga d'Elx`}>
+  <PageHero title={t(locale, 'blog.title')} subtitle={t(locale, 'blog.subtitle')} />
+  <BlogApp locale={locale} posts={posts} />
+</BaseLayout>

@@ -1,0 +1,91 @@
+---
+import { t, type Locale } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const slides = [
+  { src: '/images/carousel/1.png', height: '145%', anchor: 'bottom' },
+  { src: '/images/carousel/2.png', height: '135%', anchor: 'bottom' },
+  { src: '/images/carousel/3.png', height: '130%', anchor: 'bottom' },
+];
+---
+
+<section class="relative h-[85vh] min-h-[520px] overflow-hidden bg-elx-dark" data-carousel>
+  <div class="absolute inset-0 overflow-hidden">
+    {
+      slides.map((slide, i) => (
+        <img
+          src={slide.src}
+          alt=""
+          class:list={[
+            'carousel-slide absolute left-1/2 -translate-x-1/2 w-full max-w-none object-cover object-bottom transition-opacity duration-700',
+            i === 0 ? 'opacity-100' : 'opacity-0',
+          ]}
+          style={`height: ${slide.height}; ${slide.anchor === 'bottom' ? 'bottom: 0; top: auto;' : ''}`}
+          data-carousel-slide
+          data-index={i}
+        />
+      ))
+    }
+  </div>
+
+  <div class="relative z-10 h-full flex flex-col justify-center px-6 sm:px-12 max-w-7xl mx-auto pt-16">
+    <h1 class="text-4xl sm:text-6xl lg:text-7xl font-bold text-white drop-shadow-lg">
+      {t(locale, 'home.carousel.title')}
+    </h1>
+    <p class="mt-4 text-lg sm:text-2xl text-white/95 font-medium drop-shadow">
+      {t(locale, 'home.carousel.subtitle')}
+    </p>
+  </div>
+
+  <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+    {
+      slides.map((_, i) => (
+        <button
+          type="button"
+          class:list={[
+            'h-2.5 w-2.5 rounded-full border border-white',
+            i === 0 ? 'bg-white' : 'bg-transparent',
+          ]}
+          data-carousel-dot
+          data-index={i}
+          aria-label={`Slide ${i + 1}`}
+        />
+      ))
+    }
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector('[data-carousel]');
+  if (root) {
+    const slides = [...root.querySelectorAll('[data-carousel-slide]')];
+    const dots = [...root.querySelectorAll('[data-carousel-dot]')];
+    let index = 0;
+
+    const show = (next: number) => {
+      index = (next + slides.length) % slides.length;
+      slides.forEach((el, i) => {
+        el.classList.toggle('opacity-100', i === index);
+        el.classList.toggle('opacity-0', i !== index);
+      });
+      dots.forEach((el, i) => {
+        el.classList.toggle('bg-white', i === index);
+        el.classList.toggle('bg-transparent', i !== index);
+      });
+    };
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const i = Number((dot as HTMLElement).dataset.index);
+        show(i);
+      });
+    });
+
+    setInterval(() => show(index + 1), 6000);
+  }
+</script>

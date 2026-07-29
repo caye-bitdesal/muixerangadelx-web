@@ -1,0 +1,21 @@
+---
+interface Props {
+  title: string;
+  subtitle: string;
+  image?: string;
+}
+
+const { title, subtitle, image = '/images/placeholders/hero.svg' } = Astro.props;
+---
+
+<section class="relative h-[55vh] min-h-[360px] max-h-[560px] overflow-hidden">
+  <img src={image} alt="" class="absolute inset-0 h-full w-full object-cover" />
+  <div class="absolute inset-0 bg-elx-dark/45 mix-blend-multiply"></div>
+  <div class="absolute inset-0 bg-gradient-to-r from-elx-red/40 via-elx-yellow/20 to-elx-blue/30"></div>
+  <div class="relative z-10 h-full flex flex-col justify-center px-6 sm:px-12 max-w-7xl mx-auto">
+    <h1 class="text-4xl sm:text-6xl font-bold text-white drop-shadow-md">{title}</h1>
+    <p class="mt-4 inline-block w-fit bg-elx-dark/85 text-white px-4 py-2 text-sm sm:text-base">
+      {subtitle}
+    </p>
+  </div>
+</section>
