@@ -28,6 +28,12 @@ Este repositorio se despliega automáticamente en el hosting de Gandi mediante *
 - **Cuándo se ejecuta**: en cada push a la rama `main`
 - **Qué hace**: instala dependencias, ejecuta `npm run build` y sube el contenido de `dist/`
 
+### Hosting Python (WSGI)
+
+Si el virtual host es **Python** (Apache + uWSGI), Gandi no sirve HTML suelto en la raíz: ejecuta `wsgi.py`. El archivo `public/wsgi.py` se copia a `dist/` en el build y sirve las páginas estáticas de Astro (sustituye el “It works!” por defecto).
+
+Tras el primer deploy, si sigues viendo la página antigua, reinicia la app desde el panel de Gandi o revisa `/lamp0/var/log/www/uwsgi.log`.
+
 ### Secretos de GitHub
 
 Configura estos secretos en **Settings → Secrets and variables → Actions** del repositorio:
@@ -37,7 +43,7 @@ Configura estos secretos en **Settings → Secrets and variables → Actions** d
 | `SFTP_SERVER` | Host SFTP de Gandi (p. ej. `sftp.gandi.net`) |
 | `SFTP_USERNAME` | Usuario SFTP |
 | `SFTP_PASSWORD` | Contraseña SFTP |
-| `SFTP_REMOTE_PATH` | Ruta remota donde servir el sitio (p. ej. `/muixerangadelx.com/`) |
+| `SFTP_REMOTE_PATH` | Ruta remota de la app Python (donde debe vivir `wsgi.py` junto a `index.html`) |
 | `PUBLIC_CONTACT_API_URL` | *(opcional)* URL de la Cloud Function de contacto para producción |
 
 ## Contenido
