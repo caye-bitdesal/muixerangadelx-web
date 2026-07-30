@@ -2,17 +2,19 @@
 import { socialLinks } from '../lib/site';
 
 interface Props {
-  variant?: 'light' | 'dark';
+  variant?: 'light' | 'dark' | 'footer';
 }
 
 const { variant = 'dark' } = Astro.props;
 const circle =
   variant === 'light'
     ? 'bg-white text-elx-dark hover:bg-elx-yellow'
-    : 'bg-elx-dark text-white hover:bg-elx-red';
+    : variant === 'footer'
+      ? 'bg-[#555] text-white hover:bg-elx-red'
+      : 'bg-elx-dark text-white hover:bg-elx-red';
 ---
 
-<ul class="flex items-center gap-3">
+<ul class="social-buttons-list flex items-center justify-center gap-3 flex-wrap">
   {
     socialLinks.map((link) => (
       <li>

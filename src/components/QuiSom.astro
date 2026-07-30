@@ -7,24 +7,24 @@ interface Props {
 }
 
 const { locale } = Astro.props;
+const paragraphs = t(locale, 'home.quisom.body').split('\n\n');
 ---
 
-<section class="bg-white py-16 px-4 sm:px-6">
-  <div class="mx-auto max-w-7xl grid lg:grid-cols-2 gap-10 items-start">
-    <div>
-      <p class="text-elx-red font-semibold text-sm uppercase tracking-wide">
-        {t(locale, 'home.quisom.label')}
-      </p>
-      <h2 class="mt-2 text-3xl sm:text-4xl font-bold">{t(locale, 'home.quisom.title')}</h2>
-    </div>
-    <div>
-      <p class="text-base leading-relaxed text-elx-dark/90">{t(locale, 'home.quisom.body')}</p>
-      <a
-        href={localizedPath(locale, '/contacte')}
-        class="mt-8 inline-block bg-elx-dark text-white px-6 py-3 font-semibold hover:bg-elx-red transition-colors"
-      >
-        {t(locale, 'home.quisom.cta')}
-      </a>
+<section class="tt-section p-t-90 p-b-90 p-t-md-50 p-b-md-50 muixeranga-elx bg-white" id="quisom">
+  <div class="tt-section-inner tt-wrap container">
+    <div class="row p-t-0 p-b-90 p-b-md-50">
+      <div class="col-lg-4">
+        <h2>{t(locale, 'home.quisom.label')}</h2>
+        <h1>{t(locale, 'home.quisom.title')}</h1>
+      </div>
+
+      <div class="col-lg-8 texto">
+        {paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+
+        <a href={localizedPath(locale, '/contacte')} class="btn btn-primary m-t-30 m-b-0">
+          {t(locale, 'home.quisom.cta')}
+        </a>
+      </div>
     </div>
   </div>
 </section>

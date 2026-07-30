@@ -34,11 +34,15 @@ const {
     />
     <title>{title}</title>
   </head>
-  <body class="min-h-screen flex flex-col bg-white text-elx-dark font-sans">
-    <Navbar locale={locale} overlay={overlayNav} currentPath={Astro.url.pathname} />
-    <main class:list={['flex-1', overlayNav ? '' : 'pt-20']}>
-      <slot />
-    </main>
-    <Footer locale={locale} />
+  <body id="body" class="min-h-screen flex flex-col bg-white text-elx-dark font-sans">
+    <div id="body-inner" class="flex min-h-screen flex-col flex-1">
+      <div id="page-wrap" class="flex flex-1 flex-col">
+        <Navbar locale={locale} overlay={overlayNav} currentPath={Astro.url.pathname} />
+        <main id="page-content" class:list={['flex-1', overlayNav ? '' : 'pt-[4.875rem]']}>
+          <slot />
+        </main>
+        <Footer locale={locale} />
+      </div>
+    </div>
   </body>
 </html>

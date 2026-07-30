@@ -1,9 +1,18 @@
 @import "tailwindcss";
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+:root {
+  --bs-body-font-family: "Roboto", sans-serif;
+  --bs-primary: #d52b1e;
+  --bs-primary-rgb: 213, 43, 30;
+  --bs-link-color: #d52b1e;
+  --bs-link-hover-color: #b02419;
+}
 
 @theme {
   --color-elx-red: #d52b1e;
   --color-elx-yellow: #ffd700;
-  --color-elx-blue: #0072ce;
+  --color-elx-blue: #0172c0;
   --color-elx-dark: #1a1a1a;
   --color-elx-muted: #666666;
   --font-sans: "Roboto", sans-serif;
@@ -27,8 +36,7 @@ img {
 }
 
 .logo-mask {
-  border-radius: 50%;
-  object-fit: cover;
+  object-fit: contain;
   background: transparent;
 }
 
@@ -37,6 +45,248 @@ img {
   font-weight: 500;
 }
 
+/* Header — estructura tipo Conlloga */
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 4.875rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.header-filled,
+.header-transparent.header-scrolled {
+  background-color: var(--color-elx-red);
+}
+
+.header-transparent {
+  background-color: transparent;
+  transition: background-color 0.25s ease;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-left: auto;
+}
+
+.header-attributes {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.menu-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.25rem 1.75rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-nav a {
+  color: rgb(255 255 255 / 0.92);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.menu-nav a:hover,
+.menu-nav li.active a {
+  color: var(--color-elx-yellow);
+}
+
+#tt-m-menu-toggle-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+#tt-m-menu-toggle-btn .menu-bar {
+  display: block;
+  width: 1.5rem;
+  height: 2px;
+  background: #fff;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.mobile-menu {
+  background-color: var(--color-elx-red);
+  border-top: 1px solid rgb(255 255 255 / 0.15);
+}
+
+.menu-nav-mobile {
+  list-style: none;
+  margin: 0;
+  padding: 0.75rem 1rem;
+}
+
+.menu-nav-mobile li + li {
+  border-top: 1px solid rgb(255 255 255 / 0.08);
+}
+
+.menu-nav-mobile a {
+  display: block;
+  padding: 0.75rem 0;
+  color: rgb(255 255 255 / 0.92);
+  text-decoration: none;
+}
+
+.menu-nav-mobile li.active a {
+  color: var(--color-elx-yellow);
+}
+
+/* Footer — estructura tipo Conlloga */
+.site-footer {
+  margin-top: auto;
+}
+
+.footer-superior {
+  padding-top: 3.75rem;
+  padding-bottom: 3.75rem;
+}
+
+.footer-brand {
+  text-align: center;
+}
+
+.social-buttons-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-bottom-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+@media (min-width: 1024px) {
+  .footer-bottom-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+
+  .footer-bottom-right {
+    text-align: right;
+    margin-left: auto;
+  }
+}
+
+.footer-bottom-left {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+}
+
+.footer-sep {
+  opacity: 0.65;
+}
+
+.footer-bottom-right {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+}
+
 .carousel-slide {
   object-position: center bottom;
+}
+
+/* Helpers tipo Conlloga (helper.css) */
+.p-t-90 {
+  padding-top: 90px;
+}
+
+.p-b-90 {
+  padding-bottom: 90px;
+}
+
+.p-t-0 {
+  padding-top: 0;
+}
+
+.m-t-30 {
+  margin-top: 30px;
+}
+
+.m-b-0 {
+  margin-bottom: 0;
+}
+
+@media (max-width: 991.98px) {
+  .p-t-md-50 {
+    padding-top: 50px;
+  }
+
+  .p-b-md-50 {
+    padding-bottom: 50px;
+  }
+}
+
+.tt-wrap {
+  max-width: 1170px;
+}
+
+/* Secció Qui som — format Conlloga Muixeranga */
+.muixeranga-elx h2 {
+  color: var(--color-elx-red);
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+}
+
+.muixeranga-elx h1 {
+  color: #202020;
+  line-height: 50px;
+  font-size: 52px;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+.muixeranga-elx .texto p {
+  color: rgb(26 26 26 / 0.9);
+  font-size: 1rem;
+  line-height: 1.75;
+  margin-bottom: 1.25rem;
+}
+
+.muixeranga-elx .texto p:last-of-type {
+  margin-bottom: 0;
+}
+
+.muixeranga-elx .btn-primary {
+  --bs-btn-bg: var(--color-elx-red);
+  --bs-btn-border-color: var(--color-elx-red);
+  --bs-btn-hover-bg: #b02419;
+  --bs-btn-hover-border-color: #b02419;
+  --bs-btn-active-bg: #962018;
+  --bs-btn-active-border-color: #962018;
+  border-radius: 0;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+}
+
+@media (max-width: 991.98px) {
+  .muixeranga-elx .col-lg-4 {
+    margin-bottom: 2rem;
+  }
 }

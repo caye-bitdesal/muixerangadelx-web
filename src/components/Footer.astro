@@ -10,49 +10,60 @@ interface Props {
 const { locale } = Astro.props;
 ---
 
-<footer class="mt-auto">
-  <div class="bg-elx-dark text-white py-12 px-4">
-    <div class="mx-auto max-w-7xl flex flex-col items-center gap-4">
-      <img
-        src="/images/logo.png"
-        alt="Muixeranga d'Elx"
-        class="logo-mask h-28 w-28"
-        width="112"
-        height="112"
-      />
-      <SocialLinks variant="light" />
+<footer id="footer" class="site-footer mt-auto">
+  <div class="footer-inner footer-superior bg-elx-blue text-white">
+    <div class="footer-container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="footer-brand">
+        <a href={localizedPath(locale, '/')} class="footer-logo inline-block">
+          <img
+            src="/images/logo.png"
+            alt="Muixeranga d'Elx"
+            class="logo-mask h-32 w-32 sm:h-36 sm:w-36 mx-auto"
+            width="144"
+            height="144"
+          />
+        </a>
+        <div class="social-buttons mt-8">
+          <SocialLinks variant="footer" />
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="bg-elx-red text-elx-dark">
-    <div class="mx-auto max-w-7xl px-4 py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3 text-sm">
-      <p class="flex flex-wrap items-center gap-x-2 gap-y-1">
-        <span>{t(locale, 'footer.copyright')}</span>
-        <span aria-hidden="true">|</span>
-        <a href={localizedPath(locale, '/avis-legal')} class="underline-offset-2 hover:underline">
-          {t(locale, 'footer.legal')}
-        </a>
-        <span aria-hidden="true">|</span>
-        <a href={localizedPath(locale, '/politica-privacitat')} class="underline-offset-2 hover:underline">
-          {t(locale, 'footer.privacy')}
-        </a>
-        <span aria-hidden="true">|</span>
-        <a href={localizedPath(locale, '/us-cookies')} class="underline-offset-2 hover:underline">
-          {t(locale, 'footer.cookies')}
-        </a>
-      </p>
-      <p class="flex items-center gap-2">
-        <span>{t(locale, 'footer.design')}</span>
-        <a
-          href="https://bitdesal.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 underline-offset-2 hover:underline"
-        >
-          <img src="/images/bitdesal.png" alt="" class="h-8 w-8 rounded" width="32" height="32" />
-          <span class="font-bold">Bitdesal</span>
-        </a>
-      </p>
+  <div class="footer-inner footer-inferior bg-elx-red text-white">
+    <div class="footer-bottom">
+      <div class="footer-container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3">
+        <div class="footer-bottom-row">
+          <div class="footer-bottom-left">
+            <span>{t(locale, 'footer.copyright')}</span>
+            <span class="footer-sep" aria-hidden="true">|</span>
+            <a href={localizedPath(locale, '/avis-legal')} class="text-white hover:underline">
+              {t(locale, 'footer.legal')}
+            </a>
+            <span class="footer-sep" aria-hidden="true">|</span>
+            <a href={localizedPath(locale, '/politica-privacitat')} class="text-white hover:underline">
+              {t(locale, 'footer.privacy')}
+            </a>
+            <span class="footer-sep" aria-hidden="true">|</span>
+            <a href={localizedPath(locale, '/us-cookies')} class="text-white hover:underline">
+              {t(locale, 'footer.cookies')}
+            </a>
+          </div>
+
+          <div class="footer-bottom-right">
+            <span>{t(locale, 'footer.design')}</span>
+            <a
+              href="https://bitdesal.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 text-white hover:underline"
+            >
+              <img src="/images/bitdesal.png" alt="" class="h-8 w-8 rounded" width="32" height="32" />
+              <span class="font-bold">Bitdesal</span>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </footer>

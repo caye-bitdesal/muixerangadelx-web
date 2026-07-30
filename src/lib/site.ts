@@ -17,7 +17,7 @@ export const socialLinks = [
   {
     id: 'youtube',
     label: 'YouTube',
-    href: 'https://www.youtube.com',
+    href: 'https://www.youtube.com/@MuixerangadElx',
   },
 ] as const;
 
