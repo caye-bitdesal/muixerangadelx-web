@@ -3,16 +3,16 @@
 
 :root {
   --bs-body-font-family: "Roboto", sans-serif;
-  --bs-primary: #d52b1e;
-  --bs-primary-rgb: 213, 43, 30;
-  --bs-link-color: #d52b1e;
-  --bs-link-hover-color: #b02419;
+  --bs-primary: #bb2029;
+  --bs-primary-rgb: 187, 32, 41;
+  --bs-link-color: #bb2029;
+  --bs-link-hover-color: #9a1a22;
 }
 
 @theme {
-  --color-elx-red: #d52b1e;
-  --color-elx-yellow: #ffd700;
-  --color-elx-blue: #0172c0;
+  --color-elx-red: #bb2029;
+  --color-elx-yellow: #ffc432;
+  --color-elx-blue: #02579f;
   --color-elx-dark: #1a1a1a;
   --color-elx-muted: #666666;
   --font-sans: "Roboto", sans-serif;
@@ -101,7 +101,7 @@ img {
 }
 
 #tt-m-menu-toggle-btn {
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: center;
   gap: 5px;
@@ -110,6 +110,12 @@ img {
   background: transparent;
   border: 0;
   cursor: pointer;
+}
+
+@media (max-width: 991px) {
+  #tt-m-menu-toggle-btn {
+    display: flex;
+  }
 }
 
 #tt-m-menu-toggle-btn .menu-bar {
@@ -276,10 +282,10 @@ img {
 .muixeranga-elx .btn-primary {
   --bs-btn-bg: var(--color-elx-red);
   --bs-btn-border-color: var(--color-elx-red);
-  --bs-btn-hover-bg: #b02419;
-  --bs-btn-hover-border-color: #b02419;
-  --bs-btn-active-bg: #962018;
-  --bs-btn-active-border-color: #962018;
+  --bs-btn-hover-bg: #9a1a22;
+  --bs-btn-hover-border-color: #9a1a22;
+  --bs-btn-active-bg: #80161c;
+  --bs-btn-active-border-color: #80161c;
   border-radius: 0;
   font-weight: 600;
   padding: 0.75rem 1.5rem;

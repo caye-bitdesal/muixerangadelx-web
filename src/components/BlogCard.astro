@@ -8,9 +8,10 @@ interface Props {
   date: string;
   image: string;
   readLabel: string;
+  yellowButton?: boolean;
 }
 
-const { title, excerpt, date, image, readLabel, locale } = Astro.props;
+const { title, excerpt, date, image, readLabel, locale, yellowButton = false } = Astro.props;
 
 const formatted = new Intl.DateTimeFormat(
   locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES' : 'en-GB',
@@ -28,7 +29,12 @@ const formatted = new Intl.DateTimeFormat(
     <p class="mt-3 text-sm leading-relaxed line-clamp-3">{excerpt}</p>
     <button
       type="button"
-      class="mt-auto pt-5 self-start bg-elx-red text-white px-4 py-2 text-sm font-semibold uppercase tracking-wide cursor-default opacity-90"
+      class:list={[
+        'mt-auto pt-5 self-start px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-colors cursor-default',
+        yellowButton
+          ? 'bg-elx-yellow text-black hover:bg-[#e6b02e]'
+          : 'bg-elx-red text-white hover:bg-[#9a1a22]',
+      ]}
       aria-disabled="true"
     >
       {readLabel}
