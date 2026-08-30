@@ -11,7 +11,7 @@ interface Props {
 const { doc, downloadLabel } = Astro.props;
 ---
 
-<article class="flex flex-col border border-black/10 bg-white">
+<article class="flex flex-col border border-black/10 bg-white h-full">
   <div class="aspect-[3/4] bg-neutral-100 overflow-hidden">
     <img src={doc.thumbnail} alt="" class="h-full w-full object-cover" loading="lazy" />
   </div>
@@ -19,12 +19,12 @@ const { doc, downloadLabel } = Astro.props;
     <h3 class="font-bold text-lg leading-snug">{doc.title}</h3>
     <p class="text-sm text-elx-muted">{doc.description}</p>
     <p class="text-xs text-elx-muted">{doc.issuer} · {doc.date}</p>
-    <button
-      type="button"
-      class="mt-auto self-start bg-elx-dark text-white px-4 py-2 text-sm font-semibold uppercase tracking-wide cursor-default opacity-90"
-      aria-disabled="true"
+    <a
+      href={doc.file}
+      download
+      class="mt-auto self-start bg-elx-dark text-white px-4 py-2 text-sm font-semibold uppercase tracking-wide hover:bg-elx-red transition-colors"
     >
       {downloadLabel}
-    </button>
+    </a>
   </div>
 </article>

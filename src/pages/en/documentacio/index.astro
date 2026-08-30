@@ -8,6 +8,10 @@ const locale = 'en' as const;
 ---
 
 <BaseLayout locale={locale} overlayNav title={`${t(locale, 'docs.title')} | Muixeranga d'Elx`}>
-  <PageHero title={t(locale, 'docs.title')} subtitle={t(locale, 'docs.subtitle')} />
+  <PageHero
+    title={t(locale, 'docs.title')}
+    subtitle={t(locale, 'docs.subtitle')}
+    image="/images/heroes/documentacio.jpg"
+  />
   <DocsApp locale={locale} />
 </BaseLayout>
