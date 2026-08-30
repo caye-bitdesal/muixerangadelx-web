@@ -8,24 +8,25 @@ interface Props {
 const { locale } = Astro.props;
 
 const slides = [
-  { src: '/images/carousel/1.png', height: '145%', anchor: 'bottom' },
-  { src: '/images/carousel/2.png', height: '135%', anchor: 'bottom' },
-  { src: '/images/carousel/3.png', height: '130%', anchor: 'bottom' },
+  { src: '/images/carousel/hero1.jpg' },
+  { src: '/images/carousel/hero2.jpg' },
+  { src: '/images/carousel/hero3.jpg' },
+  { src: '/images/carousel/hero4.jpg' },
+  { src: '/images/carousel/hero5.jpg' },
 ];
 ---
 
-<section class="relative h-[85vh] min-h-[520px] overflow-hidden bg-elx-dark" data-carousel>
-  <div class="absolute inset-0 overflow-hidden">
+<section class="carousel-hero relative w-full overflow-hidden bg-elx-dark" data-carousel>
+  <div class="carousel-media absolute inset-0 overflow-hidden">
     {
       slides.map((slide, i) => (
         <img
           src={slide.src}
           alt=""
           class:list={[
-            'carousel-slide absolute left-1/2 -translate-x-1/2 w-full max-w-none object-cover object-bottom transition-opacity duration-700',
+            'carousel-slide absolute inset-0 h-full w-full max-w-none object-cover object-bottom transition-opacity duration-700',
             i === 0 ? 'opacity-100' : 'opacity-0',
           ]}
-          style={`height: ${slide.height}; ${slide.anchor === 'bottom' ? 'bottom: 0; top: auto;' : ''}`}
           data-carousel-slide
           data-index={i}
         />
@@ -33,8 +34,9 @@ const slides = [
     }
   </div>
 
-  <div class="relative z-10 h-full flex flex-col justify-center px-6 sm:px-12 max-w-7xl mx-auto pt-16">
-    <h1 class="text-4xl sm:text-6xl lg:text-7xl font-bold text-white drop-shadow-lg">
+  <div class="carousel-copy relative z-10 flex h-full flex-col justify-center px-6 sm:px-12 max-w-7xl mx-auto pt-16">
+    <p class="carousel-lead font-bold text-white">{t(locale, 'home.carousel.lead')}</p>
+    <h1 class="carousel-title font-bold text-white">
       {t(locale, 'home.carousel.title')}
     </h1>
   </div>
@@ -60,13 +62,47 @@ const slides = [
 <script>
   const root = document.querySelector('[data-carousel]');
   if (root) {
-    const slides = [...root.querySelectorAll('[data-carousel-slide]')];
+    const slideEls = [...root.querySelectorAll<HTMLImageElement>('[data-carousel-slide]')];
     const dots = [...root.querySelectorAll('[data-carousel-dot]')];
     let index = 0;
 
+    const setCarouselSize = () => {
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      let maxImageHeight = 0;
+
+      for (const img of slideEls) {
+        if (!img.naturalWidth || !img.naturalHeight) continue;
+        const scaledHeight = viewportWidth * (img.naturalHeight / img.naturalWidth);
+        maxImageHeight = Math.max(maxImageHeight, scaledHeight);
+      }
+
+      if (maxImageHeight <= 0) return;
+
+      const height = Math.min(viewportHeight, maxImageHeight);
+      root.style.height = `${height}px`;
+    };
+
+    const whenImagesReady = slideEls.map(
+      (img) =>
+        new Promise<void>((resolve) => {
+          if (img.complete) {
+            resolve();
+            return;
+          }
+          img.addEventListener('load', () => resolve(), { once: true });
+          img.addEventListener('error', () => resolve(), { once: true });
+        }),
+    );
+
+    Promise.all(whenImagesReady).then(setCarouselSize);
+
+    window.addEventListener('resize', setCarouselSize, { passive: true });
+    window.visualViewport?.addEventListener('resize', setCarouselSize, { passive: true });
+
     const show = (next: number) => {
-      index = (next + slides.length) % slides.length;
-      slides.forEach((el, i) => {
+      index = (next + slideEls.length) % slideEls.length;
+      slideEls.forEach((el, i) => {
         el.classList.toggle('opacity-100', i === index);
         el.classList.toggle('opacity-0', i !== index);
       });

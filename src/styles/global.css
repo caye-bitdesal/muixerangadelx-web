@@ -12,7 +12,7 @@
 @theme {
   --color-elx-red: #bb2029;
   --color-elx-yellow: #ffc432;
-  --color-elx-blue: #02579f;
+  --color-elx-blue: #14005e;
   --color-elx-dark: #1a1a1a;
   --color-elx-muted: #666666;
   --font-sans: "Roboto", sans-serif;
@@ -51,8 +51,10 @@ img {
   align-items: center;
   gap: 1rem;
   min-height: 4.875rem;
-  padding-top: 0.25rem;
+  padding-top: 20px;
   padding-bottom: 0.25rem;
+  position: relative;
+  z-index: 1;
 }
 
 .header-filled,
@@ -63,6 +65,19 @@ img {
 .header-transparent {
   background-color: transparent;
   transition: background-color 0.25s ease;
+}
+
+.header-gradient {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(to bottom, rgb(0 0 0 / 0.55), transparent);
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.header-transparent.header-scrolled .header-gradient {
+  opacity: 0;
 }
 
 .header-right {
@@ -76,6 +91,29 @@ img {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  margin-left: auto;
+  padding-left: 2.5rem;
+}
+
+.header-lang a,
+.mobile-lang a {
+  text-decoration: none;
+}
+
+.header-lang a.lang-active,
+.mobile-lang a.lang-active {
+  color: var(--color-elx-yellow);
+  font-weight: 700;
+}
+
+.header-lang a.lang-inactive,
+.mobile-lang a.lang-inactive {
+  color: rgb(255 255 255 / 0.8);
+}
+
+.header-lang a.lang-inactive:hover,
+.mobile-lang a.lang-inactive:hover {
+  color: #fff;
 }
 
 .menu-nav {
@@ -127,6 +165,8 @@ img {
 }
 
 .mobile-menu {
+  position: relative;
+  z-index: 1;
   background-color: var(--color-elx-red);
   border-top: 1px solid rgb(255 255 255 / 0.15);
 }
@@ -213,7 +253,51 @@ img {
   gap: 0.5rem;
 }
 
+.carousel-hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+}
+
+.carousel-copy {
+  margin-left: -10px;
+  padding-right: 10px;
+  max-width: calc(100% + 10px);
+  box-sizing: border-box;
+}
+
+.carousel-title {
+  font-size: 2.5em;
+  line-height: 1.1;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 0.35), 0 2px 10px rgb(0 0 0 / 0.25);
+}
+
+.carousel-lead {
+  font-size: 4.5em;
+  line-height: 1.1;
+  margin-bottom: 0.5em;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 0.35), 0 2px 10px rgb(0 0 0 / 0.25);
+}
+
+@media (max-width: 639px) {
+  .carousel-copy {
+    margin-left: -6px;
+    padding-right: 6px;
+    max-width: calc(100% + 6px);
+  }
+
+  .carousel-lead {
+    font-size: clamp(1.75rem, 11vw, 4.5em);
+  }
+
+  .carousel-title {
+    font-size: clamp(1.25rem, 6.5vw, 2.5em);
+  }
+}
+
 .carousel-slide {
+  object-fit: cover;
   object-position: center bottom;
 }
 
