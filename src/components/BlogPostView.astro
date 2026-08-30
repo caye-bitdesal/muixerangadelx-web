@@ -1,0 +1,59 @@
+---
+import BlogPostBody from './BlogPostBody.astro';
+import { localizedPath } from '../i18n/utils';
+import { t, type Locale } from '../i18n/ui';
+import type { BlogPost } from '../lib/blog';
+
+interface Props {
+  locale: Locale;
+  post: BlogPost;
+}
+
+const { locale, post } = Astro.props;
+
+const formattedDate = new Intl.DateTimeFormat(
+  locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES' : 'en-GB',
+  { day: 'numeric', month: 'long', year: 'numeric' },
+).format(new Date(post.date));
+---
+
+<article class="bg-white">
+  <div class="blog-post-cover w-full bg-elx-dark">
+    <img src={post.coverImage} alt="" loading="eager" />
+  </div>
+
+  <div class="mx-auto max-w-3xl px-4 sm:px-6 py-10 sm:py-14">
+    {
+      post.categories.length > 0 && (
+        <ul class="flex flex-wrap gap-2 mb-4">
+          {post.categories.map((category) => (
+            <li class="text-xs font-semibold uppercase tracking-wide bg-elx-yellow text-elx-dark px-2 py-1">
+              {category}
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    <h1 class="text-3xl sm:text-4xl font-bold leading-tight">{post.title}</h1>
+
+    <p class="mt-4 text-sm text-elx-muted">
+      <time datetime={post.date}>{formattedDate}</time>
+      <span aria-hidden="true"> · </span>
+      <span>{t(locale, 'blog.author')}: {post.author}</span>
+    </p>
+
+    <p class="mt-6 text-lg text-elx-muted leading-relaxed">{post.description}</p>
+
+    <div class="mt-10 border-t border-black/10 pt-10">
+      <BlogPostBody blocks={post.content} />
+    </div>
+
+    <a
+      href={localizedPath(locale, '/blog')}
+      class="inline-block mt-12 text-sm font-semibold uppercase tracking-wide text-elx-red hover:underline"
+    >
+      ← {t(locale, 'blog.back')}
+    </a>
+  </div>
+</article>

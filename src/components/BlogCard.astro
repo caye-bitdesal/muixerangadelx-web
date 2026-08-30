@@ -1,17 +1,21 @@
 ---
+import { localizedPath } from '../i18n/utils';
 import type { Locale } from '../i18n/ui';
 
 interface Props {
   locale: Locale;
+  slug: string;
   title: string;
-  excerpt: string;
+  description: string;
   date: string;
-  image: string;
+  coverImage: string;
   readLabel: string;
   yellowButton?: boolean;
 }
 
-const { title, excerpt, date, image, readLabel, locale, yellowButton = false } = Astro.props;
+const { slug, title, description, date, coverImage, readLabel, locale, yellowButton = false } = Astro.props;
+
+const href = localizedPath(locale, `/blog/${slug}`);
 
 const formatted = new Intl.DateTimeFormat(
   locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES' : 'en-GB',
@@ -20,24 +24,25 @@ const formatted = new Intl.DateTimeFormat(
 ---
 
 <article class="flex flex-col h-full w-full">
-  <div class="aspect-[16/10] overflow-hidden bg-elx-dark">
-    <img src={image} alt="" class="h-full w-full object-cover" loading="lazy" />
-  </div>
+  <a href={href} class="aspect-[16/10] overflow-hidden bg-elx-dark block">
+    <img src={coverImage} alt="" class="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.02]" loading="lazy" />
+  </a>
   <div class="flex flex-col flex-1 pt-4">
-    <h3 class="text-xl font-bold leading-snug">{title}</h3>
+    <h3 class="text-xl font-bold leading-snug">
+      <a href={href} class="hover:text-elx-red transition-colors">{title}</a>
+    </h3>
     <time class="mt-2 text-sm text-elx-muted" datetime={date}>{formatted}</time>
-    <p class="mt-3 text-sm leading-relaxed line-clamp-3">{excerpt}</p>
-    <button
-      type="button"
+    <p class="mt-3 text-sm leading-relaxed line-clamp-3">{description}</p>
+    <a
+      href={href}
       class:list={[
-        'mt-auto pt-5 self-start px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-colors cursor-default',
+        'mt-auto pt-5 self-start px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-colors',
         yellowButton
           ? 'bg-elx-yellow text-black hover:bg-[#e6b02e]'
           : 'bg-elx-red text-white hover:bg-[#9a1a22]',
       ]}
-      aria-disabled="true"
     >
       {readLabel}
-    </button>
+    </a>
   </div>
 </article>

@@ -3,16 +3,11 @@ import { t, type Locale } from '../i18n/ui';
 import { localizedPath } from '../i18n/utils';
 import BlogCard from './BlogCard.astro';
 
-interface PostCard {
-  title: string;
-  excerpt: string;
-  date: string;
-  image: string;
-}
+import type { BlogPostCard } from '../lib/blog';
 
 interface Props {
   locale: Locale;
-  posts: PostCard[];
+  posts: BlogPostCard[];
 }
 
 const { locale, posts } = Astro.props;
@@ -34,10 +29,11 @@ const items = posts.slice(0, 3);
           <div class="min-w-0 lg:shrink-0 lg:w-[calc((100%-2rem)/3)] [&_article]:w-full">
             <BlogCard
               locale={locale}
+              slug={post.slug}
               title={post.title}
-              excerpt={post.excerpt}
+              description={post.description}
               date={post.date}
-              image={post.image}
+              coverImage={post.coverImage}
               readLabel={t(locale, 'blog.read')}
               yellowButton
             />

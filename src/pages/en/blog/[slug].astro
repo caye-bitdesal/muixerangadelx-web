@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BlogPostView from '../../../components/BlogPostView.astro';
+import { getBlogPost, getBlogSlugs } from '../../../lib/blog';
+import { localizedPath } from '../../../i18n/utils';
+
+const locale = 'en' as const;
+
+export async function getStaticPaths() {
+  const slugs = await getBlogSlugs();
+  return slugs.map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+const post = slug ? await getBlogPost(slug, locale) : null;
+
+if (!post) {
+  return Astro.redirect(localizedPath(locale, '/blog'));
+}
+---
+
+<BaseLayout locale={locale} overlayNav title={`${post.title} | Muixeranga d'Elx`}>
+  <BlogPostView locale={locale} post={post} />
+</BaseLayout>
