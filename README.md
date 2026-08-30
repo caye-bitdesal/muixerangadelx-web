@@ -45,3 +45,4 @@ Configura estos secretos en **Settings → Secrets and variables → Actions** d
 - Eventos: API `listEvents` (Firebase Cloud Function).
 - Blog: Markdown en `src/content/blog/` (plantilla en `src/content/blog.template.md`). Campos: categories, title, date, author, description, coverImage y content (blocs de text/imatges) en va/es/en.
 - Documentación: PDFs en `public/documents/` y metadatos en `src/lib/docs.ts`.
+- Textos legales (avís legal, privacitat, cookies): `src/lib/legal/` en va/es/en. Datos del titular en `src/lib/legal/site-info.ts`.

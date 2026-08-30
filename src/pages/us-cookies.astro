@@ -1,14 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import LegalPage from '../components/LegalPage.astro';
 import { getLocaleFromUrl } from '../i18n/utils';
-import { t } from '../i18n/ui';
+import { getLegalContent } from '../lib/legal';
 
 const locale = getLocaleFromUrl(Astro.url);
+const content = getLegalContent('cookies', locale);
 ---
 
-<BaseLayout locale={locale} title={`${t(locale, 'footer.cookies')} | Muixeranga d'Elx`}>
-  <section class="mx-auto max-w-3xl px-4 py-24">
-    <h1 class="text-4xl font-bold">{t(locale, 'footer.cookies')}</h1>
-    <p class="mt-6 text-lg text-elx-muted">{t(locale, 'legal.pending')}</p>
-  </section>
+<BaseLayout locale={locale} title={`${content.title} | Muixeranga d'Elx`}>
+  <LegalPage locale={locale} page="cookies" />
 </BaseLayout>

@@ -1,0 +1,50 @@
+---
+import type { LegalPageId } from '../lib/legal/types';
+import { getLegalContent } from '../lib/legal';
+import type { Locale } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+  page: LegalPageId;
+}
+
+const { locale, page } = Astro.props;
+const content = getLegalContent(page, locale);
+
+function linkify(text: string): string {
+  return text.replace(
+    /(https?:\/\/[^\s]+)/g,
+    '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>',
+  );
+}
+---
+
+<section class="legal-page mx-auto max-w-3xl px-4 py-24 sm:py-28">
+  <h1 class="text-4xl font-bold">{content.title}</h1>
+  <p class="mt-3 text-sm text-elx-muted">
+    {content.lastUpdatedLabel}: <time datetime={content.lastUpdated}>{content.lastUpdated}</time>
+  </p>
+
+  <div class="mt-10 space-y-10">
+    {
+      content.sections.map((section) => (
+        <section>
+          <h2 class="text-xl font-bold mb-4">{section.title}</h2>
+          <div class="space-y-4 text-base leading-relaxed text-elx-dark">
+            {section.paragraphs.map((paragraph) => (
+              <p set:html={linkify(paragraph)} />
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .legal-page a {
+    color: var(--color-elx-red);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+</style>

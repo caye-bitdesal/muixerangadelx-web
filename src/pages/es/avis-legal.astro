@@ -1,13 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { t } from '../../i18n/ui';
+import LegalPage from '../../components/LegalPage.astro';
+import { getLegalContent } from '../../lib/legal';
 
 const locale = 'es' as const;
+const content = getLegalContent('legal', locale);
 ---
 
-<BaseLayout locale={locale} title={`${t(locale, 'footer.legal')} | Muixeranga d'Elx`}>
-  <section class="mx-auto max-w-3xl px-4 py-24">
-    <h1 class="text-4xl font-bold">{t(locale, 'footer.legal')}</h1>
-    <p class="mt-6 text-lg text-elx-muted">{t(locale, 'legal.pending')}</p>
-  </section>
+<BaseLayout locale={locale} title={`${content.title} | Muixeranga d'Elx`}>
+  <LegalPage locale={locale} page="legal" />
 </BaseLayout>
