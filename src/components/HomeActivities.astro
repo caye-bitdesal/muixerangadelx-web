@@ -24,7 +24,7 @@ const items = events.slice(0, 4);
       {
         items.map((event) => (
           <div class="min-w-0 lg:shrink-0 lg:w-[calc((100%-2rem)/3)] [&>a]:w-full">
-            <ActivityCard locale={locale} event={event} />
+            <ActivityCard locale={locale} event={event} overlay="always" />
           </div>
         ))
       }
@@ -40,3 +40,13 @@ const items = events.slice(0, 4);
     </div>
   </div>
 </section>
+
+<script>
+  import { fitActivityCardImages } from '../lib/activity-card';
+
+  const section = document.currentScript?.previousElementSibling as HTMLElement | null;
+  const root = section?.closest('section') ?? document;
+
+  fitActivityCardImages(root);
+  window.addEventListener('resize', () => fitActivityCardImages(root), { passive: true });
+</script>

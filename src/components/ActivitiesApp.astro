@@ -60,86 +60,9 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
   </div>
 </section>
 
-<style>
-  :global(.activity-card) {
-    position: relative;
-    display: block;
-    aspect-ratio: 3 / 4;
-    overflow: hidden;
-    background: #fff;
-    border: 1px solid rgb(0 0 0 / 10%);
-  }
-
-  :global(.activity-card__media) {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    background: #fff;
-  }
-
-  :global(.activity-card__media img) {
-    transition: transform 0.5s;
-  }
-
-  :global(.activity-card__media img.activity-card__img--natural) {
-    width: auto;
-    height: auto;
-    max-width: 100%;
-    max-height: 100%;
-  }
-
-  :global(.activity-card__media img.activity-card__img--cover) {
-    width: auto;
-    height: 100%;
-    max-width: none;
-    object-fit: cover;
-    object-position: center;
-  }
-
-  :global(.activity-card:hover .activity-card__media img),
-  :global(.activity-card:focus-within .activity-card__media img) {
-    transform: scale(1.05);
-  }
-
-  :global(.activity-card__overlay) {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1;
-    padding: 1rem;
-    color: #fff;
-    text-align: center;
-    background: rgb(0 0 0 / 85%);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  :global(.activity-card:hover .activity-card__overlay),
-  :global(.activity-card:focus-within .activity-card__overlay) {
-    opacity: 1;
-  }
-
-  :global(.activity-card__overlay .activity-card__date) {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-elx-yellow);
-  }
-
-  :global(.activity-card__overlay .activity-card__title) {
-    margin-top: 0.25rem;
-    font-size: 1.125rem;
-    font-weight: 700;
-    line-height: 1.25;
-  }
-</style>
-
 <script>
   import { compareEventDates, parseEventDate, type EventDateInput } from '../lib/events';
+  import { fitActivityCardImages } from '../lib/activity-card';
 
   type Ev = {
     id: string;
@@ -206,31 +129,7 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
     );
   };
 
-  const fitCardImage = (img: HTMLImageElement) => {
-    const media = img.closest('.activity-card__media') as HTMLElement | null;
-    if (!media) return;
-
-    const apply = () => {
-      const cw = media.clientWidth;
-      const ch = media.clientHeight;
-      const iw = img.naturalWidth;
-      const ih = img.naturalHeight;
-      if (!iw || !ih || !cw || !ch) return;
-
-      const fitsNaturally = iw <= cw && ih <= ch;
-      img.classList.toggle('activity-card__img--natural', fitsNaturally);
-      img.classList.toggle('activity-card__img--cover', !fitsNaturally);
-    };
-
-    if (img.complete) apply();
-    else img.addEventListener('load', apply, { once: true });
-  };
-
-  const fitCardImages = () => {
-    grid.querySelectorAll('.activity-card__media img').forEach((img) => {
-      fitCardImage(img as HTMLImageElement);
-    });
-  };
+  const fitCardImages = () => fitActivityCardImages(grid);
 
   const cardHtml = (event: Ev) => {
     const img = event.image || '/images/placeholders/event.svg';
