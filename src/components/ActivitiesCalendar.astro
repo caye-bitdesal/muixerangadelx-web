@@ -1,5 +1,6 @@
 ---
 import { t, type Locale } from '../i18n/ui';
+import { EVENTS_API } from '../lib/events';
 
 interface Props {
   locale: Locale;
@@ -18,6 +19,7 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
 <section
   class="relative bg-elx-dark text-white overflow-hidden"
   data-activities-calendar
+  data-api={EVENTS_API}
   data-months={JSON.stringify(monthNames)}
   data-weekdays={JSON.stringify(weekdays)}
 >
@@ -38,7 +40,9 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
 </section>
 
 <script>
-  type EventLite = { date?: string; type?: string };
+  import { eventDateKey, listAllEvents, type EventDateInput } from '../lib/events';
+
+  type EventLite = { date?: EventDateInput; type?: string };
 
   const root = document.querySelector('[data-activities-calendar]') as HTMLElement | null;
   if (root) {
@@ -49,14 +53,26 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
     const weekEl = root.querySelector('[data-cal-weekdays]')!;
     let cursor = new Date();
     cursor.setDate(1);
-    let eventDays = new Set<string>();
+    let allEvents: EventLite[] = [];
+    let filter = 'all';
 
     weekEl.innerHTML = weekdays.map((d) => `<div>${d}</div>`).join('');
 
     const key = (y: number, m: number, d: number) =>
       `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
 
+    const filteredEvents = () =>
+      filter === 'all' ? allEvents : allEvents.filter((event) => event.type === filter);
+
+    const eventDays = () =>
+      new Set(
+        filteredEvents()
+          .map((event) => eventDateKey(event.date))
+          .filter(Boolean) as string[],
+      );
+
     const render = () => {
+      const days = eventDays();
       const y = cursor.getFullYear();
       const m = cursor.getMonth();
       titleEl.textContent = `${months[m]} ${y}`;
@@ -66,7 +82,7 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
       for (let i = 0; i < firstDow; i++) cells.push('<div></div>');
       for (let d = 1; d <= daysInMonth; d++) {
         const k = key(y, m, d);
-        const active = eventDays.has(k);
+        const active = days.has(k);
         cells.push(
           `<div class="aspect-square flex items-center justify-center text-sm sm:text-base border border-white/10 ${
             active ? 'bg-elx-yellow text-elx-dark font-bold' : 'bg-white/5'
@@ -85,14 +101,17 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
       render();
     });
 
-    window.addEventListener('activities:filtered', ((e: CustomEvent<{ events: EventLite[] }>) => {
-      eventDays = new Set(
-        (e.detail.events || [])
-          .map((ev) => ev.date?.slice(0, 10))
-          .filter(Boolean) as string[],
-      );
+    window.addEventListener('activities:filter-changed', ((e: CustomEvent<{ filter: string }>) => {
+      filter = e.detail.filter || 'all';
       render();
     }) as EventListener);
+
+    listAllEvents()
+      .then((events) => {
+        allEvents = events;
+        render();
+      })
+      .catch(() => render());
 
     render();
   }

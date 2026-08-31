@@ -60,12 +60,92 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
   </div>
 </section>
 
+<style>
+  :global(.activity-card) {
+    position: relative;
+    display: block;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid rgb(0 0 0 / 10%);
+  }
+
+  :global(.activity-card__media) {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  :global(.activity-card__media img) {
+    transition: transform 0.5s;
+  }
+
+  :global(.activity-card__media img.activity-card__img--natural) {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  :global(.activity-card__media img.activity-card__img--cover) {
+    width: auto;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  :global(.activity-card:hover .activity-card__media img),
+  :global(.activity-card:focus-within .activity-card__media img) {
+    transform: scale(1.05);
+  }
+
+  :global(.activity-card__overlay) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    padding: 1rem;
+    color: #fff;
+    text-align: center;
+    background: rgb(0 0 0 / 85%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  :global(.activity-card:hover .activity-card__overlay),
+  :global(.activity-card:focus-within .activity-card__overlay) {
+    opacity: 1;
+  }
+
+  :global(.activity-card__overlay .activity-card__date) {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-elx-yellow);
+  }
+
+  :global(.activity-card__overlay .activity-card__title) {
+    margin-top: 0.25rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+</style>
+
 <script>
+  import { compareEventDates, parseEventDate, type EventDateInput } from '../lib/events';
+
   type Ev = {
     id: string;
     name: string;
     image?: string | null;
-    date?: string;
+    date?: EventDateInput;
     type?: string;
   };
 
@@ -90,6 +170,7 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
   let exhausted = false;
 
   const withDefaults = (event: Ev, index: number): Ev => {
+    const parsed = parseEventDate(event.date);
     const base = new Date();
     base.setDate(base.getDate() + index * 3);
     const image =
@@ -98,16 +179,15 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
         : null;
     return {
       ...event,
-      date: event.date ?? base.toISOString().slice(0, 10),
+      date: (parsed ?? base).toISOString(),
       type: event.type ?? FALLBACK_TYPES[index % FALLBACK_TYPES.length],
       image,
     };
   };
 
-  const formatDate = (dateStr?: string) => {
-    if (!dateStr) return '';
-    const d = new Date(dateStr);
-    if (Number.isNaN(d.getTime())) return dateStr;
+  const formatDate = (dateInput?: EventDateInput) => {
+    const d = parseEventDate(dateInput);
+    if (!d) return typeof dateInput === 'string' ? dateInput : '';
     return new Intl.DateTimeFormat(localeTag, {
       day: 'numeric',
       month: 'long',
@@ -115,23 +195,52 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
     }).format(d);
   };
 
-  const filtered = () =>
-    filter === 'all' ? allEvents : allEvents.filter((e) => e.type === filter);
+  const filtered = () => {
+    const items = filter === 'all' ? allEvents : allEvents.filter((e) => e.type === filter);
+    return [...items].sort((a, b) => compareEventDates(a.date, b.date));
+  };
 
-  const emitCalendar = () => {
+  const notifyFilter = () => {
     window.dispatchEvent(
-      new CustomEvent('activities:filtered', { detail: { events: filtered() } }),
+      new CustomEvent('activities:filter-changed', { detail: { filter } }),
     );
+  };
+
+  const fitCardImage = (img: HTMLImageElement) => {
+    const media = img.closest('.activity-card__media') as HTMLElement | null;
+    if (!media) return;
+
+    const apply = () => {
+      const cw = media.clientWidth;
+      const ch = media.clientHeight;
+      const iw = img.naturalWidth;
+      const ih = img.naturalHeight;
+      if (!iw || !ih || !cw || !ch) return;
+
+      const fitsNaturally = iw <= cw && ih <= ch;
+      img.classList.toggle('activity-card__img--natural', fitsNaturally);
+      img.classList.toggle('activity-card__img--cover', !fitsNaturally);
+    };
+
+    if (img.complete) apply();
+    else img.addEventListener('load', apply, { once: true });
+  };
+
+  const fitCardImages = () => {
+    grid.querySelectorAll('.activity-card__media img').forEach((img) => {
+      fitCardImage(img as HTMLImageElement);
+    });
   };
 
   const cardHtml = (event: Ev) => {
     const img = event.image || '/images/placeholders/event.svg';
-    return `<a href="${detailBase}/${event.id}" class="group relative block aspect-[3/4] overflow-hidden bg-[#1a1a1a]">
-      <img src="${img}" alt="" class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
-      <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/40"></div>
-      <div class="absolute top-0 left-0 right-0 p-4 text-white">
-        <p class="text-xs uppercase tracking-wide text-elx-yellow">${formatDate(event.date)}</p>
-        <h3 class="mt-1 text-lg font-bold leading-tight">${event.name}</h3>
+    return `<a href="${detailBase}/${event.id}" class="activity-card">
+      <div class="activity-card__media">
+        <img src="${img}" alt="" loading="lazy" />
+      </div>
+      <div class="activity-card__overlay">
+        <p class="activity-card__date">${formatDate(event.date)}</p>
+        <h3 class="activity-card__title">${event.name}</h3>
       </div>
     </a>`;
   };
@@ -139,9 +248,10 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
   const render = () => {
     const items = filtered();
     grid.innerHTML = items.map(cardHtml).join('');
+    fitCardImages();
     emptyEl.classList.toggle('hidden', items.length > 0);
     emptyEl.textContent = emptyMsg;
-    emitCalendar();
+    notifyFilter();
   };
 
   const loadMore = async () => {
@@ -196,4 +306,6 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
   io.observe(sentinel);
 
   loadMore();
+
+  window.addEventListener('resize', fitCardImages, { passive: true });
 </script>
