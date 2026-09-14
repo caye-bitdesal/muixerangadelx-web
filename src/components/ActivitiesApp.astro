@@ -11,10 +11,9 @@ const { locale } = Astro.props;
 
 const filters = [
   { id: 'all', label: t(locale, 'activitats.filters.all') },
-  { id: 'assajos', label: t(locale, 'activitats.filters.assajos') },
-  { id: 'actuacions', label: t(locale, 'activitats.filters.actuacions') },
-  { id: 'trobades', label: t(locale, 'activitats.filters.trobades') },
-  { id: 'tallers', label: t(locale, 'activitats.filters.tallers') },
+  { id: 'assaig', label: t(locale, 'activitats.filters.assaig') },
+  { id: 'actuacio', label: t(locale, 'activitats.filters.actuacio') },
+  { id: 'altre', label: t(locale, 'activitats.filters.altre') },
 ];
 
 const detailBase = localizedPath(locale, '/activitats');
@@ -61,7 +60,13 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
 </section>
 
 <script>
-  import { compareEventDates, parseEventDate, type EventDateInput } from '../lib/events';
+  import {
+    compareEventDates,
+    eventDateKey,
+    normalizeEventType,
+    parseEventDate,
+    type EventDateInput,
+  } from '../lib/events';
   import { fitActivityCardImages } from '../lib/activity-card';
 
   type Ev = {
@@ -72,7 +77,6 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
     type?: string;
   };
 
-  const FALLBACK_TYPES = ['assajos', 'actuacions', 'trobades', 'tallers'];
   const root = document.querySelector('[data-activities-app]') as HTMLElement | null;
   if (!root) throw new Error('activities root missing');
 
@@ -91,6 +95,7 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
   let filter = 'all';
   let loading = false;
   let exhausted = false;
+  let selectedDateKey: string | null = null;
 
   const withDefaults = (event: Ev, index: number): Ev => {
     const parsed = parseEventDate(event.date);
@@ -103,7 +108,7 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
     return {
       ...event,
       date: (parsed ?? base).toISOString(),
-      type: event.type ?? FALLBACK_TYPES[index % FALLBACK_TYPES.length],
+      type: normalizeEventType(event.type),
       image,
     };
   };
@@ -133,7 +138,8 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
 
   const cardHtml = (event: Ev) => {
     const img = event.image || '/images/placeholders/event.svg';
-    return `<a href="${detailBase}/${event.id}" class="activity-card">
+    const dateKey = eventDateKey(event.date) ?? '';
+    return `<a href="${detailBase}/${event.id}" class="activity-card scroll-mt-28" data-event-id="${event.id}" data-date-key="${dateKey}">
       <div class="activity-card__media">
         <img src="${img}" alt="" loading="lazy" />
       </div>
@@ -144,12 +150,30 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
     </a>`;
   };
 
+  const selectedCards = () =>
+    selectedDateKey
+      ? ([...grid.querySelectorAll(`[data-date-key="${selectedDateKey}"]`)] as HTMLElement[])
+      : [];
+
+  const applySelection = (scroll = false) => {
+    grid.querySelectorAll('.activity-card--selected').forEach((card) => {
+      card.classList.remove('activity-card--selected');
+    });
+    const cards = selectedCards();
+    cards.forEach((card) => card.classList.add('activity-card--selected'));
+    if (scroll && cards[0]) {
+      cards[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    return cards;
+  };
+
   const render = () => {
     const items = filtered();
     grid.innerHTML = items.map(cardHtml).join('');
     fitCardImages();
     emptyEl.classList.toggle('hidden', items.length > 0);
     emptyEl.textContent = emptyMsg;
+    applySelection();
     notifyFilter();
   };
 
@@ -207,4 +231,20 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
   loadMore();
 
   window.addEventListener('resize', fitCardImages, { passive: true });
+
+  window.addEventListener('activities:day-selected', (async (event: CustomEvent<{ dateKey: string }>) => {
+    selectedDateKey = event.detail.dateKey || null;
+    let cards = applySelection(true);
+    while (
+      selectedDateKey &&
+      !cards.length &&
+      !exhausted &&
+      !allEvents.some((item) => eventDateKey(item.date) === selectedDateKey)
+    ) {
+      const before = allEvents.length;
+      await loadMore();
+      if (allEvents.length === before) break;
+      cards = applySelection(true);
+    }
+  }) as EventListener);
 </script>

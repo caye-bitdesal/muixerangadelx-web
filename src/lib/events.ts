@@ -1,6 +1,30 @@
 import { EVENTS_API } from './site';
 
-export type EventType = 'assajos' | 'actuacions' | 'trobades' | 'tallers';
+export const EVENT_TYPES = ['assaig', 'actuacio', 'altre'] as const;
+
+export type EventType = (typeof EVENT_TYPES)[number];
+
+const CALENDAR_DAY_PRIORITY: EventType[] = ['actuacio', 'assaig', 'altre'];
+
+export function normalizeEventType(type?: string | null): EventType | undefined {
+  return EVENT_TYPES.includes(type as EventType) ? (type as EventType) : undefined;
+}
+
+export function eventCalendarDayClass(type: EventType): string {
+  switch (type) {
+    case 'assaig':
+      return 'bg-elx-blue text-white font-bold';
+    case 'actuacio':
+      return 'bg-elx-red text-white font-bold';
+    case 'altre':
+      return 'bg-elx-yellow text-elx-dark font-bold';
+  }
+}
+
+export function resolveCalendarDayType(types: Array<EventType | undefined>): EventType | null {
+  const present = new Set(types.filter((type): type is EventType => Boolean(type)));
+  return CALENDAR_DAY_PRIORITY.find((type) => present.has(type)) ?? null;
+}
 
 export type FirestoreTimestamp = {
   seconds?: number;
@@ -28,13 +52,6 @@ export type ListEventsResponse = {
   events: MuixerangaEvent[];
   lastId?: string | null;
 };
-
-const FALLBACK_TYPES: EventType[] = [
-  'assajos',
-  'actuacions',
-  'trobades',
-  'tallers',
-];
 
 export function parseEventDate(input: EventDateInput): Date | null {
   if (input == null) return null;
@@ -90,7 +107,7 @@ function withDefaults(event: MuixerangaEvent, index: number): MuixerangaEvent {
   return {
     ...event,
     date: (parsed ?? fallback).toISOString(),
-    type: event.type ?? FALLBACK_TYPES[index % FALLBACK_TYPES.length],
+    type: normalizeEventType(event.type),
     image:
       event.image && event.image.trim() !== '' && !event.image.includes('example.com')
         ? event.image
