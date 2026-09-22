@@ -31,19 +31,42 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
   </div>
 
   <div class="relative z-10 mx-auto max-w-5xl px-4 py-16 sm:py-20">
-    <div class="flex items-center justify-between mb-6">
-      <button type="button" class="text-2xl px-3 py-1 hover:text-elx-yellow" data-cal-prev aria-label="Previous month">‹</button>
-      <h1 class="text-2xl sm:text-4xl font-bold capitalize" data-cal-title></h1>
-      <button type="button" class="text-2xl px-3 py-1 hover:text-elx-yellow" data-cal-next aria-label="Next month">›</button>
-    </div>
+    <h1 class="mb-6 text-center text-2xl sm:text-4xl font-bold capitalize" data-cal-title></h1>
+
     <div class="hidden">
       <span class="bg-elx-blue text-white font-bold"></span>
       <span class="bg-elx-red text-white font-bold"></span>
       <span class="bg-elx-yellow text-elx-dark font-bold"></span>
       <span class="ring-2 ring-white ring-offset-2 ring-offset-elx-dark cursor-pointer"></span>
     </div>
-    <div class="grid grid-cols-7 gap-1 sm:gap-2 text-center text-xs sm:text-sm uppercase tracking-wide text-white/70 mb-2" data-cal-weekdays></div>
-    <div class="activities-cal-grid grid grid-cols-7 gap-1 sm:gap-2 p-1 sm:p-2" data-cal-grid></div>
+
+    <div class="activities-cal-shell">
+      <button
+        type="button"
+        class="activities-cal-nav"
+        data-cal-prev
+        aria-label={t(locale, 'activitats.cal.prevMonth')}
+      >
+        <span class="activities-cal-nav-icon" aria-hidden="true">‹</span>
+      </button>
+
+      <div class="activities-cal-body" data-cal-swipe>
+        <div
+          class="grid grid-cols-7 gap-1 sm:gap-2 text-center text-xs sm:text-sm uppercase tracking-wide text-white/70 mb-2"
+          data-cal-weekdays
+        ></div>
+        <div class="activities-cal-grid grid grid-cols-7 gap-1 sm:gap-2 p-1 sm:p-2" data-cal-grid></div>
+      </div>
+
+      <button
+        type="button"
+        class="activities-cal-nav"
+        data-cal-next
+        aria-label={t(locale, 'activitats.cal.nextMonth')}
+      >
+        <span class="activities-cal-nav-icon" aria-hidden="true">›</span>
+      </button>
+    </div>
   </div>
 </section>
 
@@ -69,12 +92,16 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
     const titleEl = root.querySelector('[data-cal-title]')!;
     const gridEl = root.querySelector('[data-cal-grid]')!;
     const weekEl = root.querySelector('[data-cal-weekdays]')!;
+    const swipeEl = root.querySelector('[data-cal-swipe]')!;
     let cursor = new Date();
     cursor.setDate(1);
     let allEvents: EventLite[] = [];
     let filter = 'all';
     let selectedDateKey: string | null = null;
     let lastNotifiedMonth: { year: number; month: number } | null = null;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let trackingSwipe = false;
 
     weekEl.innerHTML = weekdays.map((d) => `<div>${d}</div>`).join('');
 
@@ -107,6 +134,12 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
           detail: { year, month },
         }),
       );
+    };
+
+    const changeMonth = (delta: number) => {
+      cursor.setMonth(cursor.getMonth() + delta);
+      selectedDateKey = null;
+      render();
     };
 
     const render = () => {
@@ -169,16 +202,41 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
       selectDay(cell.dataset.calDay);
     });
 
-    root.querySelector('[data-cal-prev]')?.addEventListener('click', () => {
-      cursor.setMonth(cursor.getMonth() - 1);
-      selectedDateKey = null;
-      render();
-    });
-    root.querySelector('[data-cal-next]')?.addEventListener('click', () => {
-      cursor.setMonth(cursor.getMonth() + 1);
-      selectedDateKey = null;
-      render();
-    });
+    root.querySelector('[data-cal-prev]')?.addEventListener('click', () => changeMonth(-1));
+    root.querySelector('[data-cal-next]')?.addEventListener('click', () => changeMonth(1));
+
+    swipeEl.addEventListener(
+      'touchstart',
+      (event) => {
+        if (event.touches.length !== 1) return;
+        touchStartX = event.touches[0].clientX;
+        touchStartY = event.touches[0].clientY;
+        trackingSwipe = true;
+      },
+      { passive: true },
+    );
+
+    swipeEl.addEventListener(
+      'touchend',
+      (event) => {
+        if (!trackingSwipe) return;
+        trackingSwipe = false;
+        const touch = event.changedTouches[0];
+        const deltaX = touch.clientX - touchStartX;
+        const deltaY = touch.clientY - touchStartY;
+        if (Math.abs(deltaX) < 48 || Math.abs(deltaX) < Math.abs(deltaY)) return;
+        changeMonth(deltaX < 0 ? 1 : -1);
+      },
+      { passive: true },
+    );
+
+    swipeEl.addEventListener(
+      'touchcancel',
+      () => {
+        trackingSwipe = false;
+      },
+      { passive: true },
+    );
 
     window.addEventListener('activities:filter-changed', ((e: CustomEvent<{ filter: string }>) => {
       const nextFilter = e.detail.filter || 'all';

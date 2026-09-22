@@ -137,6 +137,55 @@ img {
   line-height: 1.25;
 }
 
+.activities-cal-shell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .activities-cal-shell {
+    gap: 1rem;
+  }
+}
+
+.activities-cal-nav {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  min-width: 1.5rem;
+  height: 4rem;
+  min-height: 4rem;
+  padding: 0;
+  border: 2px solid rgb(255 255 255 / 35%);
+  background: rgb(255 255 255 / 8%);
+  color: #fff;
+  font-size: 3em;
+  line-height: 0;
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.activities-cal-nav-icon {
+  display: block;
+  transform: translateY(-0.04em);
+}
+
+
+.activities-cal-nav:hover,
+.activities-cal-nav:focus-visible {
+  border-color: var(--color-elx-yellow);
+  color: var(--color-elx-yellow);
+  background: rgb(255 255 255 / 12%);
+}
+
+.activities-cal-body {
+  flex: 1;
+  min-width: 0;
+  touch-action: pan-y;
+}
+
 .activities-cal-grid {
   overflow: visible;
 }
