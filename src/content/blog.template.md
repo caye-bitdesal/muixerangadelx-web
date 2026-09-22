@@ -39,8 +39,13 @@ content:
       text: |
         Segon paràgraf després de les imatges.
 
-    - type: images
-      images: []
+    - type: embed
+      platform: youtube
+      url: https://www.youtube.com/watch?v=XXXXXXXXXXX
+
+    - type: embed
+      platform: instagram
+      url: https://www.instagram.com/p/XXXXXXXXXXX/
 
   es:
     - type: text
@@ -56,8 +61,13 @@ content:
       text: |
         Segundo párrafo después de las imágenes.
 
-    - type: images
-      images: []
+    - type: embed
+      platform: youtube
+      url: https://www.youtube.com/watch?v=XXXXXXXXXXX
+
+    - type: embed
+      platform: instagram
+      url: https://www.instagram.com/p/XXXXXXXXXXX/
 
   en:
     - type: text
@@ -73,6 +83,11 @@ content:
       text: |
         Second paragraph after the images.
 
-    - type: images
-      images: []
+    - type: embed
+      platform: youtube
+      url: https://www.youtube.com/watch?v=XXXXXXXXXXX
+
+    - type: embed
+      platform: instagram
+      url: https://www.instagram.com/p/XXXXXXXXXXX/
 ---

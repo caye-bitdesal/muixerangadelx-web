@@ -1,11 +1,16 @@
 ---
 import type { BlogContentBlock } from '../lib/blog';
+import { instagramPermalink, youtubeEmbedUrl } from '../lib/blog-embeds';
 
 interface Props {
   blocks: BlogContentBlock[];
 }
 
 const { blocks } = Astro.props;
+
+const hasInstagramEmbed = blocks.some(
+  (block) => block.type === 'embed' && block.platform === 'instagram',
+);
 ---
 
 <div class="space-y-8">
@@ -31,7 +36,49 @@ const { blocks } = Astro.props;
         );
       }
 
+      if (block.type === 'embed') {
+        if (block.platform === 'youtube') {
+          const embedUrl = youtubeEmbedUrl(block.url);
+          if (!embedUrl) return null;
+
+          return (
+            <div class="aspect-video w-full overflow-hidden bg-neutral-100">
+              <iframe
+                src={embedUrl}
+                title="YouTube video"
+                class="h-full w-full border-0"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+              />
+            </div>
+          );
+        }
+
+        if (block.platform === 'instagram') {
+          const permalink = instagramPermalink(block.url);
+          if (!permalink) return null;
+
+          return (
+            <div class="flex justify-center">
+              <blockquote
+                class="instagram-media"
+                data-instgrm-permalink={permalink}
+                data-instgrm-version="14"
+                style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%;"
+              />
+            </div>
+          );
+        }
+      }
+
       return null;
     })
   }
 </div>
+
+{
+  hasInstagramEmbed && (
+    <script is:inline async src="https://www.instagram.com/embed.js"></script>
+  )
+}

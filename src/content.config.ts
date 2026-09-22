@@ -22,6 +22,11 @@ const contentBlock = z.discriminatedUnion('type', [
     type: z.literal('images'),
     images: z.array(z.string()).default([]),
   }),
+  z.object({
+    type: z.literal('embed'),
+    platform: z.enum(['instagram', 'youtube']),
+    url: z.string().url(),
+  }),
 ]);
 
 const localizedContent = z.object({
