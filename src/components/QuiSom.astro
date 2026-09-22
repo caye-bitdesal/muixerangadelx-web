@@ -1,6 +1,7 @@
 ---
 import { t, type Locale } from '../i18n/ui';
 import { localizedPath } from '../i18n/utils';
+import { HOME_VIDEO_URL } from '../lib/site';
 
 interface Props {
   locale: Locale;
@@ -24,6 +25,22 @@ const paragraphs = t(locale, 'home.quisom.body').split('\n\n');
         <a href={localizedPath(locale, '/contacte')} class="btn btn-primary m-t-30 m-b-0">
           {t(locale, 'home.quisom.cta')}
         </a>
+      </div>
+    </div>
+
+    <div class="mx-auto w-full max-w-6xl px-4 sm:px-6">
+      <div class="aspect-video overflow-hidden bg-neutral-900 shadow-xl">
+        <video
+          class="h-full w-full object-cover"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+          aria-label={t(locale, 'home.quisom.video')}
+        >
+          <source src={HOME_VIDEO_URL} type="video/mp4" />
+        </video>
       </div>
     </div>
   </div>

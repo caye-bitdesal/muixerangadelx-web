@@ -33,3 +33,6 @@ export const CONTACT_MAP_URL =
 export const CONTACT_EMAIL = 'contacte@muixerangadelx.com';
 export const MAP_EMBED_URL =
   'https://maps.google.com/maps?q=Carrer%20Sant%20Jordi%202%2C%20Elx&t=&z=16&ie=UTF8&iwloc=&output=embed';
+
+/** Vídeo de la portada (fitxer a public/videos/). */
+export const HOME_VIDEO_URL = '/videos/correllengua_2025.mp4';
