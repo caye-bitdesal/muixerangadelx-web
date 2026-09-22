@@ -71,9 +71,12 @@ export const ui = {
     'contacte.form.message': 'Missatge',
     'contacte.form.privacy': 'He llegit i accepte la Política de privacitat.',
     'contacte.form.submit': 'enviar',
-    'contacte.form.pending':
-      "El formulari està preparat. L'enviament per Cloud Function s'activarà pròximament.",
+    'contacte.form.sending': 'Enviant…',
+    'contacte.form.success':
+      'Missatge enviat correctament. Gràcies per contactar-nos!',
     'contacte.form.error': 'Revisa els camps obligatoris.',
+    'contacte.form.submitError':
+      "No s'ha pogut enviar el missatge. Torna-ho a provar més tard.",
     'footer.copyright': "© Muixeranga d'Elx 2026",
     'footer.legal': 'Avís legal',
     'footer.privacy': 'Política de privacitat',
@@ -162,9 +165,12 @@ export const ui = {
     'contacte.form.message': 'Mensaje',
     'contacte.form.privacy': 'He leído y acepto la Política de privacidad.',
     'contacte.form.submit': 'enviar',
-    'contacte.form.pending':
-      'El formulario está preparado. El envío por Cloud Function se activará próximamente.',
+    'contacte.form.sending': 'Enviando…',
+    'contacte.form.success':
+      'Mensaje enviado correctamente. ¡Gracias por contactarnos!',
     'contacte.form.error': 'Revisa los campos obligatorios.',
+    'contacte.form.submitError':
+      'No se pudo enviar el mensaje. Inténtalo de nuevo más tarde.',
     'footer.copyright': "© Muixeranga d'Elx 2026",
     'footer.legal': 'Aviso legal',
     'footer.privacy': 'Política de privacidad',
@@ -253,9 +259,12 @@ export const ui = {
     'contacte.form.message': 'Message',
     'contacte.form.privacy': 'I have read and accept the Privacy Policy.',
     'contacte.form.submit': 'send',
-    'contacte.form.pending':
-      'The form is ready. Cloud Function submission will be enabled soon.',
+    'contacte.form.sending': 'Sending…',
+    'contacte.form.success':
+      'Message sent successfully. Thank you for contacting us!',
     'contacte.form.error': 'Please check the required fields.',
+    'contacte.form.submitError':
+      'Could not send the message. Please try again later.',
     'footer.copyright': "© Muixeranga d'Elx 2026",
     'footer.legal': 'Legal notice',
     'footer.privacy': 'Privacy policy',

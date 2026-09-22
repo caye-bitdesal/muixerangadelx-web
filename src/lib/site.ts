@@ -24,7 +24,8 @@ export const socialLinks = [
 export const EVENTS_API =
   'https://europe-southwest1-tabala-4dece.cloudfunctions.net/listEvents';
 
-export const CONTACT_API_URL = import.meta.env.PUBLIC_CONTACT_API_URL ?? '';
+export const FORMSPREE_FORM_URL =
+  import.meta.env.PUBLIC_FORMSPREE_FORM_URL ?? 'https://formspree.io/f/xppwdkyv';
 
 export const CONTACT_ADDRESS = 'C/ Sant Jordi, 2, Elx';
 export const CONTACT_EMAIL = 'contacte@muixerangadelx.com';

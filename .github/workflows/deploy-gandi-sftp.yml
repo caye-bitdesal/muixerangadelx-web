@@ -30,8 +30,6 @@ jobs:
 
       - name: Build
         run: npm run build
-        env:
-          PUBLIC_CONTACT_API_URL: ${{ secrets.PUBLIC_CONTACT_API_URL }}
 
       - name: Deploy dist/ via SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.6

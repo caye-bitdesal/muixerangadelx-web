@@ -19,7 +19,7 @@ npm run dev
 
 Copia `.env.example` a `.env`:
 
-- `PUBLIC_CONTACT_API_URL` — URL de la Cloud Function de contacto (opcional; sin ella el formulario valida pero no envía).
+- `PUBLIC_FORMSPREE_FORM_URL` — URL del formulario Formspree (opcional; por defecto `https://formspree.io/f/xppwdkyv`).
 
 ## Despliegue (Gandi)
 
@@ -38,7 +38,7 @@ Configura estos secretos en **Settings → Secrets and variables → Actions** d
 | `SFTP_USERNAME` | Usuario SFTP |
 | `SFTP_PASSWORD` | Contraseña SFTP |
 | `SFTP_REMOTE_PATH` | Ruta remota donde servir el sitio (p. ej. `/lamp0/web/vhosts/www.muixerangadelx.com/htdocs/`) |
-| `PUBLIC_CONTACT_API_URL` | *(opcional)* URL de la Cloud Function de contacto para producción |
+| `PUBLIC_FORMSPREE_FORM_URL` | *(opcional)* URL del formulario Formspree si difiere del valor por defecto |
 
 ## Contenido
 

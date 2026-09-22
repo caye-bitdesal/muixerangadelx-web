@@ -1,7 +1,7 @@
 ---
 import { t, type Locale } from '../i18n/ui';
 import SocialLinks from './SocialLinks.astro';
-import { CONTACT_ADDRESS, CONTACT_EMAIL, CONTACT_API_URL, MAP_EMBED_URL } from '../lib/site';
+import { CONTACT_ADDRESS, CONTACT_EMAIL, FORMSPREE_FORM_URL, MAP_EMBED_URL } from '../lib/site';
 import { localizedPath } from '../i18n/utils';
 
 interface Props {
@@ -39,7 +39,13 @@ const { locale } = Astro.props;
       </button>
     </div>
 
-    <form class="space-y-4" data-contact-form novalidate>
+    <form
+      action={FORMSPREE_FORM_URL}
+      method="POST"
+      class="space-y-4"
+      data-contact-form
+      novalidate
+    >
       <div>
         <label class="block text-sm font-medium mb-1" for="name">{t(locale, 'contacte.form.name')}*</label>
         <input id="name" name="name" required class="w-full border border-black/20 bg-neutral-100 px-3 py-2" />
@@ -70,11 +76,11 @@ const { locale } = Astro.props;
         </span>
       </label>
       <div class="flex justify-end">
-        <button type="submit" class="bg-elx-dark text-white px-6 py-3 font-semibold uppercase tracking-wide hover:bg-elx-red transition-colors">
+        <button type="submit" class="bg-elx-dark text-white px-6 py-3 font-semibold uppercase tracking-wide hover:bg-elx-red transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
           {t(locale, 'contacte.form.submit')}
         </button>
       </div>
-      <p class="text-sm text-elx-muted hidden" data-form-status></p>
+      <p class="text-sm text-elx-muted hidden" data-form-status role="status" aria-live="polite"></p>
     </form>
   </div>
 </section>
@@ -90,9 +96,11 @@ const { locale } = Astro.props;
 </section>
 
 <script define:vars={{
-  pendingMsg: t(locale, 'contacte.form.pending'),
-  errorMsg: t(locale, 'contacte.form.error'),
-  apiUrl: CONTACT_API_URL,
+  validationErrorMsg: t(locale, 'contacte.form.error'),
+  sendingMsg: t(locale, 'contacte.form.sending'),
+  successMsg: t(locale, 'contacte.form.success'),
+  submitErrorMsg: t(locale, 'contacte.form.submitError'),
+  formspreeUrl: FORMSPREE_FORM_URL,
 }}>
   const toggle = document.querySelector('[data-map-toggle]');
   const panel = document.querySelector('[data-map-panel]');
@@ -103,35 +111,52 @@ const { locale } = Astro.props;
 
   const form = document.querySelector('[data-contact-form]');
   const status = document.querySelector('[data-form-status]');
+  const submitBtn = form?.querySelector('[type="submit"]');
+
+  const setStatus = (message, type = 'neutral') => {
+    if (!(status instanceof HTMLElement)) return;
+    status.textContent = message;
+    status.classList.remove('hidden', 'text-green-700', 'text-red-700', 'text-elx-muted');
+    if (type === 'success') status.classList.add('text-green-700');
+    else if (type === 'error') status.classList.add('text-red-700');
+    else status.classList.add('text-elx-muted');
+  };
+
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!(form instanceof HTMLFormElement)) return;
     if (!form.checkValidity()) {
-      status.textContent = errorMsg;
-      status.classList.remove('hidden');
+      setStatus(validationErrorMsg, 'error');
       form.reportValidity();
       return;
     }
 
-    const data = Object.fromEntries(new FormData(form).entries());
-    if (!apiUrl) {
-      status.textContent = pendingMsg;
-      status.classList.remove('hidden');
-      return;
-    }
+    submitBtn?.setAttribute('disabled', 'true');
+    setStatus(sendingMsg);
+
+    const formData = new FormData(form);
+    formData.delete('privacy');
 
     try {
-      const res = await fetch(apiUrl, {
+      const res = await fetch(formspreeUrl, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: formData,
+        headers: { Accept: 'application/json' },
       });
-      status.textContent = res.ok ? pendingMsg : errorMsg;
-      status.classList.remove('hidden');
-      if (res.ok) form.reset();
+
+      if (res.ok) {
+        setStatus(successMsg, 'success');
+        form.reset();
+      } else {
+        const data = await res.json().catch(() => null);
+        const message =
+          data?.errors?.map((error) => error.message).join(', ') || submitErrorMsg;
+        setStatus(message, 'error');
+      }
     } catch {
-      status.textContent = errorMsg;
-      status.classList.remove('hidden');
+      setStatus(submitErrorMsg, 'error');
+    } finally {
+      submitBtn?.removeAttribute('disabled');
     }
   });
 </script>
