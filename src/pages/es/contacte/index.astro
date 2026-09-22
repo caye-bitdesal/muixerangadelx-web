@@ -3,11 +3,17 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHero from '../../../components/PageHero.astro';
 import ContactSection from '../../../components/ContactSection.astro';
 import { t } from '../../../i18n/ui';
+import { MAP_EMBED_URL } from '../../../lib/site';
 
 const locale = 'es' as const;
 ---
 
 <BaseLayout locale={locale} overlayNav title={`${t(locale, 'contacte.title')} | Muixeranga d'Elx`}>
-  <PageHero title={t(locale, 'contacte.title')} subtitle={t(locale, 'contacte.subtitle')} />
+  <PageHero
+    title={t(locale, 'contacte.title')}
+    subtitle={t(locale, 'contacte.subtitle')}
+    mapEmbedUrl={MAP_EMBED_URL}
+    mapTitle={t(locale, 'contacte.map')}
+  />
   <ContactSection locale={locale} />
 </BaseLayout>
