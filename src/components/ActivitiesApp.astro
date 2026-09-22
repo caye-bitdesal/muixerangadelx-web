@@ -1,6 +1,5 @@
 ---
 import { t, type Locale } from '../i18n/ui';
-import { EVENTS_API } from '../lib/site';
 import { localizedPath } from '../i18n/utils';
 
 interface Props {
@@ -23,7 +22,6 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
 <section
   class="bg-white py-10 px-4 sm:px-6"
   data-activities-app
-  data-api={EVENTS_API}
   data-detail-base={detailBase}
   data-locale={localeTag}
   data-empty={t(locale, 'activitats.empty')}
@@ -50,12 +48,11 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
     </div>
 
     <div
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-1 overflow-visible"
       data-activities-grid
     ></div>
     <p class="text-center text-elx-muted py-8 hidden" data-activities-empty></p>
     <p class="text-center text-elx-muted py-6" data-activities-status></p>
-    <div data-activities-sentinel class="h-8"></div>
   </div>
 </section>
 
@@ -63,6 +60,8 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
   import {
     compareEventDates,
     eventDateKey,
+    eventInMonth,
+    listAllEvents,
     normalizeEventType,
     parseEventDate,
     type EventDateInput,
@@ -80,7 +79,6 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
   const root = document.querySelector('[data-activities-app]') as HTMLElement | null;
   if (!root) throw new Error('activities root missing');
 
-  const api = root.dataset.api!;
   const detailBase = root.dataset.detailBase!;
   const localeTag = root.dataset.locale!;
   const emptyMsg = root.dataset.empty!;
@@ -88,30 +86,14 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
   const grid = root.querySelector('[data-activities-grid]')!;
   const emptyEl = root.querySelector('[data-activities-empty]') as HTMLElement;
   const statusEl = root.querySelector('[data-activities-status]') as HTMLElement;
-  const sentinel = root.querySelector('[data-activities-sentinel]')!;
 
+  const now = new Date();
   let allEvents: Ev[] = [];
-  let lastId: string | null = null;
   let filter = 'all';
-  let loading = false;
-  let exhausted = false;
+  let visibleYear = now.getFullYear();
+  let visibleMonth = now.getMonth();
   let selectedDateKey: string | null = null;
-
-  const withDefaults = (event: Ev, index: number): Ev => {
-    const parsed = parseEventDate(event.date);
-    const base = new Date();
-    base.setDate(base.getDate() + index * 3);
-    const image =
-      event.image && event.image.trim() !== '' && !event.image.includes('example.com')
-        ? event.image
-        : null;
-    return {
-      ...event,
-      date: (parsed ?? base).toISOString(),
-      type: normalizeEventType(event.type),
-      image,
-    };
-  };
+  let ready = false;
 
   const formatDate = (dateInput?: EventDateInput) => {
     const d = parseEventDate(dateInput);
@@ -124,7 +106,10 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
   };
 
   const filtered = () => {
-    const items = filter === 'all' ? allEvents : allEvents.filter((e) => e.type === filter);
+    const items = allEvents.filter((event) => {
+      if (!eventInMonth(event.date, visibleYear, visibleMonth)) return false;
+      return filter === 'all' || event.type === filter;
+    });
     return [...items].sort((a, b) => compareEventDates(a.date, b.date));
   };
 
@@ -168,44 +153,13 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
   };
 
   const render = () => {
+    if (!ready) return;
     const items = filtered();
     grid.innerHTML = items.map(cardHtml).join('');
     fitCardImages();
     emptyEl.classList.toggle('hidden', items.length > 0);
     emptyEl.textContent = emptyMsg;
     applySelection();
-    notifyFilter();
-  };
-
-  const loadMore = async () => {
-    if (loading || exhausted) return;
-    loading = true;
-    statusEl.textContent = loadingMsg;
-    try {
-      const url = new URL(api);
-      url.searchParams.set('limit', '12');
-      if (lastId) url.searchParams.set('lastId', lastId);
-      const res = await fetch(url.toString());
-      const data = await res.json();
-      const batch = (data.events || []).map((e: Ev, i: number) =>
-        withDefaults(e, allEvents.length + i),
-      );
-      if (!batch.length) {
-        exhausted = true;
-      } else {
-        allEvents = [...allEvents, ...batch];
-        lastId = data.lastId ?? batch[batch.length - 1]?.id ?? null;
-        // If API returns same set without pagination support, stop after first page growth stalls
-        if (batch.length < 12) exhausted = true;
-      }
-      render();
-    } catch {
-      exhausted = true;
-      render();
-    } finally {
-      loading = false;
-      statusEl.textContent = '';
-    }
   };
 
   root.querySelectorAll('[data-filter]').forEach((btn) => {
@@ -220,31 +174,42 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
         b.classList.toggle('text-elx-dark', !active);
       });
       render();
+      notifyFilter();
     });
   });
 
-  const io = new IntersectionObserver((entries) => {
-    if (entries.some((e) => e.isIntersecting)) loadMore();
-  });
-  io.observe(sentinel);
+  window.addEventListener('activities:month-changed', ((event: CustomEvent<{ year: number; month: number }>) => {
+    visibleYear = event.detail.year;
+    visibleMonth = event.detail.month;
+    selectedDateKey = null;
+    render();
+  }) as EventListener);
 
-  loadMore();
+  window.addEventListener('activities:day-selected', ((event: CustomEvent<{ dateKey: string }>) => {
+    selectedDateKey = event.detail.dateKey || null;
+    applySelection(true);
+  }) as EventListener);
 
   window.addEventListener('resize', fitCardImages, { passive: true });
 
-  window.addEventListener('activities:day-selected', (async (event: CustomEvent<{ dateKey: string }>) => {
-    selectedDateKey = event.detail.dateKey || null;
-    let cards = applySelection(true);
-    while (
-      selectedDateKey &&
-      !cards.length &&
-      !exhausted &&
-      !allEvents.some((item) => eventDateKey(item.date) === selectedDateKey)
-    ) {
-      const before = allEvents.length;
-      await loadMore();
-      if (allEvents.length === before) break;
-      cards = applySelection(true);
-    }
-  }) as EventListener);
+  statusEl.textContent = loadingMsg;
+  listAllEvents()
+    .then((events) => {
+      allEvents = events.map((event) => ({
+        id: event.id,
+        name: event.name,
+        image: event.image,
+        date: event.date,
+        type: normalizeEventType(event.type),
+      }));
+      ready = true;
+      render();
+    })
+    .catch(() => {
+      ready = true;
+      render();
+    })
+    .finally(() => {
+      statusEl.textContent = '';
+    });
 </script>

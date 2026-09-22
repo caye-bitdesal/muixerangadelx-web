@@ -1,6 +1,7 @@
 ---
 import {
   eventImage,
+  eventMapEmbedUrl,
   eventMapLink,
   formatEventDateTime,
   type MuixerangaEvent,
@@ -17,10 +18,8 @@ const { locale, event } = Astro.props;
 
 const gallery = (event.gallery ?? []).filter((url) => url && url.trim() !== '');
 const figures = (event.figures ?? []).filter((name) => name && name.trim() !== '');
-const hasLocation =
-  event.location &&
-  typeof event.location.latitude === 'number' &&
-  typeof event.location.longitude === 'number';
+const address = event.address?.trim() ?? '';
+const hasAddress = address.length > 0;
 ---
 
 <article class="bg-white">
@@ -74,7 +73,7 @@ const hasLocation =
           }
 
           {
-            hasLocation && event.location && (
+            hasAddress && (
               <div>
                 <h2 class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-elx-muted">
                   <svg viewBox="0 0 24 24" class="h-4 w-4 shrink-0 text-elx-red" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -83,16 +82,22 @@ const hasLocation =
                   </svg>
                   {t(locale, 'activitats.detail.location')}
                 </h2>
-                <p class="mt-2 text-sm text-elx-dark">
-                  {event.location.latitude.toFixed(5)}, {event.location.longitude.toFixed(5)}
-                </p>
+                <p class="mt-2 text-base font-medium text-elx-dark">{address}</p>
                 <a
-                  href={eventMapLink(event.location)}
+                  href={eventMapLink(address)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="mt-2 inline-block text-sm font-semibold text-elx-red hover:underline"
+                  class="mt-3 block overflow-hidden border border-black/10 bg-neutral-100 h-44 cursor-pointer"
+                  aria-label={t(locale, 'activitats.detail.openMap')}
                 >
-                  {t(locale, 'activitats.detail.viewMap')}
+                  <iframe
+                    title={address}
+                    src={eventMapEmbedUrl(address)}
+                    class="h-full w-full border-0 pointer-events-none select-none"
+                    loading="lazy"
+                    tabindex="-1"
+                    referrerpolicy="no-referrer-when-downgrade"
+                  />
                 </a>
               </div>
             )

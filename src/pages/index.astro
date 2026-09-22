@@ -5,11 +5,11 @@ import QuiSom from '../components/QuiSom.astro';
 import HomeActivities from '../components/HomeActivities.astro';
 import HomeBlog from '../components/HomeBlog.astro';
 import { getLocaleFromUrl } from '../i18n/utils';
-import { listEvents } from '../lib/events';
+import { listUpcomingEvents } from '../lib/events';
 import { getBlogPosts } from '../lib/blog';
 
 const locale = getLocaleFromUrl(Astro.url);
-const { events } = await listEvents({ limit: 12 });
+const events = await listUpcomingEvents(3);
 const posts = await getBlogPosts(locale);
 ---
 

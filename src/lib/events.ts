@@ -26,6 +26,17 @@ export function resolveCalendarDayType(types: Array<EventType | undefined>): Eve
   return CALENDAR_DAY_PRIORITY.find((type) => present.has(type)) ?? null;
 }
 
+export function resolveCalendarDayTypes(types: Array<EventType | undefined>): EventType[] {
+  const present = new Set(types.filter((type): type is EventType => Boolean(type)));
+  return CALENDAR_DAY_PRIORITY.filter((type) => present.has(type));
+}
+
+export function shouldSplitCalendarDay(types: Array<EventType | undefined>): boolean {
+  const normalized = types.filter((type): type is EventType => Boolean(type));
+  if (normalized.length < 2) return false;
+  return resolveCalendarDayTypes(normalized).length >= 2;
+}
+
 export type FirestoreTimestamp = {
   seconds?: number;
   _seconds?: number;
@@ -41,6 +52,7 @@ export type MuixerangaEvent = {
   description?: string;
   image?: string | null;
   gallery?: string[];
+  address?: string;
   location?: { latitude: number; longitude: number };
   figures?: string[];
   date?: EventDateInput;
@@ -90,6 +102,12 @@ export function eventDateKey(input: EventDateInput): string | null {
   return `${year}-${month}-${day}`;
 }
 
+export function eventInMonth(input: EventDateInput, year: number, month: number): boolean {
+  const date = parseEventDate(input);
+  if (!date) return false;
+  return date.getFullYear() === year && date.getMonth() === month;
+}
+
 export function compareEventDates(a: EventDateInput, b: EventDateInput): number {
   const dateA = parseEventDate(a);
   const dateB = parseEventDate(b);
@@ -97,6 +115,24 @@ export function compareEventDates(a: EventDateInput, b: EventDateInput): number 
   if (!dateA) return 1;
   if (!dateB) return -1;
   return dateB.getTime() - dateA.getTime();
+}
+
+export function compareEventDatesAsc(a: EventDateInput, b: EventDateInput): number {
+  return -compareEventDates(a, b);
+}
+
+export function isUpcomingEvent(dateInput: EventDateInput, now = new Date()): boolean {
+  const date = parseEventDate(dateInput);
+  if (!date) return false;
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return date >= startOfToday;
+}
+
+export function getUpcomingEvents(events: MuixerangaEvent[], limit = 3): MuixerangaEvent[] {
+  return events
+    .filter((event) => isUpcomingEvent(event.date))
+    .sort((a, b) => compareEventDatesAsc(a.date, b.date))
+    .slice(0, limit);
 }
 
 function withDefaults(event: MuixerangaEvent, index: number): MuixerangaEvent {
@@ -143,7 +179,11 @@ export async function listAllEvents(): Promise<MuixerangaEvent[]> {
     const page = await listEvents({ lastId, limit: 50 });
     if (!page.events.length) break;
 
-    events.push(...page.events);
+    const existingIds = new Set(events.map((event) => event.id));
+    const newEvents = page.events.filter((event) => !existingIds.has(event.id));
+    if (!newEvents.length) break;
+
+    events.push(...newEvents);
     const nextLastId = page.lastId ?? page.events[page.events.length - 1]?.id ?? null;
     if (!nextLastId || nextLastId === lastId || page.events.length < 50) {
       exhausted = true;
@@ -153,6 +193,11 @@ export async function listAllEvents(): Promise<MuixerangaEvent[]> {
   }
 
   return events.sort((a, b) => compareEventDates(a.date, b.date));
+}
+
+export async function listUpcomingEvents(limit = 3): Promise<MuixerangaEvent[]> {
+  const events = await listAllEvents();
+  return getUpcomingEvents(events, limit);
 }
 
 export function eventImage(event: MuixerangaEvent): string {
@@ -181,8 +226,14 @@ export function formatEventDateTime(dateInput: EventDateInput, locale: string): 
   }).format(date);
 }
 
-export function eventMapLink(location: { latitude: number; longitude: number }): string {
-  return `https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`;
+export function eventMapEmbedUrl(address: string): string {
+  const query = encodeURIComponent(address.trim());
+  return `https://maps.google.com/maps?q=${query}&z=15&ie=UTF8&iwloc=&output=embed`;
+}
+
+export function eventMapLink(address: string): string {
+  const query = encodeURIComponent(address.trim());
+  return `https://www.google.com/maps/search/?api=1&query=${query}`;
 }
 
 export async function getEventById(id: string): Promise<MuixerangaEvent | null> {

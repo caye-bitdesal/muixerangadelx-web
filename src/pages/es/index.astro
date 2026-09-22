@@ -4,11 +4,11 @@ import Carousel from '../../components/Carousel.astro';
 import QuiSom from '../../components/QuiSom.astro';
 import HomeActivities from '../../components/HomeActivities.astro';
 import HomeBlog from '../../components/HomeBlog.astro';
-import { listEvents } from '../../lib/events';
+import { listUpcomingEvents } from '../../lib/events';
 import { getBlogPosts } from '../../lib/blog';
 
 const locale = 'es' as const;
-const { events } = await listEvents({ limit: 12 });
+const events = await listUpcomingEvents(3);
 const posts = await getBlogPosts(locale);
 ---
 

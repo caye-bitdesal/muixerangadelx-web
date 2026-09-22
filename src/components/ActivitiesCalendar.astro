@@ -17,16 +17,18 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
 ---
 
 <section
-  class="relative bg-elx-dark text-white overflow-hidden"
+  class="relative bg-elx-dark text-white"
   data-activities-calendar
   data-api={EVENTS_API}
   data-months={JSON.stringify(monthNames)}
   data-weekdays={JSON.stringify(weekdays)}
 >
-  <div class="absolute inset-0 opacity-30">
-    <img src="/images/carousel/1.png" alt="" class="h-full w-full object-cover" />
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute inset-0 opacity-30">
+      <img src="/images/carousel/hero1.jpg" alt="" class="h-full w-full object-cover" />
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-b from-elx-dark/70 to-elx-dark/90"></div>
   </div>
-  <div class="absolute inset-0 bg-gradient-to-b from-elx-dark/70 to-elx-dark/90"></div>
 
   <div class="relative z-10 mx-auto max-w-5xl px-4 py-16 sm:py-20">
     <div class="flex items-center justify-between mb-6">
@@ -41,7 +43,7 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
       <span class="ring-2 ring-white ring-offset-2 ring-offset-elx-dark cursor-pointer"></span>
     </div>
     <div class="grid grid-cols-7 gap-1 sm:gap-2 text-center text-xs sm:text-sm uppercase tracking-wide text-white/70 mb-2" data-cal-weekdays></div>
-    <div class="grid grid-cols-7 gap-1 sm:gap-2" data-cal-grid></div>
+    <div class="activities-cal-grid grid grid-cols-7 gap-1 sm:gap-2 p-1 sm:p-2" data-cal-grid></div>
   </div>
 </section>
 
@@ -52,6 +54,8 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
     listAllEvents,
     normalizeEventType,
     resolveCalendarDayType,
+    resolveCalendarDayTypes,
+    shouldSplitCalendarDay,
     type EventDateInput,
     type EventType,
   } from '../lib/events';
@@ -70,6 +74,7 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
     let allEvents: EventLite[] = [];
     let filter = 'all';
     let selectedDateKey: string | null = null;
+    let lastNotifiedMonth: { year: number; month: number } | null = null;
 
     weekEl.innerHTML = weekdays.map((d) => `<div>${d}</div>`).join('');
 
@@ -92,6 +97,18 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
       return days;
     };
 
+    const notifyMonthChangeIfNeeded = () => {
+      const year = cursor.getFullYear();
+      const month = cursor.getMonth();
+      if (lastNotifiedMonth?.year === year && lastNotifiedMonth?.month === month) return;
+      lastNotifiedMonth = { year, month };
+      window.dispatchEvent(
+        new CustomEvent('activities:month-changed', {
+          detail: { year, month },
+        }),
+      );
+    };
+
     const render = () => {
       const days = typesByDay();
       const y = cursor.getFullYear();
@@ -99,23 +116,35 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
       titleEl.textContent = `${months[m]} ${y}`;
       const firstDow = (new Date(y, m, 1).getDay() + 6) % 7; // Monday-first
       const daysInMonth = new Date(y, m + 1, 0).getDate();
+      const today = new Date();
+      const todayKey = key(today.getFullYear(), today.getMonth(), today.getDate());
       const cells: string[] = [];
       for (let i = 0; i < firstDow; i++) cells.push('<div></div>');
       for (let d = 1; d <= daysInMonth; d++) {
         const dateKey = key(y, m, d);
-        const dayType = resolveCalendarDayType(days.get(dateKey) ?? []);
+        const dayEventTypes = days.get(dateKey) ?? [];
+        const dayTypes = resolveCalendarDayTypes(dayEventTypes);
+        const dayType = resolveCalendarDayType(dayEventTypes);
+        const isSplit = shouldSplitCalendarDay(dayEventTypes);
         const selected = selectedDateKey === dateKey;
-        cells.push(
-          `<div class="aspect-square flex items-center justify-center text-sm sm:text-base border ${
-            selected ? 'border-white ring-2 ring-white ring-offset-2 ring-offset-elx-dark' : 'border-white/10'
-          } ${dayType ? `${eventCalendarDayClass(dayType)} cursor-pointer` : 'bg-white/5'}"${
-            dayType
-              ? ` data-cal-day="${dateKey}" role="button" tabindex="0"`
-              : ''
-          }>${d}</div>`,
-        );
+        const isToday = dateKey === todayKey;
+        const dayClasses = [
+          'activities-cal-day aspect-square flex items-center justify-center text-sm sm:text-base border border-white/10',
+          dayType ? 'activities-cal-day--event' : 'bg-white/5',
+          isSplit ? 'activities-cal-day--split' : dayType ? eventCalendarDayClass(dayType) : '',
+          isToday ? 'activities-cal-day--today' : '',
+          selected ? 'activities-cal-day--selected border-white ring-2 ring-white ring-offset-2 ring-offset-elx-dark' : '',
+        ]
+          .filter(Boolean)
+          .join(' ');
+        const dayAttrs = dayType ? ` data-cal-day="${dateKey}" role="button" tabindex="0"` : '';
+        const dayContent = isSplit
+          ? `<span class="activities-cal-day__part activities-cal-day__part--left activities-cal-day__part--${dayTypes[0]}" aria-hidden="true"></span><span class="activities-cal-day__part activities-cal-day__part--right activities-cal-day__part--${dayTypes[1]}" aria-hidden="true"></span><span class="activities-cal-day__number">${d}</span>`
+          : `${d}`;
+        cells.push(`<div class="${dayClasses}"${dayAttrs}>${dayContent}</div>`);
       }
       gridEl.innerHTML = cells.join('');
+      notifyMonthChangeIfNeeded();
     };
 
     const selectDay = (dateKey: string) => {
@@ -142,15 +171,19 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
 
     root.querySelector('[data-cal-prev]')?.addEventListener('click', () => {
       cursor.setMonth(cursor.getMonth() - 1);
+      selectedDateKey = null;
       render();
     });
     root.querySelector('[data-cal-next]')?.addEventListener('click', () => {
       cursor.setMonth(cursor.getMonth() + 1);
+      selectedDateKey = null;
       render();
     });
 
     window.addEventListener('activities:filter-changed', ((e: CustomEvent<{ filter: string }>) => {
-      filter = e.detail.filter || 'all';
+      const nextFilter = e.detail.filter || 'all';
+      if (nextFilter === filter) return;
+      filter = nextFilter;
       render();
     }) as EventListener);
 
