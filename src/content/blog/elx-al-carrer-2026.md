@@ -24,7 +24,7 @@ content:
   va:
     - type: text
       text: |
-        Després d'un llarg estiu hem tornat a l'activitat de la Muixeranga d'Elx de la manera més gran possible. Amb una actuació a Elx al carrer a la porta mateixa del Palau de Altamira. Amb una vista inigualable ens hem trobat tots i totes. L'emoció ha sigut gran, ens anàvem comptant l'estiu mentre ens enfaixàvem o mentre estàvem formant una figura el que clar, ha generat algun problema de comunicació, però és que ens agrada parlar Som d'Elx!
+        Després d'un llarg estiu hem tornat a l'activitat de la Muixeranga d'Elx de la manera més gran possible. Amb una actuació a Elx al carrer a la porta mateixa del Palau de Altamira. Amb una vista inigualable ens hem trobat tots i totes. L'emoció ha sigut gran, ens anàvem comptant l'estiu mentre ens enfaixàvem o mentre estàvem formant una figura cosa que -és clar-, ha generat algun problema de comunicació, però és que ens agrada parlar Som d'Elx!
 
     - type: images
       images:
@@ -33,7 +33,7 @@ content:
 
     - type: text
       text: |
-        Aquesta vegada no era només una actuació, sinó també un taller, per la qual cosa animem als il·licitans i visitants a unir-se. Comencem per un trenet amb xiquets, on passaven de muscle en muscle, perquè aprengueren els fonaments de l'equilibri en la Muixeranga. Després d'això passem a fer pilars amb xiquets i adults de totes les grandàries i edats, la veritat és que va anar molt emocionant!
+        Aquesta vegada no era només una actuació, sinó també un taller, per la qual cosa animem els il·licitans i visitants a unir-se. Comencem per un trenet amb xiquets, on passaven de muscle en muscle, perquè aprengueren els fonaments de l'equilibri en la Muixeranga. Després d'això passem a fer pilars amb xiquets i adults de totes les grandàries i edats; la veritat és que va anar molt emocionant!
 
     - type: images
       images:
@@ -44,7 +44,7 @@ content:
 
     - type: text
       text: |
-        Així mateix, per primera vegada comptem amb una botiga de records de la Muixeranga d'Elx, de tal manera que la gent podia comprar samarretes, clauers i altres records. Per descomptat comptem amb els millors venedors del món!
+        Així mateix, per primera vegada comptem amb una botiga de records de la Muixeranga d'Elx, de tal manera que la gent podia comprar samarretes, clauers i uns altres records. Per descomptat comptem amb els millors venedors del món!
 
     - type: images
       images:
