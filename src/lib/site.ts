@@ -21,8 +21,17 @@ export const socialLinks = [
   },
 ] as const;
 
-export const EVENTS_API =
-  'https://europe-southwest1-tabala-4dece.cloudfunctions.net/listEvents';
+const EVENTS_FN_BASE =
+  'https://europe-southwest1-tabala-4dece.cloudfunctions.net';
+
+/** @deprecated Prefer {@link EVENTS_LIST_API_V1} for new code. */
+export const EVENTS_API = `${EVENTS_FN_BASE}/listEvents`;
+
+export const EVENTS_LIST_API_V1 = `${EVENTS_FN_BASE}/api/v1/events`;
+
+export function eventDetailApiUrl(id: string): string {
+  return `${EVENTS_FN_BASE}/api/v1/events/${encodeURIComponent(id)}`;
+}
 
 export const FORMSPREE_FORM_URL =
   import.meta.env.PUBLIC_FORMSPREE_FORM_URL ?? 'https://formspree.io/f/xppwdkyv';

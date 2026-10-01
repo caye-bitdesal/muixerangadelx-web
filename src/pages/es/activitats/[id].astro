@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import ActivityDetailView from '../../../components/ActivityDetailView.astro';
-import { getEventById, listAllEvents } from '../../../lib/events';
+import { listAllEvents } from '../../../lib/events';
 import { localizedPath } from '../../../i18n/utils';
+import { t } from '../../../i18n/ui';
 
 const locale = 'es' as const;
 
@@ -13,13 +14,12 @@ export async function getStaticPaths() {
 }
 
 const { id } = Astro.params;
-const event = id && id !== 'placeholder' ? await getEventById(id) : null;
 
-if (!event) {
+if (!id || id === 'placeholder') {
   return Astro.redirect(localizedPath(locale, '/activitats'));
 }
 ---
 
-<BaseLayout locale={locale} title={`${event.name} | Muixeranga d'Elx`}>
-  <ActivityDetailView locale={locale} event={event} />
+<BaseLayout locale={locale} title={`${t(locale, 'nav.activitats')} | Muixeranga d'Elx`}>
+  <ActivityDetailView locale={locale} eventId={id} />
 </BaseLayout>

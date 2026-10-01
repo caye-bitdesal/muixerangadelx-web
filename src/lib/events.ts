@@ -1,4 +1,4 @@
-import { EVENTS_API } from './site';
+import { EVENTS_API, eventDetailApiUrl } from './site';
 
 export const EVENT_TYPES = ['assaig', 'actuacio', 'altre'] as const;
 
@@ -236,9 +236,25 @@ export function eventMapLink(address: string): string {
   return `https://www.google.com/maps/search/?api=1&query=${query}`;
 }
 
+export async function fetchEventById(id: string): Promise<MuixerangaEvent | null> {
+  const trimmed = id.trim();
+  if (!trimmed) return null;
+
+  try {
+    const res = await fetch(eventDetailApiUrl(trimmed));
+    if (res.status === 404) return null;
+    if (!res.ok) throw new Error(`Event API ${res.status}`);
+    const data = (await res.json()) as MuixerangaEvent;
+    if (!data?.id) return null;
+    return withDefaults(data, 0);
+  } catch {
+    return null;
+  }
+}
+
+/** @deprecated Use {@link fetchEventById} — kept as alias for existing imports. */
 export async function getEventById(id: string): Promise<MuixerangaEvent | null> {
-  const events = await listAllEvents();
-  return events.find((event) => event.id === id) ?? null;
+  return fetchEventById(id);
 }
 
 export { EVENTS_API };
