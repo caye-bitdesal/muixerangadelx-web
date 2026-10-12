@@ -24,7 +24,7 @@ content:
   va:
     - type: text
       text: |
-        El cap de setmana del 2 al 4 d'octubre va tindre lloc el Concurs de Castells en el Tarraco Arena Plaza, el major espectacle de castells del món, amb colles de tots els costats, des de Xile fins a Vilafranca. Aquest concurs es divideix en 2 dies de competició. La Muixeranga d'Elx va anar a fer costat a Bordegassos de Vilanova, que la seua colla va tindre suport de molta gent i grups, inclosa la Conlloga de Castelló, fins a fer un total de 532 persones.
+        El cap de setmana del 2 al 4 d'octubre va tindre lloc el Concurs de Castells en el Tarraco Arena Plaza, el major espectacle de castells del món, amb colles de tot Catalunya. Aquest concurs es divideix en 2 dies de competició. La Muixeranga d'Elx va anar a fer costat a Bordegassos de Vilanova, que la seua colla va tindre suport de molta gent i grups, inclosa la Conlloga de Castelló, fins a fer un total de 532 persones.
 
     - type: images
       images:
@@ -45,7 +45,7 @@ content:
 
     - type: text
       text: |
-        Ja en el concurs Bordegassos va començar amb un 3de4 que va eixir sense problemes, nosaltres aprenent com és això de fer pinya amb tanta gent, però contents per com va eixir. La segona figura va ser un 2de8f: quan l'enxaneta va alçar la mà, quasi en el mateix moment, la torre va caure, un esglai tremend però tothom estava bé i el castell va comptar com carregat. El concurs va acabar amb un 4d8 que es va executar satisfactòriament.
+        Ja en el concurs Bordegassos va començar amb un 3de8 que va eixir sense problemes, nosaltres aprenent com és això de fer pinya amb tanta gent, però contents per com va eixir. La segona figura va ser un 2de8f: quan l'enxaneta va alçar la mà, quasi en el mateix moment, la torre va caure, un esglai tremend però tothom estava bé i el castell va comptar com carregat. El concurs va acabar amb un 4d8 que es va executar satisfactòriament.
 
         Per desgràcia no ens vam poder quedar més a conèixer més en profunditat Bordegassos i la Conlloga, ja que l'AEMET havia llançat una alerta meteorològica per pluja extrema i perill d'inundacions i vam haver de tornar corrent al càmping, donant temps, això sí, a donar una figura a un Bordegasso que el dimecres següent van entregar en el seu local.
 
@@ -61,7 +61,7 @@ content:
   es:
     - type: text
       text: |
-        El fin de semana del 2 al 4 de octubre tuvo lugar el Concurs de Castells en el Tarraco Arena Plaza, el mayor espectáculo de castells del mundo, con colles de todos los rincones, desde Chile hasta Vilafranca. Este concurso se divide en dos días de competición. La Muixeranga d'Elx fue a apoyar a Bordegassos de Vilanova, cuya colla contó con el apoyo de mucha gente y grupos, incluida la Conlloga de Castelló, hasta reunir un total de 532 personas.
+        El fin de semana del 2 al 4 de octubre tuvo lugar el Concurs de Castells en el Tarraco Arena Plaza, el mayor espectáculo de castells del mundo, con colles de toda Catalunya. Este concurso se divide en dos días de competición. La Muixeranga d'Elx fue a apoyar a Bordegassos de Vilanova, cuya colla contó con el apoyo de mucha gente y grupos, incluida la Conlloga de Castelló, hasta reunir un total de 532 personas.
 
     - type: images
       images:
@@ -82,7 +82,7 @@ content:
 
     - type: text
       text: |
-        Ya en el concurso Bordegassos empezó con un 3de4 que salió sin problemas; nosotros íbamos aprendiendo qué es hacer pinya con tanta gente, pero contentos por cómo salió. La segunda figura fue un 2de8f: cuando la enxaneta levantó la mano, casi al mismo momento, la torre cayó — un susto tremendo, pero todos estaban bien y el castell contó como cargado. El concurso terminó con un 4d8 que se ejecutó satisfactoriamente.
+        Ya en el concurso Bordegassos empezó con un 3de8 que salió sin problemas; nosotros íbamos aprendiendo qué es hacer pinya con tanta gente, pero contentos por cómo salió. La segunda figura fue un 2de8f: cuando la enxaneta levantó la mano, casi al mismo momento, la torre cayó — un susto tremendo, pero todos estaban bien y el castell contó como cargado. El concurso terminó con un 4d8 que se ejecutó satisfactoriamente.
 
         Por desgracia no pudimos quedarnos más para conocer en profundidad a Bordegassos y la Conlloga, ya que la AEMET había lanzado una alerta meteorológica por lluvia extrema y peligro de inundaciones y tuvimos que volver corriendo al camping, dando tiempo, eso sí, a regalar una figura a un Bordegasso que el miércoles siguiente entregaron en su local.
 
@@ -98,7 +98,7 @@ content:
   en:
     - type: text
       text: |
-        On the weekend of 2–4 October, the Concurs de Castells took place at Tarraco Arena Plaza, the world's greatest castells event, with colles from far and wide, from Chile to Vilafranca. The competition is spread over two days. Muixeranga d'Elx went to support Bordegassos de Vilanova, whose colla was backed by many people and groups, including Conlloga de Castelló, for a total of 532 people.
+        On the weekend of 2–4 October, the Concurs de Castells took place at Tarraco Arena Plaza, the world's greatest castells event, with colles from all over Catalonia. The competition is spread over two days. Muixeranga d'Elx went to support Bordegassos de Vilanova, whose colla was backed by many people and groups, including Conlloga de Castelló, for a total of 532 people.
 
     - type: images
       images:
@@ -119,7 +119,7 @@ content:
 
     - type: text
       text: |
-        At the competition Bordegassos opened with a 3de4 that went up without problems; we were learning what it means to form a pinya with so many people, but happy with how it went. The second figure was a 2de8f: when the enxaneta raised her hand, almost at the same moment the tower fell — a huge scare, but everyone was fine and the castell counted as completed. The competition ended with a 4d8 that was performed successfully.
+        At the competition Bordegassos opened with a 3de8 that went up without problems; we were learning what it means to form a pinya with so many people, but happy with how it went. The second figure was a 2de8f: when the enxaneta raised her hand, almost at the same moment the tower fell — a huge scare, but everyone was fine and the castell counted as completed. The competition ended with a 4d8 that was performed successfully.
 
         Unfortunately we could not stay longer to get to know Bordegassos and Conlloga better, as AEMET had issued a weather alert for extreme rain and flood risk and we had to rush back to the campsite — though we did have time to give a figure to a Bordegasso, which they presented at their local on the following Wednesday.
 
