@@ -47,7 +47,7 @@ content:
       text: |
         Ja en el concurs Bordegassos va començar amb un 3de8 que va eixir sense problemes, nosaltres aprenent com és això de fer pinya amb tanta gent, però contents per com va eixir. La segona figura va ser un 2de8f: quan l'enxaneta va alçar la mà, quasi en el mateix moment, la torre va caure, un esglai tremend però tothom estava bé i el castell va comptar com carregat. El concurs va acabar amb un 4d8 que es va executar satisfactòriament.
 
-        Per desgràcia no ens vam poder quedar més a conèixer més en profunditat Bordegassos i la Conlloga, ja que l'AEMET havia llançat una alerta meteorològica per pluja extrema i perill d'inundacions i vam haver de tornar corrent al càmping, donant temps, això sí, a donar una figura a un Bordegasso que el dimecres següent van entregar en el seu local.
+        Per desgràcia no ens vam poder quedar més a conèixer més en profunditat Bordegassos i la Conlloga, ja que l'AEMET havia llançat una alerta meteorològica per pluja extrema i perill d'inundacions i vam haver de tornar corrent al càmping, donant temps, això sí, a donar una figura a un bordegàs que el dimecres següent van entregar en el seu local.
 
         En definitiva, va ser un cap de setmana excepcional i una experiència que segur que no oblidarem. Moltes gràcies als quals ens van acollir, a tots els Bordegassos i especialment al meu cosí Julio, que va fer això possible. Farem més intercanvi amb ells, segur! Amb aquestes persones sí que es pot construir el que ens proposem!
 
@@ -84,7 +84,7 @@ content:
       text: |
         Ya en el concurso Bordegassos empezó con un 3de8 que salió sin problemas; nosotros íbamos aprendiendo qué es hacer pinya con tanta gente, pero contentos por cómo salió. La segunda figura fue un 2de8f: cuando la enxaneta levantó la mano, casi al mismo momento, la torre cayó — un susto tremendo, pero todos estaban bien y el castell contó como cargado. El concurso terminó con un 4d8 que se ejecutó satisfactoriamente.
 
-        Por desgracia no pudimos quedarnos más para conocer en profundidad a Bordegassos y la Conlloga, ya que la AEMET había lanzado una alerta meteorológica por lluvia extrema y peligro de inundaciones y tuvimos que volver corriendo al camping, dando tiempo, eso sí, a regalar una figura a un Bordegasso que el miércoles siguiente entregaron en su local.
+        Por desgracia no pudimos quedarnos más para conocer en profundidad a Bordegassos y la Conlloga, ya que la AEMET había lanzado una alerta meteorológica por lluvia extrema y peligro de inundaciones y tuvimos que volver corriendo al camping, dando tiempo, eso sí, a regalar una figura a un bordegàs que el miércoles siguiente entregaron en su local.
 
         En definitiva, fue un fin de semana excepcional y una experiencia que seguro que no olvidaremos. Muchas gracias a quienes nos acogieron, a todos los Bordegassos y especialmente a mi primo Julio, que hizo esto posible. ¡Seguro que haremos más intercambio con ellos! Con estas personas sí se puede construir lo que nos proponemos.
 
@@ -121,7 +121,7 @@ content:
       text: |
         At the competition Bordegassos opened with a 3de8 that went up without problems; we were learning what it means to form a pinya with so many people, but happy with how it went. The second figure was a 2de8f: when the enxaneta raised her hand, almost at the same moment the tower fell — a huge scare, but everyone was fine and the castell counted as completed. The competition ended with a 4d8 that was performed successfully.
 
-        Unfortunately we could not stay longer to get to know Bordegassos and Conlloga better, as AEMET had issued a weather alert for extreme rain and flood risk and we had to rush back to the campsite — though we did have time to give a figure to a Bordegasso, which they presented at their local on the following Wednesday.
+        Unfortunately we could not stay longer to get to know Bordegassos and Conlloga better, as AEMET had issued a weather alert for extreme rain and flood risk and we had to rush back to the campsite — though we did have time to give a figure to a bordegàs, which they presented at their local on the following Wednesday.
 
         All in all, it was an exceptional weekend and an experience we will surely not forget. Many thanks to those who welcomed us, to all the Bordegassos and especially to my cousin Julio, who made this possible. We will definitely do more exchanges with them! With people like these, we can build what we set out to do.
 
