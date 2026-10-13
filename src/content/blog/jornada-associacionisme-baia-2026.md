@@ -24,10 +24,6 @@ content:
   va:
     - type: text
       text: |
-        Tot just encetada la temporada d'esdeveniments de la nostra colla, el dissabte 26 de setembre ens tocava actuar a la Baia d'Elx, en la Jornada d'Associacionisme i Joventut de la Baia, organitzada per l'associació Baiajovens. Per a la Muixeranga d'Elx fou un matí ple de germanor i il·lusió, us el contem.
-
-    - type: text
-      text: |
         El matí es dibuixava assolellat i encoratjador. Veníem amb l'impuls i el bon gust de boca de l'assaig tan profitós del dia anterior, amb Bruno, i les ganes de fer colla es notaven en l'ambient. En el xat, els missatges habituals: "De camí", "Arribant", "Envieu ubicació!", "Tenim paradeta?", "Sí, ací estem"... I en un degoteig constant anàvem arribant-hi, uns més d'hora i d'altres un poc més justos de temps, fins que poguérem fer confluir en el nostre trosset de fireta, als exteriors del centre social de la Baia, les mirades i les frases de salutació rituals: "Bon dia!", "Com va?", "Xe, quina paradeta més apanyada!"... Per fi hi érem tots i totes: la tècnica i el mestre, la nostra presidenta, les companyes i els companys de la colla, la xicalla... I al voltant de nosaltres hi eren els Cabuts que dansaven, la música, multitud d'associacions, sense ànim de lucre, a càrrec de multitud de gent implicada, compartint l'espai d'aquesta fireta.
 
     - type: images
@@ -74,10 +70,6 @@ content:
   es:
     - type: text
       text: |
-        Recién iniciada la temporada de eventos de nuestra colla, el sábado 26 de septiembre nos tocaba actuar en la Baia de Elche, en la Jornada de Asociacionismo y Juventud de la Baia, organizada por la asociación Baiajovens. Para la Muixeranga d'Elx fue una mañana llena de hermandad e ilusión; os lo contamos.
-
-    - type: text
-      text: |
         La mañana se presentaba soleada y animada. Veníamos con el impulso y el buen sabor de boca del ensayo tan provechoso del día anterior, con Bruno, y las ganas de hacer colla se notaban en el ambiente. En el chat, los mensajes habituales: «De camino», «Llegando», «¡Enviad ubicación!», «¿Tenemos paradeta?», «Sí, aquí estamos»... Y en un goteo constante íbamos llegando, unos con más margen y otros un poco más justos de tiempo, hasta que pudimos hacer confluir en nuestro rinconcito de feria, en los exteriores del centro social de la Baia, las miradas y las frases de saludo ritual: «¡Buenos días!», «¿Qué tal?», «Oye, ¡qué paradeta más apañada!»... Por fin estábamos todos y todas: la técnica y el maestro, nuestra presidenta, las compañeras y compañeros de la colla, la chiquillería... Y a nuestro alrededor estaban los Cabuts bailando, la música, multitud de asociaciones sin ánimo de lucro, al cargo de multitud de gente implicada, compartiendo el espacio de esta feria.
 
     - type: images
@@ -122,10 +114,6 @@ content:
         - /images/blog/jornada-associacionisme-baia-2026/ball-polca.jpg
 
   en:
-    - type: text
-      text: |
-        With our colla's event season just getting started, on Saturday 26 September we performed in Elche's Baia district at the Baia Association and Youth Day, organised by the Baiajovens association. For Muixeranga d'Elx it was a morning full of camaraderie and excitement; here is our story.
-
     - type: text
       text: |
         The morning looked sunny and uplifting. We came with the momentum and good spirits from the very productive rehearsal the day before with Bruno, and the desire to build team spirit was palpable. In the group chat, the usual messages: "On our way", "Arriving", "Send the location!", "Do we have a stall?", "Yes, we're here"... In a steady trickle we kept arriving, some early, others cutting it a bit close, until we could gather at our little corner of the fair, outside the Baia social centre: the looks and ritual greetings: "Good morning!", "How's it going?", "Wow, what a neat stall!"... At last we were all there: the technical team and the master, our president, the colla's members, the kids... Around us the Cabuts were dancing, there was music, and countless non-profit associations run by countless committed people, all sharing the space of this fair.
