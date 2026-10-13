@@ -10,6 +10,10 @@ const posts = await getBlogPosts(locale);
 ---
 
 <BaseLayout locale={locale} overlayNav title={`${t(locale, 'blog.title')} | Muixeranga d'Elx`}>
-  <PageHero title={t(locale, 'blog.title')} subtitle={t(locale, 'blog.subtitle')} />
+  <PageHero
+    title={t(locale, 'blog.title')}
+    subtitle={t(locale, 'blog.subtitle')}
+    image="/images/heroes/blog.jpg"
+  />
   <BlogApp locale={locale} posts={posts} />
 </BaseLayout>
