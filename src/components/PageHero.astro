@@ -18,7 +18,7 @@ const {
 const useMap = Boolean(mapEmbedUrl);
 ---
 
-<section class="relative h-[55vh] min-h-[360px] max-h-[560px] overflow-hidden">
+<section class="relative h-[55vh] min-h-[360px] max-h-[560px] w-full overflow-hidden">
   {
     useMap ? (
       <iframe
@@ -30,7 +30,13 @@ const useMap = Boolean(mapEmbedUrl);
         referrerpolicy="no-referrer-when-downgrade"
       />
     ) : (
-      <img src={image} alt="" class="absolute inset-0 h-full w-full object-cover" />
+      <img
+        src={image}
+        alt=""
+        class:list={[
+          'page-hero__media absolute inset-0 h-full w-full',
+        ]}
+      />
     )
   }
   <div
