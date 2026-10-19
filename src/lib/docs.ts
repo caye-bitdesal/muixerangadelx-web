@@ -13,6 +13,17 @@ export type DocItem = {
 
 export const docs: DocItem[] = [
   {
+    id: 'full-autoritzacio-menors',
+    title: "Full D'Autorizació per a menors",
+    description:
+      "Formulari per a descarregar amb el que gestionar el permís de gravació i difusió de fotos i vídeos dels menors de la colla en xarxes socials i web. Després d'emplenar-ho pots portar-ho a una actuació o adjuntar-ho en un email dirigit a contacte@muixerangadelx.com.",
+    issuer: "Muixeranga d'Elx",
+    date: '2026-10-19',
+    type: 'manuales',
+    thumbnail: '/images/documents/full-autoritzacio-menors.jpg',
+    file: '/documents/full-autoritzacio-menors.pdf',
+  },
+  {
     id: 'vocabulari-visual-avl',
     title: 'Vocabulari visual de la muixeranga (AVL)',
     description: "Amunt al cel — Muixeranga d'Elx a la pàg. 24, amb la figura Palmera",
