@@ -1,5 +1,7 @@
 export type DocType = 'manuales' | 'entrevistas';
 
+export const defaultDocThumbnail = '/images/documents/documento.png';
+
 export type DocItem = {
   id: string;
   title: string;
@@ -7,7 +9,7 @@ export type DocItem = {
   issuer: string;
   date: string;
   type: DocType;
-  thumbnail: string;
+  thumbnail?: string;
   file: string;
 };
 
@@ -20,7 +22,6 @@ export const docs: DocItem[] = [
     issuer: "Muixeranga d'Elx",
     date: '2026-10-19',
     type: 'manuales',
-    thumbnail: '/images/documents/full-autoritzacio-menors.jpg',
     file: '/documents/full-autoritzacio-menors.pdf',
   },
   {

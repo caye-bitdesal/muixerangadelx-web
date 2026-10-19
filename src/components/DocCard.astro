@@ -1,6 +1,6 @@
 ---
 import type { Locale } from '../i18n/ui';
-import type { DocItem } from '../lib/docs';
+import { defaultDocThumbnail, type DocItem } from '../lib/docs';
 
 interface Props {
   locale: Locale;
@@ -8,16 +8,67 @@ interface Props {
   downloadLabel: string;
 }
 
+type DescriptionPart = { kind: 'text'; content: string } | { kind: 'email'; address: string };
+
+function descriptionParts(text: string): DescriptionPart[] {
+  const re = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
+  const parts: DescriptionPart[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = re.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push({ kind: 'text', content: text.slice(lastIndex, match.index) });
+    }
+    parts.push({ kind: 'email', address: match[1] });
+    lastIndex = re.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push({ kind: 'text', content: text.slice(lastIndex) });
+  }
+
+  return parts.length > 0 ? parts : [{ kind: 'text', content: text }];
+}
+
 const { doc, downloadLabel } = Astro.props;
+const thumbnail = doc.thumbnail ?? defaultDocThumbnail;
+const isDefaultCover = !doc.thumbnail;
+const description = descriptionParts(doc.description);
 ---
 
 <article class="flex flex-col border border-black/10 bg-white h-full">
-  <div class="aspect-[3/4] bg-neutral-100 overflow-hidden">
-    <img src={doc.thumbnail} alt="" class="h-full w-full object-cover" loading="lazy" />
+  <div
+    class:list={[
+      'aspect-[3/4] overflow-hidden flex items-center justify-center',
+      isDefaultCover ? 'bg-black p-16' : 'bg-neutral-100',
+    ]}
+  >
+    <img
+      src={thumbnail}
+      alt=""
+      class:list={['h-full w-full', isDefaultCover ? 'object-contain' : 'object-cover object-center']}
+      loading="lazy"
+    />
   </div>
   <div class="p-4 flex flex-col flex-1 gap-2">
     <h3 class="font-bold text-lg leading-snug">{doc.title}</h3>
-    <p class="text-sm text-elx-muted">{doc.description}</p>
+    <p class="text-sm text-elx-muted">
+      {
+        description.map((part) =>
+          part.kind === 'email' ? (
+            <a
+              href={`mailto:${part.address}`}
+              class="text-elx-red underline underline-offset-2 hover:text-elx-dark transition-colors"
+            >
+              {part.address}
+            </a>
+          ) : (
+            part.content
+          ),
+        )
+      }
+    </p>
     <p class="text-xs text-elx-muted">{doc.issuer} · {doc.date}</p>
     <a
       href={doc.file}
