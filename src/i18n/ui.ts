@@ -18,12 +18,32 @@ export const ui = {
     'nav.unete': "Apunta't",
     'nav.contacte': 'Contacte',
     'nav.contacte.info': 'Informació de contacte',
+    'home.metaDescription':
+      "Colla de muixeranga d'Elx: torres humanes, figures, música i tradició valenciana. Assagem els divendres al CEIP Clara Campoamor. Vine a provar!",
+    'activitats.metaDescription':
+      "Calendari d'assajos i actuacions de la Muixeranga d'Elx. Filtra per tipus d'activitat i consulta horari, lloc i fitxa de cada esdeveniment.",
+    'blog.metaDescription':
+      "Cròniques, notícies i reportatges de la Muixeranga d'Elx: actuacions, assajos i vida de la colla.",
+    'docs.metaDescription':
+      "Manuals, entrevistes i arxius per a descarregar de la Muixeranga d'Elx.",
+    'contacte.metaDescription':
+      "Escriu-nos per a apuntar-te, contractar una actuació, premsa o patrocini. Casal Jaume I, C/ Sant Jordi 2, Elx.",
+    'legal.metaDescription':
+      "Avís legal de la web de la Muixeranga d'Elx: titularitat, condicions d'ús i propietat intel·lectual.",
+    'privacy.metaDescription':
+      "Política de privacitat de la Muixeranga d'Elx: dades que recollim, finalitat i els teus drets.",
+    'cookies.metaDescription':
+      "Informació sobre l'ús de cookies a la web de la Muixeranga d'Elx.",
     'home.carousel.lead': "Som la Muixeranga d'Elx",
     'home.carousel.title': 'Fem pinya com una tabala',
     'home.carousel.ctaTry': 'Vine a provar',
     'home.quisom.label': 'Qui som?',
     'home.quisom.body':
-      "La Muixeranga d'Elx és una associació cultural formada al setembre de 2022, amb la finalitat bàsica de difondre la nostra cultura, llengua i costums valencians a través d'aquesta antiquíssima manifestació artística: la muixeranga.\n\nActualment, la Muixeranga d'Elx està formada per uns 50 socis molt diferents en edats, sexes i condicions: som joves, grans, som universitaris, som jubilats, som bebés... Som família, som d'Elx.\n\nEls colors de la nostra indumentària són els colors de la bandera de la ciutat d'Elx, i som la muixeranga més en el sud del País Valencià, referent per a la ciutat i les comarques del sud.\n\nEl nostre repertori d'actuacions és molt variat; realitzem figures de tres pisos com per exemple la Campana, el Retaule, la Senieta, l'Alçat de Tres, etc., així com figures de quatre pisos com la Roscana. I també realitzem uns quants balls tradicionals valencians lligats als costums de la muixeranga, com el Ball del Floret i el Ball de la Polca d'Ours.\n\nAssagem tots els divendres al CEIP Clara Campoamor d'Elx, on treballem per a créixer i continuar sent un referent a la ciutat d'Elx i a les comarques del sud.",
+      "La Muixeranga d'Elx és una associació cultural formada al setembre de 2022, amb la finalitat bàsica de difondre la nostra cultura, llengua i costums valencians a través d'aquesta antiquíssima manifestació artística: la muixeranga.\n\nActualment, la Muixeranga d'Elx està formada per uns 50 socis molt diferents en edats, sexes i condicions: som joves, grans, som universitaris, som jubilats, som bebés... Som família, som d'Elx.\n\nEls colors de la nostra indumentària són els colors de la bandera de la ciutat d'Elx, i som la muixeranga més en el sud del País Valencià, referent per a la ciutat i les comarques del sud.\n\nEl nostre repertori d'actuacions és molt variat; realitzem figures de tres pisos com per exemple la Campana, el Retaule, la Senieta, l'Alçat de Tres, etc., així com figures de quatre pisos com la Roscana. I també realitzem uns quants balls tradicionals valencians lligats als costums de la muixeranga, com el Ball del Floret i el Ball de la Polca d'Ours.",
+    'home.quisom.rehearsalPrefix': 'Assagem totes les setmanes (',
+    'home.quisom.rehearsalLink': 'consulta lloc i hora',
+    'home.quisom.rehearsalSuffix':
+      "), on treballem per a créixer i continuar sent un referent a la ciutat d'Elx i a les comarques del sud.",
     'home.quisom.cta': 'Coneix-nos',
     'home.quisom.video': "Vídeo de la Muixeranga d'Elx",
     'home.follow': 'Segueix-nos',
@@ -60,6 +80,9 @@ export const ui = {
     'blog.empty': 'Encara no hi ha entrades.',
     'blog.author': 'Autor',
     'blog.back': 'Tornar al blog',
+    'blog.chronicleCta.lead': 'Vols viure-ho? ',
+    'blog.chronicleCta.link': 'Vine a un assaig',
+    'blog.chronicleCta.aria': "Apunta't a un assaig obert",
     'docs.title': 'Documentació',
     'docs.subtitle': 'Arxius per a descarregar',
     'docs.download': 'descarregar',
@@ -128,12 +151,32 @@ export const ui = {
     'nav.unete': 'Únete',
     'nav.contacte': 'Contacto',
     'nav.contacte.info': 'Información de contacto',
+    'home.metaDescription':
+      'Colla de muixeranga de Elche: torres humanas que realizan figuras, música y tradición valenciana. Ensayamos los viernes en el CEIP Clara Campoamor. ¡Ven a probar!',
+    'activitats.metaDescription':
+      "Calendario de ensayos y actuaciones de la Muixeranga d'Elx. Filtra por tipo de actividad y consulta horario, lugar y ficha de cada evento.",
+    'blog.metaDescription':
+      "Crónicas, noticias y reportajes de la Muixeranga d'Elx: actuaciones, ensayos y vida de la colla.",
+    'docs.metaDescription':
+      "Manuales, entrevistas y archivos para descargar de la Muixeranga d'Elx.",
+    'contacte.metaDescription':
+      'Escríbenos para apuntarte, contratar una actuación, prensa o patrocinio. Casal Jaume I, C/ Sant Jordi 2, Elche.',
+    'legal.metaDescription':
+      "Aviso legal de la web de la Muixeranga d'Elx: titularidad, condiciones de uso y propiedad intelectual.",
+    'privacy.metaDescription':
+      "Política de privacidad de la Muixeranga d'Elx: datos que recabamos, finalidad y tus derechos.",
+    'cookies.metaDescription':
+      "Información sobre el uso de cookies en la web de la Muixeranga d'Elx.",
     'home.carousel.lead': "Somos la Muixeranga d'Elx",
     'home.carousel.title': 'Hacemos piña como una tabala',
     'home.carousel.ctaTry': 'Ven a probar',
     'home.quisom.label': '¿Quiénes somos?',
     'home.quisom.body':
-      "La Muixeranga d'Elx es una asociación cultural formada en septiembre de 2022, con la finalidad básica de difundir nuestra cultura, lengua y costumbres valencianas a través de esta antiquísima manifestación artística: la muixeranga.\n\nActualmente, la Muixeranga d'Elx está formada por unos 50 socios muy diferentes en edades, sexos y condiciones: somos jóvenes, mayores, universitarios, jubilados, bebés... Somos familia, somos de Elx.\n\nLos colores de nuestra indumentaria son los de la bandera de la ciudad de Elx, y somos la muixeranga más al sur del País Valenciano, referente para la ciudad y las comarcas del sur.\n\nNuestro repertorio de actuaciones es muy variado; realizamos figuras de tres pisos como, por ejemplo, la Campana, el Retaule, la Senyeta, el Alzado de Tres, etc., así como figuras de cuatro pisos como la Roscana. También realizamos varios bailes tradicionales valencianos ligados a las costumbres de la muixeranga, como el Ball del Floret y el Ball de la Polca d'Ours.\n\nEnsayamos todos los viernes en el CEIP Clara Campoamor de Elx, donde trabajamos para crecer y seguir siendo un referente en la ciudad de Elx y en las comarcas del sur.",
+      "La Muixeranga d'Elx es una asociación cultural formada en septiembre de 2022, con la finalidad básica de difundir nuestra cultura, lengua y costumbres valencianas a través de esta antiquísima manifestación artística: la muixeranga.\n\nActualmente, la Muixeranga d'Elx está formada por unos 50 socios muy diferentes en edades, sexos y condiciones: somos jóvenes, mayores, universitarios, jubilados, bebés... Somos familia, somos de Elx.\n\nLos colores de nuestra indumentaria son los de la bandera de la ciudad de Elx, y somos la muixeranga más al sur del País Valenciano, referente para la ciudad y las comarcas del sur.\n\nNuestro repertorio de actuaciones es muy variado; realizamos figuras de tres pisos como, por ejemplo, la Campana, el Retaule, la Senyeta, el Alzado de Tres, etc., así como figuras de cuatro pisos como la Roscana. También realizamos varios bailes tradicionales valencianos ligados a las costumbres de la muixeranga, como el Ball del Floret y el Ball de la Polca d'Ours.",
+    'home.quisom.rehearsalPrefix': 'Ensayamos todas las semanas (',
+    'home.quisom.rehearsalLink': 'consulta lugar y hora',
+    'home.quisom.rehearsalSuffix':
+      '), donde trabajamos para crecer y seguir siendo un referente en la ciudad de Elx y en las comarcas del sur.',
     'home.quisom.cta': 'Conócenos',
     'home.quisom.video': "Vídeo de la Muixeranga d'Elx",
     'home.follow': 'Síguenos',
@@ -170,6 +213,9 @@ export const ui = {
     'blog.empty': 'Todavía no hay entradas.',
     'blog.author': 'Autor',
     'blog.back': 'Volver al blog',
+    'blog.chronicleCta.lead': '¿Quieres vivirlo? ',
+    'blog.chronicleCta.link': 'Ven a un ensayo',
+    'blog.chronicleCta.aria': 'Apúntate a un ensayo abierto',
     'docs.title': 'Documentación',
     'docs.subtitle': 'Archivos para descargar',
     'docs.download': 'descargar',
@@ -238,12 +284,32 @@ export const ui = {
     'nav.unete': 'Join us',
     'nav.contacte': 'Contact',
     'nav.contacte.info': 'Contact information',
+    'home.metaDescription':
+      "Muixeranga colla in Elx (Elche): human towers, figures, music and Valencian tradition. We rehearse on Fridays at CEIP Clara Campoamor. Come and try!",
+    'activitats.metaDescription':
+      "Calendar of Muixeranga d'Elx rehearsals and performances. Filter by type and see time, venue and details for each event.",
+    'blog.metaDescription':
+      "News, chronicles and reports from Muixeranga d'Elx: performances, rehearsals and colla life.",
+    'docs.metaDescription':
+      "Handbooks, interviews and downloadable files from Muixeranga d'Elx.",
+    'contacte.metaDescription':
+      'Get in touch to join, book a performance, or for press and sponsorship. Casal Jaume I, C/ Sant Jordi 2, Elx.',
+    'legal.metaDescription':
+      "Legal notice for the Muixeranga d'Elx website: ownership, terms of use and intellectual property.",
+    'privacy.metaDescription':
+      "Privacy policy of Muixeranga d'Elx: data we collect, why, and your rights.",
+    'cookies.metaDescription':
+      "Information about cookies on the Muixeranga d'Elx website.",
     'home.carousel.lead': "We are Muixeranga d'Elx",
     'home.carousel.title': 'We stand together like a tabala',
     'home.carousel.ctaTry': 'Come and try',
     'home.quisom.label': 'Who we are',
     'home.quisom.body':
-      "Muixeranga d'Elx is a cultural association founded in September 2022, with the basic aim of spreading our Valencian culture, language and customs through this ancient artistic manifestation: the muixeranga.\n\nCurrently, Muixeranga d'Elx is made up of around 50 members who are very diverse in age, gender and background: we are young and old, university students and retirees, babies... We are family, we are from Elx.\n\nThe colours of our costumes are those of the flag of the city of Elx, and we are the southernmost muixeranga in the Valencian Country, a benchmark for the city and the southern regions.\n\nOur performance repertoire is very varied; we perform three-level figures such as, for example, the Campana, the Retaule, the Senyeta, the Alçat de Tres, and four-level figures such as the Roscana. We also perform several traditional Valencian dances linked to muixeranga customs, such as the Ball del Floret and the Ball de la Polca d'Ours.\n\nWe rehearse every Friday at CEIP Clara Campoamor in Elx, where we work to grow and continue to be a benchmark in the city of Elx and the southern regions.",
+      "Muixeranga d'Elx is a cultural association founded in September 2022, with the basic aim of spreading our Valencian culture, language and customs through this ancient artistic manifestation: the muixeranga.\n\nCurrently, Muixeranga d'Elx is made up of around 50 members who are very diverse in age, gender and background: we are young and old, university students and retirees, babies... We are family, we are from Elx.\n\nThe colours of our costumes are those of the flag of the city of Elx, and we are the southernmost muixeranga in the Valencian Country, a benchmark for the city and the southern regions.\n\nOur performance repertoire is very varied; we perform three-level figures such as, for example, the Campana, the Retaule, the Senyeta, the Alçat de Tres, and four-level figures such as the Roscana. We also perform several traditional Valencian dances linked to muixeranga customs, such as the Ball del Floret and the Ball de la Polca d'Ours.",
+    'home.quisom.rehearsalPrefix': 'We rehearse every week (',
+    'home.quisom.rehearsalLink': 'check venue and time',
+    'home.quisom.rehearsalSuffix':
+      '), where we work to grow and continue to be a benchmark in the city of Elx and the southern regions.',
     'home.quisom.cta': 'Meet us',
     'home.quisom.video': "Muixeranga d'Elx video",
     'home.follow': 'Follow us',
@@ -280,6 +346,9 @@ export const ui = {
     'blog.empty': 'No posts yet.',
     'blog.author': 'Author',
     'blog.back': 'Back to blog',
+    'blog.chronicleCta.lead': 'Want to experience it? ',
+    'blog.chronicleCta.link': 'Come to a rehearsal',
+    'blog.chronicleCta.aria': 'Join us at an open rehearsal',
     'docs.title': 'Documentation',
     'docs.subtitle': 'Files to download',
     'docs.download': 'download',

@@ -1,6 +1,5 @@
 ---
 import { t, type Locale } from '../i18n/ui';
-import { localizedPath } from '../i18n/utils';
 
 interface Props {
   locale: Locale;
@@ -15,15 +14,14 @@ const filters = [
   { id: 'altre', label: t(locale, 'activitats.filters.altre') },
 ];
 
-const detailBase = localizedPath(locale, '/activitats');
 const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES' : 'en-GB';
 ---
 
 <section
   class="bg-white py-10 px-4 sm:px-6"
   data-activities-app
-  data-detail-base={detailBase}
-  data-locale={localeTag}
+  data-locale={locale}
+  data-locale-tag={localeTag}
   data-empty={t(locale, 'activitats.empty')}
   data-loading={t(locale, 'activitats.loading')}
 >
@@ -67,6 +65,9 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
     type EventDateInput,
   } from '../lib/events';
   import { fitActivityCardImages } from '../lib/activity-card';
+  import { buildEventSlugIndex, eventSlug } from '../lib/event-slug';
+  import { eventDetailPath } from '../i18n/utils';
+  import type { Locale } from '../i18n/ui';
   import { onPageLoad } from '../lib/on-page-load';
 
   type Ev = {
@@ -85,8 +86,8 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
   const { signal } = ac;
   let cancelled = false;
 
-  const detailBase = root.dataset.detailBase!;
-  const localeTag = root.dataset.locale!;
+  const pageLocale = (root.dataset.locale ?? 'va') as Locale;
+  const localeTag = root.dataset.localeTag!;
   const emptyMsg = root.dataset.empty!;
   const loadingMsg = root.dataset.loading!;
   const grid = root.querySelector('[data-activities-grid]')!;
@@ -103,6 +104,7 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
   let visibleMonth = now.getMonth();
   let selectedDateKey: string | null = null;
   let ready = false;
+  let slugIndex = buildEventSlugIndex([]);
 
   const applyFilterButtonStyles = () => {
     root.querySelectorAll('[data-filter]').forEach((b) => {
@@ -143,10 +145,12 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
 
   const fitCardImages = () => fitActivityCardImages(grid);
 
-  const cardHtml = (event: Ev) => {
+  const cardHtml = (event: Ev, slugIndex: ReturnType<typeof buildEventSlugIndex>) => {
     const img = event.image || '/images/placeholders/event.svg';
     const dateKey = eventDateKey(event.date) ?? '';
-    return `<a href="${detailBase}/${event.id}" class="activity-card scroll-mt-28" data-event-id="${event.id}" data-date-key="${dateKey}">
+    const slug = eventSlug(event as import('../lib/events').MuixerangaEvent, slugIndex);
+    const href = eventDetailPath(pageLocale, slug);
+    return `<a href="${href}" class="activity-card scroll-mt-28" data-event-id="${event.id}" data-date-key="${dateKey}">
       <div class="activity-card__media">
         <img src="${img}" alt="" loading="lazy" />
       </div>
@@ -177,7 +181,7 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
   const render = () => {
     if (!ready) return;
     const items = filtered();
-    grid.innerHTML = items.map(cardHtml).join('');
+    grid.innerHTML = items.map((event) => cardHtml(event, slugIndex)).join('');
     fitCardImages();
     emptyEl.classList.toggle('hidden', items.length > 0);
     emptyEl.textContent = emptyMsg;
@@ -229,7 +233,9 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
         image: event.image,
         date: event.date,
         type: normalizeEventType(event.type),
+        slug: event.slug,
       }));
+      slugIndex = buildEventSlugIndex(events);
       ready = true;
       render();
     })

@@ -9,9 +9,10 @@ import { socialLinks } from '../lib/site';
 interface Props {
   locale: Locale;
   nextAssaig: MuixerangaEvent | null;
+  nextAssaigSlug?: string;
 }
 
-const { locale, nextAssaig } = Astro.props;
+const { locale, nextAssaig, nextAssaigSlug } = Astro.props;
 const copy = getJoinUsContent(locale);
 const instagram = socialLinks.find((link) => link.id === 'instagram');
 
@@ -70,7 +71,7 @@ const sideImage = '/images/events/join-us-pinya-enxaneta.jpg';
           <h2 class="text-2xl font-bold sm:text-3xl">{copy.whenWhereTitle}</h2>
           <p class="mt-4 leading-relaxed">{copy.whenWhereIntro}</p>
           <div class="mt-6">
-            <NextAssaigBlock locale={locale} nextAssaig={nextAssaig} />
+            <NextAssaigBlock locale={locale} nextAssaig={nextAssaig} eventSlugValue={nextAssaigSlug} />
           </div>
         </div>
 

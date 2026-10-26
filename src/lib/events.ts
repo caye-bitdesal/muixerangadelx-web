@@ -48,6 +48,8 @@ export type EventDateInput = string | number | FirestoreTimestamp | null | undef
 
 export type MuixerangaEvent = {
   id: string;
+  /** Optional SEO slug from API; otherwise derived from name at build/runtime. */
+  slug?: string;
   name: string;
   description?: string;
   image?: string | null;

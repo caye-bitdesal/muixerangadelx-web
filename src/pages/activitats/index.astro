@@ -4,11 +4,23 @@ import ActivitiesCalendar from '../../components/ActivitiesCalendar.astro';
 import ActivitiesApp from '../../components/ActivitiesApp.astro';
 import { getLocaleFromUrl } from '../../i18n/utils';
 import { t } from '../../i18n/ui';
+import { listUpcomingEvents } from '../../lib/events';
+import { upcomingEventsJsonLd } from '../../lib/seo';
 
 const locale = getLocaleFromUrl(Astro.url);
+const jsonLd = upcomingEventsJsonLd(await listUpcomingEvents(20), locale, Astro.site, Astro.url);
 ---
 
-<BaseLayout locale={locale} overlayNav title={`${t(locale, 'nav.activitats')} | Muixeranga d'Elx`}>
+<BaseLayout
+  locale={locale}
+  overlayNav
+  title={`${t(locale, 'nav.activitats')} | Muixeranga d'Elx`}
+  description={t(locale, 'activitats.metaDescription')}
+  ogTitle={`${t(locale, 'nav.activitats')} | Muixeranga d'Elx`}
+  ogDescription={t(locale, 'activitats.metaDescription')}
+  ogImage="/images/carousel/hero1.jpg"
+  jsonLd={jsonLd}
+>
   <ActivitiesCalendar locale={locale} />
   <ActivitiesApp locale={locale} />
 </BaseLayout>

@@ -1,5 +1,6 @@
 ---
 import BlogPostBody from './BlogPostBody.astro';
+import ChronicleJoinCta from './ChronicleJoinCta.astro';
 import { localizedPath } from '../i18n/utils';
 import { t, type Locale } from '../i18n/ui';
 import type { BlogPost } from '../lib/blog';
@@ -48,6 +49,8 @@ const formattedDate = new Intl.DateTimeFormat(
     <div class="mt-10 border-t border-black/10 pt-10">
       <BlogPostBody blocks={post.content} />
     </div>
+
+    <ChronicleJoinCta locale={locale} />
 
     <a
       href={localizedPath(locale, '/blog')}

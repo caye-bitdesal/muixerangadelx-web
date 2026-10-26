@@ -9,7 +9,15 @@ const locale = 'es' as const;
 const posts = await getBlogPosts(locale);
 ---
 
-<BaseLayout locale={locale} overlayNav title={`${t(locale, 'blog.title')} | Muixeranga d'Elx`}>
+<BaseLayout
+  locale={locale}
+  overlayNav
+  title={`${t(locale, 'blog.title')} | Muixeranga d'Elx`}
+  description={t(locale, 'blog.metaDescription')}
+  ogTitle={`${t(locale, 'blog.title')} | Muixeranga d'Elx`}
+  ogDescription={t(locale, 'blog.metaDescription')}
+  ogImage="/images/heroes/blog.jpg"
+>
   <PageHero
     title={t(locale, 'blog.title')}
     subtitle={t(locale, 'blog.subtitle')}

@@ -1,25 +1,29 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import ActivityDetailView from '../../../components/ActivityDetailView.astro';
 import { listAllEvents } from '../../../lib/events';
-import { localizedPath } from '../../../i18n/utils';
-import { t } from '../../../i18n/ui';
+import { buildEventSlugIndex, eventSlug, resolveEventParam } from '../../../lib/event-slug';
+import { activitatsPath, eventDetailPath } from '../../../i18n/utils';
 
 const locale = 'en' as const;
 
 export async function getStaticPaths() {
   const events = await listAllEvents();
-  const ids = events.length ? events.map((e) => e.id) : ['placeholder'];
-  return ids.map((id) => ({ params: { id } }));
+  if (!events.length) return [];
+  const index = buildEventSlugIndex(events);
+  return events.map((event) => ({ params: { id: event.id } }));
 }
 
 const { id } = Astro.params;
-
-if (!id || id === 'placeholder') {
-  return Astro.redirect(localizedPath(locale, '/activitats'));
+if (!id) {
+  return Astro.redirect(activitatsPath(locale));
 }
----
 
-<BaseLayout locale={locale} title={`${t(locale, 'nav.activitats')} | Muixeranga d'Elx`}>
-  <ActivityDetailView locale={locale} eventId={id} />
-</BaseLayout>
+const events = await listAllEvents();
+const index = buildEventSlugIndex(events);
+const event = resolveEventParam(id, index, events);
+
+if (!event) {
+  return Astro.redirect(activitatsPath(locale));
+}
+
+return Astro.redirect(eventDetailPath(locale, eventSlug(event, index)), 301);
+---

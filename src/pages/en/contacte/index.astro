@@ -13,7 +13,14 @@ const scrollToForm = Boolean(defaultSubjectKey);
 const nextAssaig = getNextAssaig(await listAllEvents());
 ---
 
-<BaseLayout locale={locale} overlayNav title={`${t(locale, 'contacte.title')} | Muixeranga d'Elx`}>
+<BaseLayout
+  locale={locale}
+  overlayNav
+  title={`${t(locale, 'contacte.title')} | Muixeranga d'Elx`}
+  description={t(locale, 'contacte.metaDescription')}
+  ogTitle={`${t(locale, 'contacte.title')} | Muixeranga d'Elx`}
+  ogDescription={t(locale, 'contacte.metaDescription')}
+>
   <PageHero
     title={t(locale, 'contacte.title')}
     subtitle={t(locale, 'contacte.subtitle')}

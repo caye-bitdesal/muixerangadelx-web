@@ -5,15 +5,26 @@ import QuiSom from '../components/QuiSom.astro';
 import HomeActivities from '../components/HomeActivities.astro';
 import HomeBlog from '../components/HomeBlog.astro';
 import { getLocaleFromUrl } from '../i18n/utils';
+import { t } from '../i18n/ui';
 import { listUpcomingEvents } from '../lib/events';
 import { getBlogPosts } from '../lib/blog';
+import { DEFAULT_OG_IMAGE } from '../lib/seo';
 
 const locale = getLocaleFromUrl(Astro.url);
 const events = await listUpcomingEvents(3);
 const posts = await getBlogPosts(locale);
 ---
 
-<BaseLayout locale={locale} overlayNav title="Muixeranga d'Elx">
+<BaseLayout
+  locale={locale}
+  overlayNav
+  title="Muixeranga d'Elx"
+  description={t(locale, 'home.metaDescription')}
+  ogTitle="Muixeranga d'Elx"
+  ogDescription={t(locale, 'home.metaDescription')}
+  ogImage={DEFAULT_OG_IMAGE}
+  ogImageAlt={t(locale, 'home.hire.imageAlt')}
+>
   <Carousel locale={locale} />
   <QuiSom locale={locale} />
   <HomeActivities locale={locale} events={events} />

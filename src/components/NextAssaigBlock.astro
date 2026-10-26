@@ -1,19 +1,20 @@
 ---
-import type { Locale } from '../i18n/ui';
+import { t, type Locale } from '../i18n/ui';
 import { getJoinUsContent } from '../lib/join-us-content';
-import { activitatsAssaigFilterPath, localizedPath } from '../i18n/utils';
-import { formatEventDateTime, type MuixerangaEvent } from '../lib/events';
+import { activitatsAssaigFilterPath, eventDetailPath } from '../i18n/utils';
+import { eventMapLink, formatEventDateTime, type MuixerangaEvent } from '../lib/events';
 
 interface Props {
   locale: Locale;
   nextAssaig: MuixerangaEvent | null;
+  /** Canonical URL slug (from {@link buildEventSlugIndex}). */
+  eventSlugValue?: string;
 }
 
-const { locale, nextAssaig } = Astro.props;
+const { locale, nextAssaig, eventSlugValue } = Astro.props;
 const copy = getJoinUsContent(locale);
-const detailHref = nextAssaig
-  ? `${localizedPath(locale, '/activitats')}/${nextAssaig.id}`
-  : null;
+const detailHref =
+  nextAssaig && eventSlugValue ? eventDetailPath(locale, eventSlugValue) : null;
 ---
 
 <div class="next-assaig-block">
@@ -25,7 +26,25 @@ const detailHref = nextAssaig
         </p>
         <p class="mt-2 text-xl font-bold">{nextAssaig.name}</p>
         <p class="mt-1">{formatEventDateTime(nextAssaig.date, locale)}</p>
-        {nextAssaig.address ? <p class="mt-2 text-elx-muted">{nextAssaig.address}</p> : null}
+        {nextAssaig.address ? (
+          <a
+            href={eventMapLink(nextAssaig.address)}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mt-2 inline-flex max-w-full items-start gap-2 text-elx-muted no-underline transition-colors hover:text-elx-dark"
+            aria-label={`${t(locale, 'activitats.detail.openMap')}: ${nextAssaig.address}`}
+          >
+            <img
+              src="/images/icons/map-address.png"
+              alt=""
+              width={32}
+              height={32}
+              class="mt-0.5 shrink-0"
+              loading="lazy"
+            />
+            <span class="mt-[7px] min-w-0 leading-snug">{nextAssaig.address}</span>
+          </a>
+        ) : null}
         <div class="mt-4 flex flex-wrap gap-3">
           <a
             href={detailHref}

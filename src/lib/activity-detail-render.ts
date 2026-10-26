@@ -5,6 +5,10 @@ import {
   formatEventDateTime,
   type MuixerangaEvent,
 } from './events';
+import { renderChronicleJoinCtaHtml } from './chronicle-join-cta';
+
+/** Re-enable when figures and gallery are ready on event detail pages. */
+const SHOW_FIGURES_AND_GALLERY = false;
 
 export type ActivityDetailLabels = {
   date: string;
@@ -14,6 +18,9 @@ export type ActivityDetailLabels = {
   figuresEmpty: string;
   gallery: string;
   galleryEmpty: string;
+  chronicleCtaLead: string;
+  chronicleCtaLink: string;
+  chronicleCtaAria: string;
 };
 
 function escapeHtml(value: string): string {
@@ -31,14 +38,21 @@ export function renderActivityDetailBody(
   labels: ActivityDetailLabels,
   locale: DetailLocale,
 ): string {
-  const gallery = (event.gallery ?? []).filter((url) => url && url.trim() !== '');
-  const figures = (event.figures ?? []).filter((name) => name && name.trim() !== '');
   const address = event.address?.trim() ?? '';
   const hasAddress = address.length > 0;
   const name = escapeHtml(event.name);
   const img = escapeHtml(eventImage(event));
-  const description = event.description?.trim()
-    ? `<p class="mt-8 text-base sm:text-lg leading-relaxed whitespace-pre-line text-elx-dark">${escapeHtml(event.description)}</p>`
+  const hasDescription = Boolean(event.description?.trim());
+  const description = hasDescription
+    ? `<p class="mt-8 text-base sm:text-lg leading-relaxed whitespace-pre-line text-elx-dark">${escapeHtml(event.description!.trim())}</p>`
+    : '';
+  const chronicleCta = hasDescription
+    ? renderChronicleJoinCtaHtml(
+        locale,
+        labels.chronicleCtaLead,
+        labels.chronicleCtaLink,
+        labels.chronicleCtaAria,
+      )
     : '';
 
   const dateBlock =
@@ -86,14 +100,33 @@ export function renderActivityDetailBody(
       </div>`
     : '';
 
-  const figuresList =
-    figures.length > 0
-      ? `<ul class="mt-2 space-y-1">${figures.map((figure) => `<li class="text-base font-medium">${escapeHtml(figure)}</li>`).join('')}</ul>`
-      : `<p class="mt-2 text-sm text-elx-muted">${escapeHtml(labels.figuresEmpty)}</p>`;
+  let figuresAside = '';
+  let gallerySection = '';
 
-  const galleryBlock =
-    gallery.length > 0
-      ? `<div class="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+  if (SHOW_FIGURES_AND_GALLERY) {
+    const gallery = (event.gallery ?? []).filter((url) => url && url.trim() !== '');
+    const figures = (event.figures ?? []).filter((name) => name && name.trim() !== '');
+
+    const figuresList =
+      figures.length > 0
+        ? `<ul class="mt-2 space-y-1">${figures.map((figure) => `<li class="text-base font-medium">${escapeHtml(figure)}</li>`).join('')}</ul>`
+        : `<p class="mt-2 text-sm text-elx-muted">${escapeHtml(labels.figuresEmpty)}</p>`;
+
+    figuresAside = `<div>
+          <h2 class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-elx-muted">
+            <svg viewBox="0 0 24 24" class="h-4 w-4 shrink-0 text-elx-red" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 2 2 7l10 5 10-5-10-5z"></path>
+              <path d="M2 17l10 5 10-5"></path>
+              <path d="M2 12l10 5 10-5"></path>
+            </svg>
+            ${escapeHtml(labels.figures)}
+          </h2>
+          ${figuresList}
+        </div>`;
+
+    const galleryBlock =
+      gallery.length > 0
+        ? `<div class="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
           ${gallery
             .map(
               (src) =>
@@ -103,7 +136,20 @@ export function renderActivityDetailBody(
             )
             .join('')}
         </div>`
-      : `<p class="mt-4 text-elx-muted">${escapeHtml(labels.galleryEmpty)}</p>`;
+        : `<p class="mt-4 text-elx-muted">${escapeHtml(labels.galleryEmpty)}</p>`;
+
+    gallerySection = `<section class="mt-14 pt-10 border-t border-black/10">
+    <h2 class="flex items-center gap-2 text-2xl font-bold">
+      <svg viewBox="0 0 24 24" class="h-6 w-6 shrink-0 text-elx-red" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+        <path d="m21 15-5-5L5 21"></path>
+      </svg>
+      ${escapeHtml(labels.gallery)}
+    </h2>
+    ${galleryBlock}
+  </section>`;
+  }
 
   return `<div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12">
     <div class="lg:col-span-2">
@@ -117,34 +163,15 @@ export function renderActivityDetailBody(
         />
       </div>
       ${description}
+      ${chronicleCta}
     </div>
     <aside class="lg:col-span-1 lg:mt-[70px]">
       <div class="border border-black/10 bg-neutral-50 p-6 space-y-6">
         ${dateBlock}
         ${addressBlock}
-        <div>
-          <h2 class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-elx-muted">
-            <svg viewBox="0 0 24 24" class="h-4 w-4 shrink-0 text-elx-red" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path d="M12 2 2 7l10 5 10-5-10-5z"></path>
-              <path d="M2 17l10 5 10-5"></path>
-              <path d="M2 12l10 5 10-5"></path>
-            </svg>
-            ${escapeHtml(labels.figures)}
-          </h2>
-          ${figuresList}
-        </div>
+        ${figuresAside}
       </div>
     </aside>
   </div>
-  <section class="mt-14 pt-10 border-t border-black/10">
-    <h2 class="flex items-center gap-2 text-2xl font-bold">
-      <svg viewBox="0 0 24 24" class="h-6 w-6 shrink-0 text-elx-red" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-        <circle cx="8.5" cy="8.5" r="1.5"></circle>
-        <path d="m21 15-5-5L5 21"></path>
-      </svg>
-      ${escapeHtml(labels.gallery)}
-    </h2>
-    ${galleryBlock}
-  </section>`;
+  ${gallerySection}`;
 }

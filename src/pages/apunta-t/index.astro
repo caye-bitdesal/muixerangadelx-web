@@ -4,11 +4,13 @@ import JoinUsPage from '../../components/JoinUsPage.astro';
 import { getLocaleFromUrl } from '../../i18n/utils';
 import { getJoinUsContent } from '../../lib/join-us-content';
 import { getNextAssaig, listAllEvents } from '../../lib/events';
+import { buildEventSlugIndex, eventSlug } from '../../lib/event-slug';
 
 const locale = getLocaleFromUrl(Astro.url);
 const copy = getJoinUsContent(locale);
 const events = await listAllEvents();
 const nextAssaig = getNextAssaig(events);
+const nextAssaigSlug = nextAssaig ? eventSlug(nextAssaig, buildEventSlugIndex(events)) : undefined;
 const ogImage = '/images/events/assaig.jpg';
 ---
 
@@ -20,5 +22,5 @@ const ogImage = '/images/events/assaig.jpg';
   ogDescription={copy.metaDescription}
   ogImage={ogImage}
 >
-  <JoinUsPage locale={locale} nextAssaig={nextAssaig} />
+  <JoinUsPage locale={locale} nextAssaig={nextAssaig} nextAssaigSlug={nextAssaigSlug} />
 </BaseLayout>

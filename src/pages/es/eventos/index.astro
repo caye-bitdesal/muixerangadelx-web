@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ActivitiesCalendar from '../../../components/ActivitiesCalendar.astro';
+import ActivitiesApp from '../../../components/ActivitiesApp.astro';
+import { t } from '../../../i18n/ui';
+import { listUpcomingEvents } from '../../../lib/events';
+import { upcomingEventsJsonLd } from '../../../lib/seo';
+
+const locale = 'es' as const;
+const jsonLd = upcomingEventsJsonLd(await listUpcomingEvents(20), locale, Astro.site, Astro.url);
+---
+
+<BaseLayout
+  locale={locale}
+  overlayNav
+  title={`${t(locale, 'nav.activitats')} | Muixeranga d'Elx`}
+  description={t(locale, 'activitats.metaDescription')}
+  ogTitle={`${t(locale, 'nav.activitats')} | Muixeranga d'Elx`}
+  ogDescription={t(locale, 'activitats.metaDescription')}
+  ogImage="/images/carousel/hero1.jpg"
+  jsonLd={jsonLd}
+>
+  <ActivitiesCalendar locale={locale} />
+  <ActivitiesApp locale={locale} />
+</BaseLayout>

@@ -1,20 +1,21 @@
 ---
 import type { Locale } from '../i18n/ui';
 import { formatEventDate, eventImage, type MuixerangaEvent } from '../lib/events';
-import { localizedPath } from '../i18n/utils';
+import { eventDetailPath } from '../i18n/utils';
 
 interface Props {
   locale: Locale;
   event: MuixerangaEvent;
+  slug: string;
   /** Show date and title without hover (e.g. home page with more space). */
   overlay?: 'hover' | 'always';
 }
 
-const { locale, event, overlay = 'hover' } = Astro.props;
+const { locale, event, slug, overlay = 'hover' } = Astro.props;
 ---
 
 <a
-  href={localizedPath(locale, `/activitats/${event.id}`)}
+  href={eventDetailPath(locale, slug)}
   class:list={['activity-card', overlay === 'always' && 'activity-card--overlay-always']}
 >
   <div class="activity-card__media">

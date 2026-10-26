@@ -1,6 +1,6 @@
 ---
 import { t, languages, type Locale } from '../i18n/ui';
-import { historiaPath, joinUsPath, localizedPath, switchLocalePath } from '../i18n/utils';
+import { activitatsPath, historiaPath, joinUsPath, localizedPath, switchLocalePath } from '../i18n/utils';
 
 interface Props {
   locale: Locale;
@@ -11,24 +11,37 @@ interface Props {
 const { locale, overlay = false, currentPath } = Astro.props;
 
 type PrimaryLink =
-  | { key: 'nav.portada' | 'nav.activitats' | 'nav.blog'; path: string }
-  | { key: 'nav.historia'; historia: true };
+  | { key: 'nav.portada' | 'nav.blog'; path: string }
+  | { key: 'nav.historia'; historia: true }
+  | { key: 'nav.activitats'; activitats: true };
 
 const primaryLinks: PrimaryLink[] = [
   { key: 'nav.portada', path: '/' },
   { key: 'nav.historia', historia: true },
-  { key: 'nav.activitats', path: '/activitats' },
+  { key: 'nav.activitats', activitats: true },
   { key: 'nav.blog', path: '/blog' },
 ];
 
 function primaryHref(link: PrimaryLink): string {
-  return 'historia' in link ? historiaPath(locale) : localizedPath(locale, link.path);
+  if ('historia' in link) return historiaPath(locale);
+  if ('activitats' in link) return activitatsPath(locale);
+  return localizedPath(locale, link.path);
 }
 
 function isPrimaryLinkActive(link: PrimaryLink): boolean {
   if ('historia' in link) {
     const href = historiaPath(locale);
     return currentPath === href || currentPath.startsWith(`${href}/`);
+  }
+  if ('activitats' in link) {
+    const href = activitatsPath(locale);
+    const legacyList = localizedPath(locale, '/activitats');
+    return (
+      currentPath === href ||
+      currentPath.startsWith(`${href}/`) ||
+      currentPath === legacyList ||
+      currentPath.startsWith(`${legacyList}/`)
+    );
   }
   return isPrimaryActive(link.path);
 }

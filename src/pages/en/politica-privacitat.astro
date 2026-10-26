@@ -1,12 +1,17 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import LegalPage from '../../components/LegalPage.astro';
+import { t } from '../../i18n/ui';
 import { getLegalContent } from '../../lib/legal';
 
 const locale = 'en' as const;
 const content = getLegalContent('privacy', locale);
 ---
 
-<BaseLayout locale={locale} title={`${content.title} | Muixeranga d'Elx`}>
+<BaseLayout
+  locale={locale}
+  title={`${content.title} | Muixeranga d'Elx`}
+  description={t(locale, 'privacy.metaDescription')}
+>
   <LegalPage locale={locale} page="privacy" />
 </BaseLayout>

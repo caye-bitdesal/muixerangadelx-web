@@ -10,4 +10,9 @@ export function onPageLoad(init: () => void | (() => void)): void {
   };
 
   document.addEventListener('astro:page-load', run);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run, { once: true });
+  } else {
+    run();
+  }
 }

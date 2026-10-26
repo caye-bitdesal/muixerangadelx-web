@@ -101,7 +101,7 @@ const content: Record<Locale, JoinUsContent> = {
     ctaEventDetail: 'Ver ficha del evento',
     forWhoTitle: '¿Para quién es?',
     forWhoBody:
-      'No hace falta experiencia: puedes empezar desde cero. Lo importante son las ganas de participar, aprender y disfrutar juntas y juntos. Hay sitio para personas de todas las edades y condiciones. En la colla (el grupo de la muixeranga, la tradición de torres humanas valenciana) nos importa la pinya —fer pinya es sostener la figura juntos, hombro con hombro— y el buen rollo más que la estatura o la forma física.',
+      'No hace falta experiencia ni estar en forma: puedes empezar desde cero. Aquí cabe gente de todas las edades y condiciones, y lo que de verdad importa son las ganas de participar, aprender y pasarlo bien. Cada persona tiene su lugar, porque cada figura, sea alta o compleja, solo se alza cuando todos hacemos pinya.',
     whenWhereTitle: '¿Cuándo y dónde ensayamos?',
     whenWhereIntro:
       'Los días y horas de ensayo cambian según la semana. Lo más fiable es mirar el calendario o el próximo ensayo publicado:',
@@ -160,7 +160,7 @@ const content: Record<Locale, JoinUsContent> = {
     ctaEventDetail: 'View event details',
     forWhoTitle: 'Who is it for?',
     forWhoBody:
-      'No experience is needed — you can start from scratch. What matters is wanting to take part, learn and enjoy together. There is room for people of all ages and backgrounds. In the colla (the muixeranga group — the Valencian human-tower tradition) we care about the pinya (the base of people standing shoulder to shoulder to support the figure) and the team spirit more than height or fitness.',
+      'No prior experience or special fitness condition is needed, as long as you can stand, you can start. There is room here for people of all ages and backgrounds, and what really matters is wanting to take part, learn and enjoy yourself. Everyone has a place, because every figure, whether tall or complex, only rises when we all make pinya together.',
     whenWhereTitle: 'When and where do we rehearse?',
     whenWhereIntro:
       'Rehearsal days and times change from week to week. Check the calendar or the next published rehearsal:',

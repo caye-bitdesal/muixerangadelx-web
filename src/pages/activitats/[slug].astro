@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ActivityDetailView from '../../components/ActivityDetailView.astro';
+import { activitatsPath, getLocaleFromUrl } from '../../i18n/utils';
+import { getEventDetailStaticPaths, loadEventDetailPage } from '../../lib/event-detail-page';
+
+export async function getStaticPaths() {
+  return getEventDetailStaticPaths();
+}
+
+const locale = getLocaleFromUrl(Astro.url);
+const { slug } = Astro.params;
+
+const model = await loadEventDetailPage(slug, locale, Astro.site, Astro.url);
+
+if (!slug || slug === 'placeholder' || !model.event) {
+  return Astro.redirect(activitatsPath(locale));
+}
+
+if (model.redirectTo) {
+  return Astro.redirect(model.redirectTo, 301);
+}
+---
+
+<BaseLayout
+  locale={locale}
+  title={model.pageTitle}
+  description={model.pageDescription}
+  ogTitle={model.event!.name}
+  ogDescription={model.pageDescription}
+  ogImage={model.shareImage}
+  ogImageAlt={model.event!.name}
+  jsonLd={model.eventLd ? [model.eventLd] : []}
+>
+  <ActivityDetailView locale={locale} eventId={model.eventId!} />
+</BaseLayout>

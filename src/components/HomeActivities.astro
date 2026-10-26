@@ -1,7 +1,8 @@
 ---
 import { t, type Locale } from '../i18n/ui';
-import { contactPerformancePath, localizedPath } from '../i18n/utils';
+import { activitatsPath, contactPerformancePath } from '../i18n/utils';
 import type { MuixerangaEvent } from '../lib/events';
+import { buildEventSlugIndex, eventSlug } from '../lib/event-slug';
 import ActivityCard from './ActivityCard.astro';
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
 
 const { locale, events } = Astro.props;
 const items = events.slice(0, 3);
+const slugIndex = buildEventSlugIndex(events);
 ---
 
 <section id="home-activities" class="bg-elx-yellow py-16 px-4 sm:px-6">
@@ -24,7 +26,7 @@ const items = events.slice(0, 3);
       {
         items.map((event) => (
           <div class="min-w-0 lg:shrink-0 lg:w-[calc((100%-2rem)/3)] [&>a]:w-full">
-            <ActivityCard locale={locale} event={event} overlay="always" />
+            <ActivityCard locale={locale} event={event} slug={eventSlug(event, slugIndex)} overlay="always" />
           </div>
         ))
       }
@@ -32,7 +34,7 @@ const items = events.slice(0, 3);
 
     <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
       <a
-        href={localizedPath(locale, '/activitats')}
+        href={activitatsPath(locale)}
         class="inline-block bg-elx-dark px-6 py-3 font-semibold text-white transition-colors hover:bg-elx-red"
       >
         {t(locale, 'home.seeAll')}

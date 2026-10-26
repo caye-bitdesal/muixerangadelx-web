@@ -18,6 +18,18 @@ if (!post) {
 }
 ---
 
-<BaseLayout locale={locale} overlayNav title={`${post.title} | Muixeranga d'Elx`}>
+<BaseLayout
+  locale={locale}
+  overlayNav
+  title={`${post.title} | Muixeranga d'Elx`}
+  description={post.description}
+  ogTitle={post.title}
+  ogDescription={post.description}
+  ogImage={post.coverImage}
+  ogImageAlt={post.title}
+  ogType="article"
+  articlePublishedTime={post.date}
+  articleAuthor={post.author}
+>
   <BlogPostView locale={locale} post={post} />
 </BaseLayout>

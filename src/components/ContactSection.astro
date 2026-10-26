@@ -27,6 +27,10 @@ const subjectOptionKeys: Record<ContactSubjectKey, UiKey> = {
 const presetSubjectValue = defaultSubjectKey
   ? t(locale, subjectOptionKeys[defaultSubjectKey])
   : '';
+
+const subjectLabels = Object.fromEntries(
+  CONTACT_SUBJECT_KEYS.map((key) => [key, t(locale, subjectOptionKeys[key])]),
+) as Record<ContactSubjectKey, string>;
 ---
 
 <section
@@ -40,6 +44,7 @@ const presetSubjectValue = defaultSubjectKey
   data-formspree-url={FORMSPREE_FORM_URL}
   data-scroll-to-form={scrollToForm ? 'true' : 'false'}
   data-preset-subject={presetSubjectValue}
+  data-subject-labels={JSON.stringify(subjectLabels)}
 >
   <div class="mx-auto max-w-7xl grid lg:grid-cols-2 gap-12">
     <div>
@@ -178,6 +183,7 @@ const presetSubjectValue = defaultSubjectKey
 </section>
 
 <script>
+  import { defaultSubjectKeyFromContactUrl, type ContactSubjectKey } from '../lib/contact-form';
   import { onPageLoad } from '../lib/on-page-load';
 
   onPageLoad(() => {
@@ -192,14 +198,20 @@ const presetSubjectValue = defaultSubjectKey
     const successMsg = page.dataset.successMsg ?? '';
     const submitErrorMsg = page.dataset.submitError ?? '';
     const formspreeUrl = page.dataset.formspreeUrl ?? '';
-    const scrollToForm = page.dataset.scrollToForm === 'true';
-    const presetSubjectValue = page.dataset.presetSubject ?? '';
+    const subjectLabels = JSON.parse(page.dataset.subjectLabels ?? '{}') as Record<
+      ContactSubjectKey,
+      string
+    >;
+    const presetKey = defaultSubjectKeyFromContactUrl(new URLSearchParams(window.location.search));
+    const presetSubjectValue =
+      (presetKey && subjectLabels[presetKey]) || page.dataset.presetSubject || '';
 
     const subjectSelect = document.getElementById('subject');
     if (presetSubjectValue && subjectSelect instanceof HTMLSelectElement) {
       subjectSelect.value = presetSubjectValue;
     }
 
+    const scrollToForm = page.dataset.scrollToForm === 'true' || Boolean(presetKey);
     if (scrollToForm) {
       const section = document.getElementById('contacte-form');
       const nameField = document.getElementById('name');

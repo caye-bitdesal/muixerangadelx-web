@@ -19,7 +19,17 @@ const paragraphs = t(locale, 'home.quisom.body').split('\n\n');
       </div>
 
       <div class="col-12 texto">
-        {paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+        {paragraphs.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+
+        <p>
+          {t(locale, 'home.quisom.rehearsalPrefix')}
+          <a href={joinUsPath(locale)} class="text-elx-red underline underline-offset-2 hover:opacity-90">
+            {t(locale, 'home.quisom.rehearsalLink')}
+          </a>
+          {t(locale, 'home.quisom.rehearsalSuffix')}
+        </p>
 
         <a href={joinUsPath(locale)} class="btn btn-primary m-t-30 m-b-0">
           {t(locale, 'home.quisom.cta')}
