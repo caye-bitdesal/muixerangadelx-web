@@ -46,26 +46,35 @@ const labels = {
 <script>
   import { fetchEventById } from '../lib/events';
   import { renderActivityDetailBody, type ActivityDetailLabels } from '../lib/activity-detail-render';
+  import { onPageLoad } from '../lib/on-page-load';
 
-  const root = document.querySelector('[data-activity-detail]') as HTMLElement | null;
-  if (!root) throw new Error('activity detail root missing');
+  onPageLoad(() => {
+    const root = document.querySelector('[data-activity-detail]') as HTMLElement | null;
+    if (!root) return;
 
-  const eventId = root.dataset.eventId!;
-  const backHref = root.dataset.backHref!;
-  const locale = (root.dataset.locale ?? 'va') as 'va' | 'es' | 'en';
-  const labels = JSON.parse(root.dataset.labels ?? '{}') as ActivityDetailLabels;
-  const body = root.querySelector('[data-activity-detail-body]') as HTMLElement;
+    const eventId = root.dataset.eventId!;
+    const backHref = root.dataset.backHref!;
+    const locale = (root.dataset.locale ?? 'va') as 'va' | 'es' | 'en';
+    const labels = JSON.parse(root.dataset.labels ?? '{}') as ActivityDetailLabels;
+    const body = root.querySelector('[data-activity-detail-body]') as HTMLElement;
 
-  fetchEventById(eventId)
-    .then((event) => {
-      if (!event) {
-        window.location.replace(backHref);
-        return;
-      }
-      body.innerHTML = renderActivityDetailBody(event, labels, locale);
-      document.title = `${event.name} | Muixeranga d'Elx`;
-    })
-    .catch(() => {
-      window.location.replace(backHref);
-    });
+    let cancelled = false;
+    fetchEventById(eventId)
+      .then((event) => {
+        if (cancelled) return;
+        if (!event) {
+          window.location.replace(backHref);
+          return;
+        }
+        body.innerHTML = renderActivityDetailBody(event, labels, locale);
+        document.title = `${event.name} | Muixeranga d'Elx`;
+      })
+      .catch(() => {
+        if (!cancelled) window.location.replace(backHref);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  });
 </script>

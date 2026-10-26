@@ -60,12 +60,18 @@ const filters = [
 </section>
 
 <script>
-  const root = document.querySelector('[data-docs-app]');
-  if (root) {
+  import { onPageLoad } from '../lib/on-page-load';
+
+  onPageLoad(() => {
+    const root = document.querySelector('[data-docs-app]');
+    if (!root) return;
+
+    const ac = new AbortController();
+    const { signal } = ac;
     const cards = [...root.querySelectorAll('[data-doc-card]')];
     const emptyMsg = root.querySelector('[data-docs-empty-filter]');
 
-    const applyFilter = (filter) => {
+    const applyFilter = (filter: string) => {
       let visible = 0;
       cards.forEach((card) => {
         const show = filter === 'all' || card.dataset.docType === filter;
@@ -76,17 +82,23 @@ const filters = [
     };
 
     root.querySelectorAll('[data-doc-filter]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const filter = btn.dataset.docFilter || 'all';
-        root.querySelectorAll('[data-doc-filter]').forEach((b) => {
-          const active = b === btn;
-          b.classList.toggle('bg-elx-dark', active);
-          b.classList.toggle('text-white', active);
-          b.classList.toggle('bg-white', !active);
-          b.classList.toggle('text-elx-dark', !active);
-        });
-        applyFilter(filter);
-      });
+      btn.addEventListener(
+        'click',
+        () => {
+          const filter = (btn as HTMLElement).dataset.docFilter || 'all';
+          root.querySelectorAll('[data-doc-filter]').forEach((b) => {
+            const active = b === btn;
+            b.classList.toggle('bg-elx-dark', active);
+            b.classList.toggle('text-white', active);
+            b.classList.toggle('bg-white', !active);
+            b.classList.toggle('text-elx-dark', !active);
+          });
+          applyFilter(filter);
+        },
+        { signal },
+      );
     });
-  }
+
+    return () => ac.abort();
+  });
 </script>

@@ -1,8 +1,11 @@
 ---
+import { ClientRouter, fade } from 'astro:transitions';
 import '../styles/global.css';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import type { Locale } from '../i18n/ui';
+
+const mainFade = fade({ duration: '0.22s' });
 
 interface Props {
   title?: string;
@@ -55,15 +58,26 @@ const pageUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : Astr
       rel="stylesheet"
     />
     <title>{title}</title>
+    <ClientRouter />
   </head>
   <body id="body" class="min-h-screen flex flex-col bg-white text-elx-dark font-sans">
     <div id="body-inner" class="flex min-h-screen flex-col flex-1">
       <div id="page-wrap" class="flex flex-1 flex-col">
-        <Navbar locale={locale} overlay={overlayNav} currentPath={Astro.url.pathname} />
-        <main id="page-content" class:list={['flex-1', overlayNav ? '' : 'pt-[4.875rem]']}>
+        <Navbar
+          locale={locale}
+          overlay={overlayNav}
+          currentPath={Astro.url.pathname}
+          transition:name="site-header"
+          transition:animate="none"
+        />
+        <main
+          id="page-content"
+          transition:animate={mainFade}
+          class:list={['flex-1', overlayNav ? '' : 'pt-[4.875rem]']}
+        >
           <slot />
         </main>
-        <Footer locale={locale} />
+        <Footer locale={locale} transition:name="site-footer" transition:animate="none" />
       </div>
     </div>
   </body>

@@ -48,8 +48,12 @@ const { locale, posts } = Astro.props;
 </noscript>
 
 <script>
-  const root = document.querySelector('[data-blog-app]') as HTMLElement | null;
-  if (root) {
+  import { onPageLoad } from '../lib/on-page-load';
+
+  onPageLoad(() => {
+    const root = document.querySelector('[data-blog-app]') as HTMLElement | null;
+    if (!root) return;
+
     const posts = JSON.parse(root.dataset.posts || '[]') as Array<{
       slug: string;
       title: string;
@@ -100,10 +104,18 @@ const { locale, posts } = Astro.props;
       emptyEl.textContent = emptyMsg;
     };
 
-    const io = new IntersectionObserver((entries) => {
-      if (entries.some((e) => e.isIntersecting) && shown < posts.length) loadMore();
-    });
-    io.observe(root.querySelector('[data-blog-sentinel]')!);
+    grid.innerHTML = '';
+    shown = 0;
+
+    const sentinel = root.querySelector('[data-blog-sentinel]');
+    const io =
+      sentinel &&
+      new IntersectionObserver((entries) => {
+        if (entries.some((e) => e.isIntersecting) && shown < posts.length) loadMore();
+      });
+    if (io && sentinel) io.observe(sentinel);
     loadMore();
-  }
+
+    return () => io?.disconnect();
+  });
 </script>

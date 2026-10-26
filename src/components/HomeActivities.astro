@@ -13,7 +13,7 @@ const { locale, events } = Astro.props;
 const items = events.slice(0, 3);
 ---
 
-<section class="bg-elx-yellow py-16 px-4 sm:px-6">
+<section id="home-activities" class="bg-elx-yellow py-16 px-4 sm:px-6">
   <div class="mx-auto max-w-7xl">
     <div class="mb-8 text-center sm:text-left">
       <h2 class="text-3xl sm:text-4xl font-bold text-elx-dark">{t(locale, 'home.activitats')}</h2>
@@ -49,10 +49,17 @@ const items = events.slice(0, 3);
 
 <script>
   import { fitActivityCardImages } from '../lib/activity-card';
+  import { onPageLoad } from '../lib/on-page-load';
 
-  const section = document.currentScript?.previousElementSibling as HTMLElement | null;
-  const root = section?.closest('section') ?? document;
+  onPageLoad(() => {
+    const section = document.querySelector('#home-activities');
+    if (!section) return;
 
-  fitActivityCardImages(root);
-  window.addEventListener('resize', () => fitActivityCardImages(root), { passive: true });
+    const fit = () => fitActivityCardImages(section);
+    fit();
+
+    const ac = new AbortController();
+    window.addEventListener('resize', fit, { passive: true, signal: ac.signal });
+    return () => ac.abort();
+  });
 </script>

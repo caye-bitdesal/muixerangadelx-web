@@ -67,6 +67,7 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
     type EventDateInput,
   } from '../lib/events';
   import { fitActivityCardImages } from '../lib/activity-card';
+  import { onPageLoad } from '../lib/on-page-load';
 
   type Ev = {
     id: string;
@@ -76,8 +77,13 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
     type?: string;
   };
 
+  onPageLoad(() => {
   const root = document.querySelector('[data-activities-app]') as HTMLElement | null;
-  if (!root) throw new Error('activities root missing');
+  if (!root) return;
+
+  const ac = new AbortController();
+  const { signal } = ac;
+  let cancelled = false;
 
   const detailBase = root.dataset.detailBase!;
   const localeTag = root.dataset.locale!;
@@ -179,31 +185,44 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
   };
 
   root.querySelectorAll('[data-filter]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      filter = (btn as HTMLElement).dataset.filter || 'all';
-      applyFilterButtonStyles();
-      render();
-      notifyFilter();
-    });
+    btn.addEventListener(
+      'click',
+      () => {
+        filter = (btn as HTMLElement).dataset.filter || 'all';
+        applyFilterButtonStyles();
+        render();
+        notifyFilter();
+      },
+      { signal },
+    );
   });
 
-  window.addEventListener('activities:month-changed', ((event: CustomEvent<{ year: number; month: number }>) => {
-    visibleYear = event.detail.year;
-    visibleMonth = event.detail.month;
-    selectedDateKey = null;
-    render();
-  }) as EventListener);
+  window.addEventListener(
+    'activities:month-changed',
+    ((event: CustomEvent<{ year: number; month: number }>) => {
+      visibleYear = event.detail.year;
+      visibleMonth = event.detail.month;
+      selectedDateKey = null;
+      render();
+    }) as EventListener,
+    { signal },
+  );
 
-  window.addEventListener('activities:day-selected', ((event: CustomEvent<{ dateKey: string }>) => {
-    selectedDateKey = event.detail.dateKey || null;
-    applySelection(true);
-  }) as EventListener);
+  window.addEventListener(
+    'activities:day-selected',
+    ((event: CustomEvent<{ dateKey: string }>) => {
+      selectedDateKey = event.detail.dateKey || null;
+      applySelection(true);
+    }) as EventListener,
+    { signal },
+  );
 
-  window.addEventListener('resize', fitCardImages, { passive: true });
+  window.addEventListener('resize', fitCardImages, { passive: true, signal });
 
   statusEl.textContent = loadingMsg;
   listAllEvents()
     .then((events) => {
+      if (cancelled) return;
       allEvents = events.map((event) => ({
         id: event.id,
         name: event.name,
@@ -215,10 +234,17 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
       render();
     })
     .catch(() => {
+      if (cancelled) return;
       ready = true;
       render();
     })
     .finally(() => {
-      statusEl.textContent = '';
+      if (!cancelled) statusEl.textContent = '';
     });
+
+  return () => {
+    cancelled = true;
+    ac.abort();
+  };
+  });
 </script>

@@ -67,8 +67,14 @@ const slides = [
 </section>
 
 <script>
-  const root = document.querySelector('[data-carousel]');
-  if (root) {
+  import { onPageLoad } from '../lib/on-page-load';
+
+  onPageLoad(() => {
+    const root = document.querySelector('[data-carousel]');
+    if (!root) return;
+
+    const ac = new AbortController();
+    const { signal } = ac;
     const slideEls = [...root.querySelectorAll<HTMLImageElement>('[data-carousel-slide]')];
     const dots = [...root.querySelectorAll('[data-carousel-dot]')];
     let index = 0;
@@ -104,8 +110,8 @@ const slides = [
 
     Promise.all(whenImagesReady).then(setCarouselSize);
 
-    window.addEventListener('resize', setCarouselSize, { passive: true });
-    window.visualViewport?.addEventListener('resize', setCarouselSize, { passive: true });
+    window.addEventListener('resize', setCarouselSize, { passive: true, signal });
+    window.visualViewport?.addEventListener('resize', setCarouselSize, { passive: true, signal });
 
     const show = (next: number) => {
       index = (next + slideEls.length) % slideEls.length;
@@ -120,12 +126,21 @@ const slides = [
     };
 
     dots.forEach((dot) => {
-      dot.addEventListener('click', () => {
-        const i = Number((dot as HTMLElement).dataset.index);
-        show(i);
-      });
+      dot.addEventListener(
+        'click',
+        () => {
+          const i = Number((dot as HTMLElement).dataset.index);
+          show(i);
+        },
+        { signal },
+      );
     });
 
-    setInterval(() => show(index + 1), 6000);
-  }
+    const intervalId = setInterval(() => show(index + 1), 6000);
+
+    return () => {
+      ac.abort();
+      clearInterval(intervalId);
+    };
+  });
 </script>

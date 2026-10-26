@@ -82,11 +82,18 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
     type EventDateInput,
     type EventType,
   } from '../lib/events';
+  import { onPageLoad } from '../lib/on-page-load';
 
   type EventLite = { date?: EventDateInput; type?: EventType };
 
-  const root = document.querySelector('[data-activities-calendar]') as HTMLElement | null;
-  if (root) {
+  onPageLoad(() => {
+    const root = document.querySelector('[data-activities-calendar]') as HTMLElement | null;
+    if (!root) return;
+
+    const ac = new AbortController();
+    const { signal } = ac;
+    let cancelled = false;
+
     const months: string[] = JSON.parse(root.dataset.months || '[]');
     const weekdays: string[] = JSON.parse(root.dataset.weekdays || '[]');
     const titleEl = root.querySelector('[data-cal-title]')!;
@@ -188,22 +195,30 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
       );
     };
 
-    gridEl.addEventListener('click', (event) => {
-      const cell = (event.target as HTMLElement).closest('[data-cal-day]');
-      if (!(cell instanceof HTMLElement) || !cell.dataset.calDay) return;
-      selectDay(cell.dataset.calDay);
-    });
+    gridEl.addEventListener(
+      'click',
+      (event) => {
+        const cell = (event.target as HTMLElement).closest('[data-cal-day]');
+        if (!(cell instanceof HTMLElement) || !cell.dataset.calDay) return;
+        selectDay(cell.dataset.calDay);
+      },
+      { signal },
+    );
 
-    gridEl.addEventListener('keydown', (event) => {
-      if (event.key !== 'Enter' && event.key !== ' ') return;
-      const cell = (event.target as HTMLElement).closest('[data-cal-day]');
-      if (!(cell instanceof HTMLElement) || !cell.dataset.calDay) return;
-      event.preventDefault();
-      selectDay(cell.dataset.calDay);
-    });
+    gridEl.addEventListener(
+      'keydown',
+      (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        const cell = (event.target as HTMLElement).closest('[data-cal-day]');
+        if (!(cell instanceof HTMLElement) || !cell.dataset.calDay) return;
+        event.preventDefault();
+        selectDay(cell.dataset.calDay);
+      },
+      { signal },
+    );
 
-    root.querySelector('[data-cal-prev]')?.addEventListener('click', () => changeMonth(-1));
-    root.querySelector('[data-cal-next]')?.addEventListener('click', () => changeMonth(1));
+    root.querySelector('[data-cal-prev]')?.addEventListener('click', () => changeMonth(-1), { signal });
+    root.querySelector('[data-cal-next]')?.addEventListener('click', () => changeMonth(1), { signal });
 
     swipeEl.addEventListener(
       'touchstart',
@@ -213,7 +228,7 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
         touchStartY = event.touches[0].clientY;
         trackingSwipe = true;
       },
-      { passive: true },
+      { passive: true, signal },
     );
 
     swipeEl.addEventListener(
@@ -227,7 +242,7 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
         if (Math.abs(deltaX) < 48 || Math.abs(deltaX) < Math.abs(deltaY)) return;
         changeMonth(deltaX < 0 ? 1 : -1);
       },
-      { passive: true },
+      { passive: true, signal },
     );
 
     swipeEl.addEventListener(
@@ -235,23 +250,35 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
       () => {
         trackingSwipe = false;
       },
-      { passive: true },
+      { passive: true, signal },
     );
 
-    window.addEventListener('activities:filter-changed', ((e: CustomEvent<{ filter: string }>) => {
-      const nextFilter = e.detail.filter || 'all';
-      if (nextFilter === filter) return;
-      filter = nextFilter;
-      render();
-    }) as EventListener);
+    window.addEventListener(
+      'activities:filter-changed',
+      ((e: CustomEvent<{ filter: string }>) => {
+        const nextFilter = e.detail.filter || 'all';
+        if (nextFilter === filter) return;
+        filter = nextFilter;
+        render();
+      }) as EventListener,
+      { signal },
+    );
 
     listAllEvents()
       .then((events) => {
+        if (cancelled) return;
         allEvents = events;
         render();
       })
-      .catch(() => render());
+      .catch(() => {
+        if (!cancelled) render();
+      });
 
     render();
-  }
+
+    return () => {
+      cancelled = true;
+      ac.abort();
+    };
+  });
 </script>
