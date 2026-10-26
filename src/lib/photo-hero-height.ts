@@ -12,7 +12,14 @@ export function bindPhotoHeroHeights(signal: AbortSignal): void {
       if (!img.naturalWidth || !img.naturalHeight) return;
 
       const scaledHeight = viewportWidth * (img.naturalHeight / img.naturalWidth);
-      const height = Math.min(viewportHeight, scaledHeight);
+      let height = Math.min(viewportHeight, scaledHeight);
+      const minAttr = root.getAttribute('data-photo-hero-min-height');
+      if (minAttr) {
+        const minHeight = Number.parseInt(minAttr, 10);
+        if (Number.isFinite(minHeight) && minHeight > 0) {
+          height = Math.max(minHeight, height);
+        }
+      }
       (root as HTMLElement).style.height = `${height}px`;
     };
 
