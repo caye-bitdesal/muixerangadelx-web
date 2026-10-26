@@ -9,6 +9,9 @@ interface Props {
   locale: Locale;
   overlayNav?: boolean;
   description?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
 }
 
 const {
@@ -16,7 +19,16 @@ const {
   locale,
   overlayNav = false,
   description = "Web oficial de la Muixeranga d'Elx",
+  ogTitle,
+  ogDescription,
+  ogImage,
 } = Astro.props;
+
+const socialTitle = ogTitle ?? title;
+const socialDescription = ogDescription ?? description;
+const socialImagePath = ogImage ?? '/images/logo.png';
+const socialImageUrl = new URL(socialImagePath, Astro.site ?? Astro.url).href;
+const pageUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : Astro.url.href;
 ---
 
 <!doctype html>
@@ -25,6 +37,16 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:title" content={socialTitle} />
+    <meta property="og:description" content={socialDescription} />
+    <meta property="og:image" content={socialImageUrl} />
+    <meta property="og:locale" content={locale === 'va' ? 'ca_ES' : locale === 'es' ? 'es_ES' : 'en_GB'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={socialTitle} />
+    <meta name="twitter:description" content={socialDescription} />
+    <meta name="twitter:image" content={socialImageUrl} />
     <link rel="icon" type="image/png" href="/images/logo.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

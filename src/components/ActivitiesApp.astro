@@ -89,11 +89,27 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
 
   const now = new Date();
   let allEvents: Ev[] = [];
-  let filter = 'all';
+  const VALID_FILTERS = new Set(['all', 'assaig', 'actuacio', 'altre']);
+  const initialFilter = new URLSearchParams(window.location.search).get('filter');
+  let filter =
+    initialFilter && VALID_FILTERS.has(initialFilter) ? initialFilter : 'all';
   let visibleYear = now.getFullYear();
   let visibleMonth = now.getMonth();
   let selectedDateKey: string | null = null;
   let ready = false;
+
+  const applyFilterButtonStyles = () => {
+    root.querySelectorAll('[data-filter]').forEach((b) => {
+      const active = (b as HTMLElement).dataset.filter === filter;
+      b.classList.toggle('bg-elx-dark', active);
+      b.classList.toggle('text-white', active);
+      b.classList.toggle('border-elx-dark', active);
+      b.classList.toggle('bg-white', !active);
+      b.classList.toggle('text-elx-dark', !active);
+    });
+  };
+
+  applyFilterButtonStyles();
 
   const formatDate = (dateInput?: EventDateInput) => {
     const d = parseEventDate(dateInput);
@@ -165,14 +181,7 @@ const localeTag = locale === 'va' ? 'ca-ES-valencia' : locale === 'es' ? 'es-ES'
   root.querySelectorAll('[data-filter]').forEach((btn) => {
     btn.addEventListener('click', () => {
       filter = (btn as HTMLElement).dataset.filter || 'all';
-      root.querySelectorAll('[data-filter]').forEach((b) => {
-        const active = b === btn;
-        b.classList.toggle('bg-elx-dark', active);
-        b.classList.toggle('text-white', active);
-        b.classList.toggle('border-elx-dark', active);
-        b.classList.toggle('bg-white', !active);
-        b.classList.toggle('text-elx-dark', !active);
-      });
+      applyFilterButtonStyles();
       render();
       notifyFilter();
     });

@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://www.muixerangadelx.com',
   i18n: {
     defaultLocale: 'va',
     locales: ['va', 'es', 'en'],

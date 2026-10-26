@@ -135,6 +135,14 @@ export function getUpcomingEvents(events: MuixerangaEvent[], limit = 3): Muixera
     .slice(0, limit);
 }
 
+export function getNextAssaig(events: MuixerangaEvent[]): MuixerangaEvent | null {
+  return (
+    events
+      .filter((event) => normalizeEventType(event.type) === 'assaig' && isUpcomingEvent(event.date))
+      .sort((a, b) => compareEventDatesAsc(a.date, b.date))[0] ?? null
+  );
+}
+
 function withDefaults(event: MuixerangaEvent, index: number): MuixerangaEvent {
   const parsed = parseEventDate(event.date);
   const fallback = new Date();

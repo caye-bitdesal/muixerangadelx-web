@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import JoinUsPage from '../../../components/JoinUsPage.astro';
+import { getLocaleFromUrl } from '../../../i18n/utils';
+import { getJoinUsContent } from '../../../lib/join-us-content';
+import { getNextAssaig, listAllEvents } from '../../../lib/events';
+
+const locale = getLocaleFromUrl(Astro.url);
+const copy = getJoinUsContent(locale);
+const events = await listAllEvents();
+const nextAssaig = getNextAssaig(events);
+const ogImage = '/images/events/assaig.jpg';
+---
+
+<BaseLayout
+  locale={locale}
+  title={`${copy.metaTitle}`}
+  description={copy.metaDescription}
+  ogTitle={copy.metaTitle}
+  ogDescription={copy.metaDescription}
+  ogImage={ogImage}
+>
+  <JoinUsPage locale={locale} nextAssaig={nextAssaig} />
+</BaseLayout>

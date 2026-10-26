@@ -1,0 +1,225 @@
+---
+import type { Locale } from '../i18n/ui';
+import { getJoinUsContent } from '../lib/join-us-content';
+import {
+  activitatsAssaigFilterPath,
+  contactJoinPath,
+  localizedPath,
+} from '../i18n/utils';
+import {
+  formatEventDateTime,
+  type MuixerangaEvent,
+} from '../lib/events';
+import { socialLinks } from '../lib/site';
+
+interface Props {
+  locale: Locale;
+  nextAssaig: MuixerangaEvent | null;
+}
+
+const { locale, nextAssaig } = Astro.props;
+const copy = getJoinUsContent(locale);
+const instagram = socialLinks.find((link) => link.id === 'instagram');
+
+const heroImage = '/images/events/assaig.jpg';
+const sideImage = '/images/events/assaig-pinya-nens.jpg';
+
+const detailHref = nextAssaig
+  ? `${localizedPath(locale, '/activitats')}/${nextAssaig.id}`
+  : null;
+---
+
+<article class="join-us-page bg-white">
+  <section class="join-hero relative overflow-hidden bg-elx-dark text-white">
+    <img
+      src={heroImage}
+      alt={copy.heroImageAlt}
+      class="absolute inset-0 h-full w-full max-w-none object-cover object-center"
+      width="1600"
+      height="900"
+      fetchpriority="high"
+    />
+    <div
+      class="absolute inset-0 bg-gradient-to-b from-elx-dark/85 via-elx-dark/70 to-elx-dark/90"
+      aria-hidden="true"
+    ></div>
+
+    <div class="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-14 lg:py-16">
+      <div class="max-w-3xl">
+        <h1 class="text-2xl font-bold leading-tight sm:text-4xl lg:text-5xl">{copy.heroTitle}</h1>
+        <p class="mt-3 text-sm leading-relaxed text-white/95 sm:mt-4 sm:text-lg">{copy.heroSubtitle}</p>
+      </div>
+
+      <div class="mt-5 grid gap-3 sm:mt-8 sm:gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-6">
+        <div class="rounded-lg border border-white/20 bg-white/10 p-4 backdrop-blur-sm sm:p-5">
+          <p class="text-xs font-semibold uppercase tracking-wide text-elx-yellow">
+            {copy.nextRehearsalLabel}
+          </p>
+          {
+            nextAssaig && detailHref ? (
+              <>
+                <p class="mt-2 text-lg font-bold">{nextAssaig.name}</p>
+                <p class="mt-1 text-sm sm:text-base">
+                  {formatEventDateTime(nextAssaig.date, locale)}
+                </p>
+                {nextAssaig.address ? (
+                  <p class="mt-1 text-sm text-white/90">{nextAssaig.address}</p>
+                ) : null}
+                <a
+                  href={detailHref}
+                  class="mt-3 inline-block text-sm font-semibold text-elx-yellow underline underline-offset-2"
+                >
+                  {copy.ctaEventDetail}
+                </a>
+              </>
+            ) : (
+              <p class="mt-2 text-sm leading-relaxed sm:text-base">{copy.noRehearsalMsg}</p>
+            )
+          }
+          <a
+            href={activitatsAssaigFilterPath(locale)}
+            class="mt-4 inline-flex items-center justify-center border border-white/40 bg-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-colors hover:bg-white/20"
+          >
+            {copy.ctaAllRehearsals}
+          </a>
+        </div>
+
+        <div class="flex flex-col gap-3 sm:flex-row lg:flex-col lg:min-w-[220px]">
+          <a
+            href={contactJoinPath(locale)}
+            class="inline-flex items-center justify-center bg-elx-red px-6 py-3 text-center text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-elx-yellow hover:text-elx-dark"
+          >
+            {copy.ctaContact}
+          </a>
+          <a
+            href="#faq"
+            class="inline-flex items-center justify-center border-2 border-white px-6 py-3 text-center text-sm font-semibold uppercase tracking-wide text-white transition-colors hover:bg-white hover:text-elx-dark"
+          >
+            FAQ
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:py-16">
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(280px,420px)] lg:items-start lg:gap-12 xl:gap-16">
+      <div class="join-us-main-copy flex min-w-0 flex-col gap-12 lg:gap-14">
+        <div>
+          <h2 class="text-2xl font-bold sm:text-3xl">{copy.forWhoTitle}</h2>
+          <p class="mt-4 text-base leading-relaxed text-elx-dark/90">{copy.forWhoBody}</p>
+        </div>
+
+        <div class="border-t border-elx-dark/10 pt-12 lg:pt-14">
+          <h2 class="text-2xl font-bold sm:text-3xl">{copy.whenWhereTitle}</h2>
+          <p class="mt-4 leading-relaxed">{copy.whenWhereIntro}</p>
+          {
+            nextAssaig && detailHref ? (
+              <div class="mt-6 rounded-lg border border-elx-dark/10 bg-neutral-50 p-5">
+                <p class="text-sm font-semibold uppercase tracking-wide text-elx-red">
+                  {copy.nextRehearsalLabel}
+                </p>
+                <p class="mt-2 text-xl font-bold">{nextAssaig.name}</p>
+                <p class="mt-1">{formatEventDateTime(nextAssaig.date, locale)}</p>
+                {nextAssaig.address ? <p class="mt-2 text-elx-muted">{nextAssaig.address}</p> : null}
+                <div class="mt-4 flex flex-wrap gap-3">
+                  <a
+                    href={detailHref}
+                    class="inline-flex bg-elx-dark px-4 py-2 text-sm font-semibold uppercase tracking-wide text-white hover:bg-elx-red"
+                  >
+                    {copy.ctaEventDetail}
+                  </a>
+                  <a
+                    href={activitatsAssaigFilterPath(locale)}
+                    class="inline-flex border border-elx-dark px-4 py-2 text-sm font-semibold uppercase tracking-wide text-elx-dark hover:bg-elx-dark hover:text-white"
+                  >
+                    {copy.ctaAllRehearsals}
+                  </a>
+                </div>
+              </div>
+            ) : (
+              <p class="mt-6 rounded-lg border border-dashed border-elx-dark/20 bg-neutral-50 p-5 text-elx-muted">
+                {copy.noRehearsalMsg}
+              </p>
+            )
+          }
+        </div>
+
+      </div>
+
+      <div class="join-us-side-media mx-auto w-full max-w-md lg:sticky lg:top-24 lg:max-w-none lg:self-start">
+        <div class="overflow-hidden rounded-lg shadow-lg">
+          <img
+            src={sideImage}
+            alt={copy.sideImageAlt}
+            class="aspect-[3/4] w-full max-w-none object-cover object-center"
+            width="900"
+            height="1200"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="w-full bg-neutral-50 py-14 px-4 sm:px-6 lg:py-16">
+    <div class="mx-auto max-w-7xl">
+      <h2 class="text-2xl font-bold sm:text-3xl">{copy.bringTitle}</h2>
+      <p class="mt-4 w-full text-lg leading-relaxed">{copy.bringBody}</p>
+    </div>
+  </section>
+
+  <section id="faq" class="bg-white py-14 px-4 sm:px-6 lg:py-16 scroll-mt-24">
+    <div class="mx-auto max-w-3xl">
+      <h2 class="text-2xl font-bold sm:text-3xl">{copy.faqTitle}</h2>
+      <div class="mt-6 divide-y divide-elx-dark/10 border border-elx-dark/10 bg-white">
+        {
+          copy.faqs.map((item) => (
+            <details class="group p-4 sm:p-5">
+              <summary class="cursor-pointer list-none font-semibold marker:content-none [&::-webkit-details-marker]:hidden">
+                <span class="flex items-start justify-between gap-4">
+                  <span>{item.question}</span>
+                  <span
+                    class="mt-0.5 shrink-0 text-elx-red transition-transform group-open:rotate-45"
+                    aria-hidden="true"
+                  >
+                    +
+                  </span>
+                </span>
+              </summary>
+              <p class="mt-3 leading-relaxed text-elx-dark/90">{item.answer}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20">
+    <div class="rounded-xl bg-elx-dark px-6 py-10 text-center text-white sm:px-10">
+      <h2 class="text-2xl font-bold sm:text-3xl">{copy.closingTitle}</h2>
+      <p class="mx-auto mt-4 max-w-2xl leading-relaxed text-white/95">{copy.closingBody}</p>
+      <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <a
+          href={contactJoinPath(locale)}
+          class="inline-flex bg-elx-red px-8 py-3 text-sm font-bold uppercase tracking-wide text-white hover:bg-elx-yellow hover:text-elx-dark"
+        >
+          {copy.ctaContact}
+        </a>
+        {
+          instagram ? (
+            <a
+              href={instagram.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex border border-white/50 px-8 py-3 text-sm font-semibold uppercase tracking-wide text-white hover:bg-white hover:text-elx-dark"
+            >
+              {copy.closingInstagram}
+            </a>
+          ) : null
+        }
+      </div>
+    </div>
+  </section>
+</article>
+

@@ -1,6 +1,6 @@
 ---
 import { t, languages, type Locale } from '../i18n/ui';
-import { localizedPath, switchLocalePath } from '../i18n/utils';
+import { joinUsPath, localizedPath, switchLocalePath } from '../i18n/utils';
 
 interface Props {
   locale: Locale;
@@ -10,15 +10,29 @@ interface Props {
 
 const { locale, overlay = false, currentPath } = Astro.props;
 
-const links = [
-  { key: 'nav.portada' as const, path: '/' },
-  { key: 'nav.activitats' as const, path: '/activitats' },
-  { key: 'nav.blog' as const, path: '/blog' },
-  { key: 'nav.documentacio' as const, path: '/documentacio' },
-  { key: 'nav.contacte' as const, path: '/contacte' },
+type NavLink =
+  | { key: 'nav.portada' | 'nav.activitats' | 'nav.blog' | 'nav.documentacio' | 'nav.contacte'; path: string }
+  | { key: 'nav.unete'; join: true };
+
+const links: NavLink[] = [
+  { key: 'nav.portada', path: '/' },
+  { key: 'nav.activitats', path: '/activitats' },
+  { key: 'nav.unete', join: true },
+  { key: 'nav.blog', path: '/blog' },
+  { key: 'nav.documentacio', path: '/documentacio' },
+  { key: 'nav.contacte', path: '/contacte' },
 ];
 
-function isActive(path: string): boolean {
+function linkHref(link: NavLink): string {
+  return 'join' in link ? joinUsPath(locale) : localizedPath(locale, link.path);
+}
+
+function isActive(link: NavLink): boolean {
+  if ('join' in link) {
+    const href = joinUsPath(locale);
+    return currentPath === href || currentPath.startsWith(`${href}/`);
+  }
+  const path = link.path;
   const localized = localizedPath(locale, path);
   if (path === '/') {
     return currentPath === localized || currentPath === `/${locale}`;
@@ -54,8 +68,8 @@ function isActive(path: string): boolean {
         <ul class="menu-nav">
           {
             links.map((link) => (
-              <li class:list={[isActive(link.path) && 'active']}>
-                <a href={localizedPath(locale, link.path)}>{t(locale, link.key)}</a>
+              <li class:list={[isActive(link) && 'active']}>
+                <a href={linkHref(link)}>{t(locale, link.key)}</a>
               </li>
             ))
           }
@@ -102,8 +116,8 @@ function isActive(path: string): boolean {
     <ul class="menu-nav-mobile">
       {
         links.map((link) => (
-          <li class:list={[isActive(link.path) && 'active']}>
-            <a href={localizedPath(locale, link.path)}>{t(locale, link.key)}</a>
+          <li class:list={[isActive(link) && 'active']}>
+            <a href={linkHref(link)}>{t(locale, link.key)}</a>
           </li>
         ))
       }

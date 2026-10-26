@@ -6,9 +6,10 @@ import { localizedPath } from '../i18n/utils';
 
 interface Props {
   locale: Locale;
+  defaultSubject?: string;
 }
 
-const { locale } = Astro.props;
+const { locale, defaultSubject = '' } = Astro.props;
 ---
 
 <section class="bg-white py-16 px-4 sm:px-6" data-contact-page>
@@ -63,7 +64,13 @@ const { locale } = Astro.props;
       </div>
       <div>
         <label class="block text-sm font-medium mb-1" for="subject">{t(locale, 'contacte.form.subject')}*</label>
-        <input id="subject" name="subject" required class="w-full border border-black/20 bg-neutral-100 px-3 py-2" />
+        <input
+          id="subject"
+          name="subject"
+          required
+          value={defaultSubject}
+          class="w-full border border-black/20 bg-neutral-100 px-3 py-2"
+        />
       </div>
       <div>
         <label class="block text-sm font-medium mb-1" for="message">{t(locale, 'contacte.form.message')}*</label>
