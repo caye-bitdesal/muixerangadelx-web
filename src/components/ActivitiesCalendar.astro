@@ -20,7 +20,6 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
   class="carousel-hero relative w-full overflow-hidden bg-elx-dark text-white"
   data-activities-calendar
   data-photo-hero
-  data-photo-hero-min-height="840"
   data-hero-perf-scope="agenda-hero"
   data-api={EVENTS_API}
   data-months={JSON.stringify(monthNames)}
@@ -38,7 +37,10 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
   </div>
   <div class="absolute inset-0 bg-elx-dark/70" aria-hidden="true"></div>
 
-  <div class="relative z-10 mx-auto flex min-h-full max-w-5xl flex-col justify-center px-4 pb-10 pt-20 sm:px-6 sm:pb-14 sm:pt-24">
+  <div
+    class="relative z-10 mx-auto flex min-h-full max-w-5xl flex-col justify-center px-4 pb-10 pt-20 sm:px-6 sm:pb-14 sm:pt-24"
+    data-agenda-hero-content
+  >
     <h2 class="mb-6 text-center text-2xl sm:text-4xl font-bold capitalize" data-cal-title></h2>
 
     <div class="hidden">
@@ -91,7 +93,7 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
     type EventType,
   } from '../lib/events';
   import { onPageLoad } from '../lib/on-page-load';
-  import { bindPhotoHeroHeights } from '../lib/photo-hero-height';
+  import { bindPhotoHeroHeights, updatePhotoHeroHeight } from '../lib/photo-hero-height';
 
   type EventLite = { date?: EventDateInput; type?: EventType };
 
@@ -195,6 +197,7 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
       }
       gridEl.innerHTML = cells.join('');
       notifyMonthChangeIfNeeded();
+      updatePhotoHeroHeight(root);
     };
 
     const selectDay = (dateKey: string) => {

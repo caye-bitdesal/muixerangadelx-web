@@ -653,10 +653,6 @@ img {
   height: 100dvh;
 }
 
-.carousel-hero[data-activities-calendar] {
-  min-height: 840px;
-}
-
 .carousel-copy {
   margin-left: -10px;
   padding-right: 10px;
