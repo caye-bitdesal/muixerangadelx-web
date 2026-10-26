@@ -36,10 +36,17 @@ const youtubeEmbedSrc = useYoutube
   : '';
 ---
 
-<section class="relative h-[55vh] min-h-[360px] max-h-[560px] w-full overflow-hidden">
+<section
+  data-hero-perf-scope="page-hero"
+  class:list={[
+    'relative h-[55vh] min-h-[360px] max-h-[560px] w-full overflow-hidden',
+    useYoutube && 'bg-elx-dark',
+  ]}
+>
   {
     useMap ? (
       <iframe
+        data-astro-reload
         title={mapTitle}
         src={mapEmbedUrl}
         class="absolute inset-0 h-full w-full border-0 pointer-events-none select-none"
@@ -48,27 +55,15 @@ const youtubeEmbedSrc = useYoutube
         referrerpolicy="no-referrer-when-downgrade"
       />
     ) : useYoutube ? (
-      <>
-        <div class="page-hero__youtube-wrap" aria-hidden="true">
-          <iframe
-            class="page-hero__youtube page-hero__youtube--motion"
-            src={youtubeEmbedSrc}
-            title={youtubeTitle}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            loading="lazy"
-            tabindex="-1"
-          />
-        </div>
-        <img
-          src={image}
-          alt={imageAlt}
-          class:list={[
-            'page-hero__media page-hero__youtube-fallback absolute inset-0 h-full w-full',
-            imageCover && 'page-hero__media--cover',
-          ]}
+      <div class="page-hero__youtube-wrap" aria-hidden="true">
+        <iframe
+          class="page-hero__youtube page-hero__youtube--motion"
+          data-youtube-embed-src={youtubeEmbedSrc}
+          title={youtubeTitle}
+          referrerpolicy="strict-origin-when-cross-origin"
+          tabindex="-1"
         />
-      </>
+      </div>
     ) : (
       <img
         src={image}

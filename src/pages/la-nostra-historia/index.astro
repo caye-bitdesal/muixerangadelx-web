@@ -1,13 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PageHero from '../../components/PageHero.astro';
+import PhotoHero from '../../components/PhotoHero.astro';
 import HistoriaPage from '../../components/HistoriaPage.astro';
 import { getLocaleFromUrl } from '../../i18n/utils';
-import {
-  getHistoriaContent,
-  HISTORIA_ELX_IMAGE,
-  HISTORIA_HERO_YOUTUBE_ID,
-} from '../../lib/historia-content';
+import { getHistoriaContent, HISTORIA_ELX_IMAGE } from '../../lib/historia-content';
 
 const locale = getLocaleFromUrl(Astro.url);
 const copy = getHistoriaContent(locale);
@@ -22,14 +18,11 @@ const copy = getHistoriaContent(locale);
   ogDescription={copy.metaDescription}
   ogImage={HISTORIA_ELX_IMAGE}
 >
-  <PageHero
-    title={copy.heroTitle}
-    subtitle={copy.heroSubtitle}
-    youtubeVideoId={HISTORIA_HERO_YOUTUBE_ID}
-    youtubeTitle={copy.heroImageAlt}
-    image={HISTORIA_ELX_IMAGE}
-    imageAlt={copy.heroImageAlt}
-    imageCover
+  <PhotoHero
+    image="/images/carousel/hero3.jpg"
+    lead={copy.heroTitle}
+    title={copy.heroSubtitle}
+    perfScope="historia-hero"
   />
   <HistoriaPage locale={locale} />
 </BaseLayout>

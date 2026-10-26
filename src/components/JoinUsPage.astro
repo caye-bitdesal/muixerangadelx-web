@@ -16,12 +16,12 @@ const copy = getJoinUsContent(locale);
 const instagram = socialLinks.find((link) => link.id === 'instagram');
 
 const heroImage = '/images/events/assaig.jpg';
-const sideImage = '/images/events/assaig-pinya-nens.jpg';
+const sideImage = '/images/events/join-us-pinya-enxaneta.jpg';
 
 ---
 
 <article class="join-us-page bg-white">
-  <section class="join-hero relative overflow-hidden bg-elx-dark text-white">
+  <section class="join-hero relative overflow-hidden bg-elx-dark text-white" data-hero-perf-scope="join-us">
     <img
       src={heroImage}
       alt={copy.heroImageAlt}
@@ -82,8 +82,8 @@ const sideImage = '/images/events/assaig-pinya-nens.jpg';
             src={sideImage}
             alt={copy.sideImageAlt}
             class="aspect-[3/4] w-full max-w-none object-cover object-center"
-            width="900"
-            height="1200"
+            width="768"
+            height="1024"
             loading="lazy"
           />
         </div>

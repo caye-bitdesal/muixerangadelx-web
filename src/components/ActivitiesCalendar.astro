@@ -17,21 +17,28 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
 ---
 
 <section
-  class="relative bg-elx-dark text-white"
+  class="carousel-hero relative w-full overflow-hidden bg-elx-dark text-white"
   data-activities-calendar
+  data-photo-hero
+  data-hero-perf-scope="agenda-hero"
   data-api={EVENTS_API}
   data-months={JSON.stringify(monthNames)}
   data-weekdays={JSON.stringify(weekdays)}
 >
-  <div class="absolute inset-0 overflow-hidden">
-    <div class="absolute inset-0 opacity-30">
-      <img src="/images/carousel/hero1.jpg" alt="" class="h-full w-full object-cover" />
-    </div>
-    <div class="absolute inset-0 bg-gradient-to-b from-elx-dark/70 to-elx-dark/90"></div>
+  <div class="carousel-media absolute inset-0 overflow-hidden" aria-hidden="true">
+    <img
+      src="/images/carousel/hero1.jpg"
+      alt=""
+      class="carousel-slide absolute inset-0 h-full w-full max-w-none object-cover object-bottom"
+      data-photo-hero-img
+      fetchpriority="high"
+      loading="eager"
+    />
   </div>
+  <div class="absolute inset-0 bg-elx-dark/70" aria-hidden="true"></div>
 
-  <div class="relative z-10 mx-auto max-w-5xl px-4 py-16 sm:py-20">
-    <h1 class="mb-6 text-center text-2xl sm:text-4xl font-bold capitalize" data-cal-title></h1>
+  <div class="relative z-10 mx-auto flex min-h-full max-w-5xl flex-col justify-center px-4 pb-10 pt-20 sm:px-6 sm:pb-14 sm:pt-24">
+    <h2 class="mb-6 text-center text-2xl sm:text-4xl font-bold capitalize" data-cal-title></h2>
 
     <div class="hidden">
       <span class="bg-elx-blue text-white font-bold"></span>
@@ -83,6 +90,7 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
     type EventType,
   } from '../lib/events';
   import { onPageLoad } from '../lib/on-page-load';
+  import { bindPhotoHeroHeights } from '../lib/photo-hero-height';
 
   type EventLite = { date?: EventDateInput; type?: EventType };
 
@@ -92,6 +100,7 @@ const weekdays = Array.from({ length: 7 }, (_, i) =>
 
     const ac = new AbortController();
     const { signal } = ac;
+    bindPhotoHeroHeights(signal);
     let cancelled = false;
 
     const months: string[] = JSON.parse(root.dataset.months || '[]');

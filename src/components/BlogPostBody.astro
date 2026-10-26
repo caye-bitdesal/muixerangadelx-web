@@ -45,11 +45,9 @@ const hasInstagramEmbed = blocks.some(
           return (
             <div class="aspect-video w-full overflow-hidden bg-neutral-100">
               <iframe
-                src={embedUrl}
+                data-youtube-embed-src={embedUrl}
                 title="YouTube video"
                 class="h-full w-full border-0"
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowfullscreen
               />
             </div>

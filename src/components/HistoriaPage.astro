@@ -29,11 +29,9 @@ const algemesiYoutubeEmbed = youtubeEmbedUrl(HISTORIA_ALGEMESI_YOUTUBE_URL);
           {section.embedYoutube && algemesiYoutubeEmbed ? (
             <div class="mt-6 aspect-video w-full overflow-hidden rounded-lg bg-neutral-100 shadow-sm">
               <iframe
-                src={algemesiYoutubeEmbed}
+                data-youtube-embed-src={algemesiYoutubeEmbed}
                 title={copy.algemesiYoutubeTitle}
                 class="h-full w-full border-0"
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowfullscreen
               />
             </div>

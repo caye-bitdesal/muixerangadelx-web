@@ -86,7 +86,7 @@ const content: Record<Locale, JoinUsContent> = {
     closingInstagram: 'Segueix-nos a Instagram',
     heroImageAlt: 'Assaig de la Muixeranga d’Elx en un espai interior',
     sideImageAlt:
-      'Assaig de la Muixeranga d’Elx en un pavelló: persones de diferents edats formen una torre humana amb un xiquet a dalt i adults sostenint la pinya a la base',
+      'Figura de la Muixeranga d’Elx al capvespre: una enxaneta amb els braços oberts a dalt de la torre i la pinya sostenint-la des de baix, amb el cel taronja de fons',
   },
   es: {
     metaTitle: "Únete a la Muixeranga d'Elx – Ven a probar, sin experiencia",
@@ -145,7 +145,7 @@ const content: Record<Locale, JoinUsContent> = {
     closingInstagram: 'Síguenos en Instagram',
     heroImageAlt: 'Ensayo de la Muixeranga d\'Elx en un espacio cubierto',
     sideImageAlt:
-      'Ensayo de la Muixeranga d\'Elx en un pabellón: personas de distintas edades forman una torre humana con un niño arriba y adultos sosteniendo la pinya en la base',
+      'Figura de la Muixeranga d\'Elx al atardecer: una enxaneta con los brazos abiertos en lo alto de la torre y la pinya sosteniéndola desde abajo, con el cielo naranja de fondo',
   },
   en: {
     metaTitle: "Join Muixeranga d'Elx – Come and try, no experience needed",
@@ -204,7 +204,7 @@ const content: Record<Locale, JoinUsContent> = {
     closingInstagram: 'Follow us on Instagram',
     heroImageAlt: 'Muixeranga d\'Elx rehearsal indoors',
     sideImageAlt:
-      'Muixeranga d\'Elx rehearsal in a sports hall: people of different ages building a human tower with a child at the top and adults supporting the pinya at the base',
+      'Muixeranga d\'Elx figure at dusk: an enxaneta with arms outstretched atop the tower and the pinya supporting from below, against an orange sky',
   },
 };
 

@@ -1,0 +1,59 @@
+---
+interface Props {
+  image: string;
+  lead: string;
+  title: string;
+  cta?: { href: string; label: string };
+  perfScope: string;
+  /** Desplaça el bloc de text cap amunt (px). */
+  raiseCopyByPx?: number;
+}
+
+const { image, lead, title, cta, perfScope, raiseCopyByPx = 0 } = Astro.props;
+---
+
+<section
+  class="carousel-hero relative w-full overflow-hidden bg-elx-dark"
+  data-photo-hero
+  data-hero-perf-scope={perfScope}
+>
+  <div class="carousel-media absolute inset-0 overflow-hidden">
+    <img
+      src={image}
+      alt=""
+      class="carousel-slide absolute inset-0 h-full w-full max-w-none object-cover object-bottom"
+      data-photo-hero-img
+      fetchpriority="high"
+      loading="eager"
+    />
+  </div>
+
+  <div
+    class="carousel-copy relative z-10 flex h-full flex-col justify-center px-6 sm:px-12 max-w-7xl mx-auto pt-16"
+    style={raiseCopyByPx > 0 ? `transform: translateY(-${raiseCopyByPx}px)` : undefined}
+  >
+    <p class="carousel-lead font-bold text-white">{lead}</p>
+    <h1 class="carousel-title font-bold text-white">{title}</h1>
+    {
+      cta ? (
+        <a
+          href={cta.href}
+          class="carousel-cta inline-flex w-fit items-center justify-center bg-elx-red px-6 py-3 text-sm font-bold uppercase tracking-wide text-white no-underline transition-colors hover:bg-elx-yellow hover:text-elx-dark sm:text-base"
+        >
+          {cta.label}
+        </a>
+      ) : null
+    }
+  </div>
+</section>
+
+<script>
+  import { onPageLoad } from '../lib/on-page-load';
+  import { bindPhotoHeroHeights } from '../lib/photo-hero-height';
+
+  onPageLoad(() => {
+    const ac = new AbortController();
+    bindPhotoHeroHeights(ac.signal);
+    return () => ac.abort();
+  });
+</script>

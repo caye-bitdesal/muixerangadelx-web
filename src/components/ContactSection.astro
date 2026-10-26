@@ -29,7 +29,18 @@ const presetSubjectValue = defaultSubjectKey
   : '';
 ---
 
-<section id="contacte-form" class="bg-white py-16 px-4 sm:px-6 scroll-mt-24" data-contact-page>
+<section
+  id="contacte-form"
+  class="bg-white py-16 px-4 sm:px-6 scroll-mt-24"
+  data-contact-page
+  data-validation-error={t(locale, 'contacte.form.error')}
+  data-sending-msg={t(locale, 'contacte.form.sending')}
+  data-success-msg={t(locale, 'contacte.form.success')}
+  data-submit-error={t(locale, 'contacte.form.submitError')}
+  data-formspree-url={FORMSPREE_FORM_URL}
+  data-scroll-to-form={scrollToForm ? 'true' : 'false'}
+  data-preset-subject={presetSubjectValue}
+>
   <div class="mx-auto max-w-7xl grid lg:grid-cols-2 gap-12">
     <div>
       <h2 class="text-3xl font-bold mb-6">{t(locale, 'contacte.heading')}</h2>
@@ -166,20 +177,23 @@ const presetSubjectValue = defaultSubjectKey
   </div>
 </section>
 
-<script define:vars={{
-  validationErrorMsg: t(locale, 'contacte.form.error'),
-  sendingMsg: t(locale, 'contacte.form.sending'),
-  successMsg: t(locale, 'contacte.form.success'),
-  submitErrorMsg: t(locale, 'contacte.form.submitError'),
-  formspreeUrl: FORMSPREE_FORM_URL,
-  scrollToForm,
-  presetSubjectValue,
-}}>
+<script>
   import { onPageLoad } from '../lib/on-page-load';
 
   onPageLoad(() => {
+    const page = document.querySelector('[data-contact-page]') as HTMLElement | null;
+    if (!page) return;
+
     const ac = new AbortController();
     const { signal } = ac;
+
+    const validationErrorMsg = page.dataset.validationError ?? '';
+    const sendingMsg = page.dataset.sendingMsg ?? '';
+    const successMsg = page.dataset.successMsg ?? '';
+    const submitErrorMsg = page.dataset.submitError ?? '';
+    const formspreeUrl = page.dataset.formspreeUrl ?? '';
+    const scrollToForm = page.dataset.scrollToForm === 'true';
+    const presetSubjectValue = page.dataset.presetSubject ?? '';
 
     const subjectSelect = document.getElementById('subject');
     if (presetSubjectValue && subjectSelect instanceof HTMLSelectElement) {

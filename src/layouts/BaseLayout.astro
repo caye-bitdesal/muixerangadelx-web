@@ -59,6 +59,10 @@ const pageUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : Astr
     />
     <title>{title}</title>
     <ClientRouter />
+    <script>
+      import '../lib/hero-perf-boot';
+      import '../lib/youtube-embed-boot';
+    </script>
   </head>
   <body id="body" class="min-h-screen flex flex-col bg-white text-elx-dark font-sans">
     <div id="body-inner" class="flex min-h-screen flex-col flex-1">

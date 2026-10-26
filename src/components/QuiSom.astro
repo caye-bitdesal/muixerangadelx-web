@@ -30,17 +30,67 @@ const paragraphs = t(locale, 'home.quisom.body').split('\n\n');
     <div class="mx-auto w-full max-w-6xl px-4 sm:px-6">
       <div class="aspect-video overflow-hidden bg-neutral-900 shadow-xl">
         <video
+          id="quisom-video"
           class="h-full w-full object-cover"
-          autoplay
+          src={HOME_VIDEO_URL}
           muted
           loop
           playsinline
-          preload="auto"
+          preload="none"
+          poster="/images/events/correllengua.png"
           aria-label={t(locale, 'home.quisom.video')}
-        >
-          <source src={HOME_VIDEO_URL} type="video/mp4" />
-        </video>
+        ></video>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+  import { onPageLoad } from '../lib/on-page-load';
+
+  onPageLoad(() => {
+    const video = document.getElementById('quisom-video');
+    if (!(video instanceof HTMLVideoElement)) return;
+
+    let started = false;
+
+    const startPlayback = () => {
+      if (started) return;
+      started = true;
+      video.preload = 'auto';
+      if (video.readyState === 0) video.load();
+      video.muted = true;
+      void video.play().catch(() => {
+        /* Autoplay blocked: poster stays visible */
+      });
+    };
+
+    video.addEventListener(
+      'error',
+      () => {
+        video.removeAttribute('src');
+        video.load();
+      },
+      { once: true },
+    );
+
+    if (typeof IntersectionObserver === 'undefined') {
+      startPlayback();
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          startPlayback();
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '120px' },
+    );
+
+    observer.observe(video);
+
+    return () => observer.disconnect();
+  });
+</script>
