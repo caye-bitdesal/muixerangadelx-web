@@ -1,6 +1,6 @@
 ---
 import { t, languages, type Locale } from '../i18n/ui';
-import { joinUsPath, localizedPath, switchLocalePath } from '../i18n/utils';
+import { historiaPath, joinUsPath, localizedPath, switchLocalePath } from '../i18n/utils';
 
 interface Props {
   locale: Locale;
@@ -10,35 +10,64 @@ interface Props {
 
 const { locale, overlay = false, currentPath } = Astro.props;
 
-type NavLink =
-  | { key: 'nav.portada' | 'nav.activitats' | 'nav.blog' | 'nav.documentacio' | 'nav.contacte'; path: string }
-  | { key: 'nav.unete'; join: true };
+type PrimaryLink =
+  | { key: 'nav.portada' | 'nav.activitats' | 'nav.blog'; path: string }
+  | { key: 'nav.historia'; historia: true };
 
-const links: NavLink[] = [
+const primaryLinks: PrimaryLink[] = [
   { key: 'nav.portada', path: '/' },
+  { key: 'nav.historia', historia: true },
   { key: 'nav.activitats', path: '/activitats' },
-  { key: 'nav.unete', join: true },
   { key: 'nav.blog', path: '/blog' },
-  { key: 'nav.documentacio', path: '/documentacio' },
-  { key: 'nav.contacte', path: '/contacte' },
 ];
 
-function linkHref(link: NavLink): string {
-  return 'join' in link ? joinUsPath(locale) : localizedPath(locale, link.path);
+function primaryHref(link: PrimaryLink): string {
+  return 'historia' in link ? historiaPath(locale) : localizedPath(locale, link.path);
 }
 
-function isActive(link: NavLink): boolean {
-  if ('join' in link) {
-    const href = joinUsPath(locale);
+function isPrimaryLinkActive(link: PrimaryLink): boolean {
+  if ('historia' in link) {
+    const href = historiaPath(locale);
     return currentPath === href || currentPath.startsWith(`${href}/`);
   }
-  const path = link.path;
+  return isPrimaryActive(link.path);
+}
+
+const contactHref = localizedPath(locale, '/contacte');
+const joinHref = joinUsPath(locale);
+const docsHref = localizedPath(locale, '/documentacio');
+
+type ContactSubItem = {
+  key: 'nav.contacte.info' | 'nav.unete' | 'nav.documentacio';
+  href: string;
+  id: 'contact' | 'join' | 'docs';
+};
+
+const contactSubItems: ContactSubItem[] = [
+  { key: 'nav.contacte.info', href: contactHref, id: 'contact' },
+  { key: 'nav.unete', href: joinHref, id: 'join' },
+  { key: 'nav.documentacio', href: docsHref, id: 'docs' },
+];
+
+function isPrimaryActive(path: string): boolean {
   const localized = localizedPath(locale, path);
   if (path === '/') {
     return currentPath === localized || currentPath === `/${locale}`;
   }
   return currentPath === localized || currentPath.startsWith(`${localized}/`);
 }
+
+function isContactSubActive(id: ContactSubItem['id']): boolean {
+  if (id === 'contact') {
+    return currentPath === contactHref || currentPath.startsWith(`${contactHref}/`);
+  }
+  if (id === 'join') {
+    return currentPath === joinHref || currentPath.startsWith(`${joinHref}/`);
+  }
+  return currentPath === docsHref || currentPath.startsWith(`${docsHref}/`);
+}
+
+const contactMenuActive = contactSubItems.some((item) => isContactSubActive(item.id));
 ---
 
 <header
@@ -67,12 +96,37 @@ function isActive(link: NavLink): boolean {
       <nav class="main-menu hidden lg:block" aria-label="Main">
         <ul class="menu-nav">
           {
-            links.map((link) => (
-              <li class:list={[isActive(link) && 'active']}>
-                <a href={linkHref(link)}>{t(locale, link.key)}</a>
+            primaryLinks.map((link) => (
+              <li class:list={[isPrimaryLinkActive(link) && 'active']}>
+                <a href={primaryHref(link)}>{t(locale, link.key)}</a>
               </li>
             ))
           }
+          <li
+            class:list={['menu-nav-dropdown', contactMenuActive && 'active']}
+            data-nav-dropdown
+          >
+            <button
+              type="button"
+              class="menu-nav-dropdown-trigger"
+              data-nav-dropdown-toggle
+              aria-expanded="false"
+              aria-haspopup="true"
+              id="nav-contact-trigger"
+            >
+              {t(locale, 'nav.contacte')}
+              <span class="menu-nav-dropdown-chevron" aria-hidden="true"></span>
+            </button>
+            <ul class="menu-nav-submenu" aria-labelledby="nav-contact-trigger">
+              {
+                contactSubItems.map((item) => (
+                  <li class:list={[isContactSubActive(item.id) && 'active']}>
+                    <a href={item.href}>{t(locale, item.key)}</a>
+                  </li>
+                ))
+              }
+            </ul>
+          </li>
         </ul>
       </nav>
 
@@ -115,12 +169,32 @@ function isActive(link: NavLink): boolean {
   <div id="mobile-menu" class="mobile-menu hidden lg:hidden" aria-label="Mobile">
     <ul class="menu-nav-mobile">
       {
-        links.map((link) => (
-          <li class:list={[isActive(link) && 'active']}>
-            <a href={linkHref(link)}>{t(locale, link.key)}</a>
+        primaryLinks.map((link) => (
+          <li class:list={[isPrimaryLinkActive(link) && 'active']}>
+            <a href={primaryHref(link)}>{t(locale, link.key)}</a>
           </li>
         ))
       }
+      <li class:list={['mobile-nav-dropdown', contactMenuActive && 'active']} data-mobile-nav-dropdown>
+        <button
+          type="button"
+          class="mobile-nav-dropdown-trigger"
+          data-mobile-nav-toggle
+          aria-expanded="false"
+        >
+          {t(locale, 'nav.contacte')}
+          <span class="menu-nav-dropdown-chevron" aria-hidden="true"></span>
+        </button>
+        <ul class="mobile-nav-submenu hidden">
+          {
+            contactSubItems.map((item) => (
+              <li class:list={[isContactSubActive(item.id) && 'active']}>
+                <a href={item.href}>{t(locale, item.key)}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </li>
     </ul>
     <div class="mobile-lang flex items-center rounded-full bg-elx-dark px-1 py-1 mx-4 mb-4 sm:hidden w-fit">
       {
@@ -163,5 +237,45 @@ function isActive(link: NavLink): boolean {
     const open = menu?.classList.toggle('hidden') === false;
     toggle.setAttribute('aria-expanded', String(open));
     toggle.classList.toggle('is-open', open);
+  });
+
+  const closeDesktopDropdowns = (except?: Element) => {
+    document.querySelectorAll('[data-nav-dropdown].is-open').forEach((dropdown) => {
+      if (except && dropdown === except) return;
+      dropdown.classList.remove('is-open');
+      const btn = dropdown.querySelector('[data-nav-dropdown-toggle]');
+      btn?.setAttribute('aria-expanded', 'false');
+    });
+  };
+
+  document.querySelectorAll('[data-nav-dropdown]').forEach((dropdown) => {
+    const btn = dropdown.querySelector('[data-nav-dropdown-toggle]');
+    btn?.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const willOpen = !dropdown.classList.contains('is-open');
+      closeDesktopDropdowns();
+      if (willOpen) {
+        dropdown.classList.add('is-open');
+        btn.setAttribute('aria-expanded', 'true');
+      } else {
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+
+  document.addEventListener('click', () => closeDesktopDropdowns());
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeDesktopDropdowns();
+  });
+
+  document.querySelectorAll('[data-mobile-nav-toggle]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const group = btn.closest('[data-mobile-nav-dropdown]');
+      const submenu = group?.querySelector('.mobile-nav-submenu');
+      if (!(submenu instanceof HTMLElement)) return;
+      const open = submenu.classList.toggle('hidden') === false;
+      btn.setAttribute('aria-expanded', String(open));
+      group?.classList.toggle('is-open', open);
+    });
   });
 </script>

@@ -1,8 +1,17 @@
 ---
+import { youtubeBackgroundEmbedUrl } from '../lib/blog-embeds';
+
 interface Props {
   title: string;
   subtitle: string;
   image?: string;
+  imageAlt?: string;
+  /** Use cover cropping for photographic heroes (e.g. historia). */
+  imageCover?: boolean;
+  youtubeVideoId?: string;
+  youtubeTitle?: string;
+  /** Default true. Set false for sound on load (may be blocked by browser autoplay rules). */
+  youtubeMuted?: boolean;
   mapEmbedUrl?: string;
   mapTitle?: string;
 }
@@ -11,11 +20,20 @@ const {
   title,
   subtitle,
   image = '/images/placeholders/hero.svg',
+  imageAlt = '',
+  imageCover = false,
+  youtubeVideoId,
+  youtubeTitle = 'Vídeo',
+  youtubeMuted = true,
   mapEmbedUrl,
   mapTitle = 'Mapa',
 } = Astro.props;
 
 const useMap = Boolean(mapEmbedUrl);
+const useYoutube = Boolean(youtubeVideoId?.trim());
+const youtubeEmbedSrc = useYoutube
+  ? youtubeBackgroundEmbedUrl(youtubeVideoId!, { muted: youtubeMuted })
+  : '';
 ---
 
 <section class="relative h-[55vh] min-h-[360px] max-h-[560px] w-full overflow-hidden">
@@ -29,12 +47,35 @@ const useMap = Boolean(mapEmbedUrl);
         tabindex="-1"
         referrerpolicy="no-referrer-when-downgrade"
       />
+    ) : useYoutube ? (
+      <>
+        <div class="page-hero__youtube-wrap" aria-hidden="true">
+          <iframe
+            class="page-hero__youtube page-hero__youtube--motion"
+            src={youtubeEmbedSrc}
+            title={youtubeTitle}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            loading="lazy"
+            tabindex="-1"
+          />
+        </div>
+        <img
+          src={image}
+          alt={imageAlt}
+          class:list={[
+            'page-hero__media page-hero__youtube-fallback absolute inset-0 h-full w-full',
+            imageCover && 'page-hero__media--cover',
+          ]}
+        />
+      </>
     ) : (
       <img
         src={image}
-        alt=""
+        alt={imageAlt}
         class:list={[
           'page-hero__media absolute inset-0 h-full w-full',
+          imageCover && 'page-hero__media--cover',
         ]}
       />
     )

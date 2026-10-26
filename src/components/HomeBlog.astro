@@ -22,11 +22,11 @@ const items = posts.slice(0, 3);
     </div>
 
     <div
-      class="grid grid-cols-2 gap-3 lg:flex lg:gap-4 lg:overflow-x-auto lg:pb-2"
+      class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:flex lg:gap-6 lg:overflow-x-auto lg:pb-2"
     >
       {
         items.map((post) => (
-          <div class="min-w-0 lg:shrink-0 lg:w-[calc((100%-2rem)/3)] [&_article]:w-full">
+          <div class="min-w-0 lg:shrink-0 lg:w-[calc((100%-3rem)/3)] [&_.blog-card]:h-full">
             <BlogCard
               locale={locale}
               slug={post.slug}
@@ -35,7 +35,6 @@ const items = posts.slice(0, 3);
               date={post.date}
               coverImage={post.coverImage}
               readLabel={t(locale, 'blog.read')}
-              yellowButton
             />
           </div>
         ))

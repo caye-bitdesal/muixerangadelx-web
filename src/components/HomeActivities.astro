@@ -1,6 +1,6 @@
 ---
 import { t, type Locale } from '../i18n/ui';
-import { localizedPath } from '../i18n/utils';
+import { contactPerformancePath, localizedPath } from '../i18n/utils';
 import type { MuixerangaEvent } from '../lib/events';
 import ActivityCard from './ActivityCard.astro';
 
@@ -30,12 +30,18 @@ const items = events.slice(0, 3);
       }
     </div>
 
-    <div class="mt-10 flex justify-center">
+    <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
       <a
         href={localizedPath(locale, '/activitats')}
-        class="inline-block bg-elx-dark text-white px-6 py-3 font-semibold hover:bg-elx-red transition-colors"
+        class="inline-block bg-elx-dark px-6 py-3 font-semibold text-white transition-colors hover:bg-elx-red"
       >
         {t(locale, 'home.seeAll')}
+      </a>
+      <a
+        href={contactPerformancePath(locale)}
+        class="inline-block bg-elx-dark px-6 py-3 font-semibold text-white transition-colors hover:bg-elx-red"
+      >
+        {t(locale, 'home.hire.cta')}
       </a>
     </div>
   </div>

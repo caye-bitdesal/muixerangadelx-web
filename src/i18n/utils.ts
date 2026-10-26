@@ -2,19 +2,35 @@ import { defaultLocale, languages, type Locale } from './ui';
 
 /** Localized slugs for the “Join us” page (not a single path across locales). */
 export const JOIN_US_SLUG: Record<Locale, string> = {
-  va: '/uneix-te',
+  va: '/apunta-t',
   es: '/unete',
   en: '/join-us',
 };
 
 const JOIN_SLUGS = new Set(Object.values(JOIN_US_SLUG).map((p) => p.replace(/^\//, '')));
 
+export const HISTORIA_SLUG: Record<Locale, string> = {
+  va: '/la-nostra-historia',
+  es: '/nuestra-historia',
+  en: '/our-history',
+};
+
+const HISTORIA_SLUGS = new Set(Object.values(HISTORIA_SLUG).map((p) => p.replace(/^\//, '')));
+
 export function joinUsPath(locale: Locale): string {
   return localizedPath(locale, JOIN_US_SLUG[locale]);
 }
 
+export function historiaPath(locale: Locale): string {
+  return localizedPath(locale, HISTORIA_SLUG[locale]);
+}
+
 export function contactJoinPath(locale: Locale): string {
   return `${localizedPath(locale, '/contacte')}?join=1`;
+}
+
+export function contactPerformancePath(locale: Locale): string {
+  return `${localizedPath(locale, '/contacte')}?asunto=contratacion`;
 }
 
 export function activitatsAssaigFilterPath(locale: Locale): string {
@@ -55,6 +71,10 @@ export function switchLocalePath(currentUrl: URL, nextLocale: Locale): string {
 
   if (JOIN_SLUGS.has(slug)) {
     return joinUsPath(nextLocale);
+  }
+
+  if (HISTORIA_SLUGS.has(slug)) {
+    return historiaPath(nextLocale);
   }
 
   return localizedPath(nextLocale, pathname);

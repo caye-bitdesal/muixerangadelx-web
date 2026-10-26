@@ -1,15 +1,9 @@
 ---
 import type { Locale } from '../i18n/ui';
 import { getJoinUsContent } from '../lib/join-us-content';
-import {
-  activitatsAssaigFilterPath,
-  contactJoinPath,
-  localizedPath,
-} from '../i18n/utils';
-import {
-  formatEventDateTime,
-  type MuixerangaEvent,
-} from '../lib/events';
+import { contactJoinPath } from '../i18n/utils';
+import type { MuixerangaEvent } from '../lib/events';
+import NextAssaigBlock from './NextAssaigBlock.astro';
 import { socialLinks } from '../lib/site';
 
 interface Props {
@@ -24,9 +18,6 @@ const instagram = socialLinks.find((link) => link.id === 'instagram');
 const heroImage = '/images/events/assaig.jpg';
 const sideImage = '/images/events/assaig-pinya-nens.jpg';
 
-const detailHref = nextAssaig
-  ? `${localizedPath(locale, '/activitats')}/${nextAssaig.id}`
-  : null;
 ---
 
 <article class="join-us-page bg-white">
@@ -50,54 +41,19 @@ const detailHref = nextAssaig
         <p class="mt-3 text-sm leading-relaxed text-white/95 sm:mt-4 sm:text-lg">{copy.heroSubtitle}</p>
       </div>
 
-      <div class="mt-5 grid gap-3 sm:mt-8 sm:gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-6">
-        <div class="rounded-lg border border-white/20 bg-white/10 p-4 backdrop-blur-sm sm:p-5">
-          <p class="text-xs font-semibold uppercase tracking-wide text-elx-yellow">
-            {copy.nextRehearsalLabel}
-          </p>
-          {
-            nextAssaig && detailHref ? (
-              <>
-                <p class="mt-2 text-lg font-bold">{nextAssaig.name}</p>
-                <p class="mt-1 text-sm sm:text-base">
-                  {formatEventDateTime(nextAssaig.date, locale)}
-                </p>
-                {nextAssaig.address ? (
-                  <p class="mt-1 text-sm text-white/90">{nextAssaig.address}</p>
-                ) : null}
-                <a
-                  href={detailHref}
-                  class="mt-3 inline-block text-sm font-semibold text-elx-yellow underline underline-offset-2"
-                >
-                  {copy.ctaEventDetail}
-                </a>
-              </>
-            ) : (
-              <p class="mt-2 text-sm leading-relaxed sm:text-base">{copy.noRehearsalMsg}</p>
-            )
-          }
-          <a
-            href={activitatsAssaigFilterPath(locale)}
-            class="mt-4 inline-flex items-center justify-center border border-white/40 bg-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-colors hover:bg-white/20"
-          >
-            {copy.ctaAllRehearsals}
-          </a>
-        </div>
-
-        <div class="flex flex-col gap-3 sm:flex-row lg:flex-col lg:min-w-[220px]">
-          <a
-            href={contactJoinPath(locale)}
-            class="inline-flex items-center justify-center bg-elx-red px-6 py-3 text-center text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-elx-yellow hover:text-elx-dark"
-          >
-            {copy.ctaContact}
-          </a>
-          <a
-            href="#faq"
-            class="inline-flex items-center justify-center border-2 border-white px-6 py-3 text-center text-sm font-semibold uppercase tracking-wide text-white transition-colors hover:bg-white hover:text-elx-dark"
-          >
-            FAQ
-          </a>
-        </div>
+      <div class="mt-5 flex flex-wrap gap-3 sm:mt-8">
+        <a
+          href={contactJoinPath(locale)}
+          class="inline-flex items-center justify-center bg-elx-red px-6 py-3 text-center text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-elx-yellow hover:text-elx-dark"
+        >
+          {copy.ctaContact}
+        </a>
+        <a
+          href="#faq"
+          class="inline-flex items-center justify-center border-2 border-white px-6 py-3 text-center text-sm font-semibold uppercase tracking-wide text-white transition-colors hover:bg-white hover:text-elx-dark"
+        >
+          FAQ
+        </a>
       </div>
     </div>
   </section>
@@ -113,36 +69,9 @@ const detailHref = nextAssaig
         <div class="border-t border-elx-dark/10 pt-12 lg:pt-14">
           <h2 class="text-2xl font-bold sm:text-3xl">{copy.whenWhereTitle}</h2>
           <p class="mt-4 leading-relaxed">{copy.whenWhereIntro}</p>
-          {
-            nextAssaig && detailHref ? (
-              <div class="mt-6 rounded-lg border border-elx-dark/10 bg-neutral-50 p-5">
-                <p class="text-sm font-semibold uppercase tracking-wide text-elx-red">
-                  {copy.nextRehearsalLabel}
-                </p>
-                <p class="mt-2 text-xl font-bold">{nextAssaig.name}</p>
-                <p class="mt-1">{formatEventDateTime(nextAssaig.date, locale)}</p>
-                {nextAssaig.address ? <p class="mt-2 text-elx-muted">{nextAssaig.address}</p> : null}
-                <div class="mt-4 flex flex-wrap gap-3">
-                  <a
-                    href={detailHref}
-                    class="inline-flex bg-elx-dark px-4 py-2 text-sm font-semibold uppercase tracking-wide text-white hover:bg-elx-red"
-                  >
-                    {copy.ctaEventDetail}
-                  </a>
-                  <a
-                    href={activitatsAssaigFilterPath(locale)}
-                    class="inline-flex border border-elx-dark px-4 py-2 text-sm font-semibold uppercase tracking-wide text-elx-dark hover:bg-elx-dark hover:text-white"
-                  >
-                    {copy.ctaAllRehearsals}
-                  </a>
-                </div>
-              </div>
-            ) : (
-              <p class="mt-6 rounded-lg border border-dashed border-elx-dark/20 bg-neutral-50 p-5 text-elx-muted">
-                {copy.noRehearsalMsg}
-              </p>
-            )
-          }
+          <div class="mt-6">
+            <NextAssaigBlock locale={locale} nextAssaig={nextAssaig} />
+          </div>
         </div>
 
       </div>

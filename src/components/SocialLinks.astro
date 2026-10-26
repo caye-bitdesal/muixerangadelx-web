@@ -3,9 +3,10 @@ import { socialLinks } from '../lib/site';
 
 interface Props {
   variant?: 'light' | 'dark' | 'footer';
+  align?: 'center' | 'start';
 }
 
-const { variant = 'dark' } = Astro.props;
+const { variant = 'dark', align = 'center' } = Astro.props;
 const circle =
   variant === 'light'
     ? 'bg-white text-elx-dark hover:bg-elx-yellow'
@@ -14,7 +15,12 @@ const circle =
       : 'bg-elx-dark text-white hover:bg-elx-red';
 ---
 
-<ul class="social-buttons-list flex items-center justify-center gap-3 flex-wrap">
+<ul
+  class:list={[
+    'social-buttons-list flex items-center gap-3 flex-wrap',
+    align === 'start' ? 'justify-start' : 'justify-center',
+  ]}
+>
   {
     socialLinks.map((link) => (
       <li>

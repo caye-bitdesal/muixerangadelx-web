@@ -14,12 +14,11 @@ const paragraphs = t(locale, 'home.quisom.body').split('\n\n');
 <section class="tt-section p-t-90 p-b-90 p-t-md-50 p-b-md-50 muixeranga-elx bg-white" id="quisom">
   <div class="tt-section-inner tt-wrap container">
     <div class="row p-t-0 p-b-90 p-b-md-50">
-      <div class="col-lg-4">
+      <div class="col-12">
         <h2>{t(locale, 'home.quisom.label')}</h2>
-        <h1>{t(locale, 'home.quisom.title')}</h1>
       </div>
 
-      <div class="col-lg-8 texto">
+      <div class="col-12 texto">
         {paragraphs.map((paragraph) => <p>{paragraph}</p>)}
 
         <a href={joinUsPath(locale)} class="btn btn-primary m-t-30 m-b-0">

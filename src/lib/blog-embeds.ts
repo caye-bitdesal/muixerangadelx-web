@@ -1,3 +1,25 @@
+/** Autoplaying embed for full-width hero backgrounds (requires loop playlist = same id). */
+export function youtubeBackgroundEmbedUrl(
+  videoId: string,
+  options?: { muted?: boolean },
+): string {
+  const id = videoId.trim();
+  const muted = options?.muted !== false;
+  const params = new URLSearchParams({
+    autoplay: '1',
+    mute: muted ? '1' : '0',
+    loop: '1',
+    playlist: id,
+    controls: '0',
+    rel: '0',
+    modestbranding: '1',
+    playsinline: '1',
+    iv_load_policy: '3',
+    disablekb: '1',
+  });
+  return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?${params.toString()}`;
+}
+
 export function youtubeEmbedUrl(url: string): string | null {
   try {
     const parsed = new URL(url);

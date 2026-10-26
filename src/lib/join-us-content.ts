@@ -30,7 +30,7 @@ export type JoinUsContent = {
 
 const content: Record<Locale, JoinUsContent> = {
   va: {
-    metaTitle: "Uneix-te a la Muixeranga d'Elx – Vine a provar, sense experiència",
+    metaTitle: "Apunta't a la Muixeranga d'Elx – Vine a provar, sense experiència",
     metaDescription:
       "Vols formar part de la colla? Vine a un assaig obert a Elx: no cal experiència, només ganes de participar. Consulta el pròxim assaig i contacta'ns.",
     heroTitle: "T'agradaria formar part de la Muixeranga d'Elx?",

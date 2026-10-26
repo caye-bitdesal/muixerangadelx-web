@@ -1,0 +1,49 @@
+---
+import type { Locale } from '../i18n/ui';
+import { youtubeEmbedUrl } from '../lib/blog-embeds';
+import {
+  getHistoriaContent,
+  HISTORIA_ALGEMESI_YOUTUBE_URL,
+} from '../lib/historia-content';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = getHistoriaContent(locale);
+const algemesiYoutubeEmbed = youtubeEmbedUrl(HISTORIA_ALGEMESI_YOUTUBE_URL);
+---
+
+<div class="historia-page bg-white">
+  <article class="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
+    <p class="text-lg leading-relaxed text-elx-dark/90">{copy.intro}</p>
+
+    {
+      copy.sections.map((section) => (
+        <section class="mt-12 border-t border-elx-dark/10 pt-12 first-of-type:mt-10">
+          <h2 class="text-2xl font-bold sm:text-3xl">{section.heading}</h2>
+          {section.paragraphs.map((paragraph) => (
+            <p class="mt-4 leading-relaxed text-elx-dark/90">{paragraph}</p>
+          ))}
+          {section.embedYoutube && algemesiYoutubeEmbed ? (
+            <div class="mt-6 aspect-video w-full overflow-hidden rounded-lg bg-neutral-100 shadow-sm">
+              <iframe
+                src={algemesiYoutubeEmbed}
+                title={copy.algemesiYoutubeTitle}
+                class="h-full w-full border-0"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+              />
+            </div>
+          ) : null}
+        </section>
+      ))
+    }
+
+    <p class="mt-12 border-t border-elx-dark/10 pt-10 text-xl font-semibold italic text-elx-dark">
+      {copy.closing}
+    </p>
+  </article>
+</div>
