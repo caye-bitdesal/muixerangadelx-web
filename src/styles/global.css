@@ -649,8 +649,15 @@ img {
 .carousel-hero {
   position: relative;
   width: 100%;
-  height: 100vh;
-  height: 100dvh;
+  height: 0%;
+}
+
+.carousel-hero[data-activities-calendar] {
+  height: auto;
+}
+
+.carousel-hero[data-activities-calendar] .carousel-slide {
+  height: 100%;
 }
 
 .carousel-copy {

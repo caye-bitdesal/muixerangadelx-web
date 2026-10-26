@@ -16,6 +16,15 @@ function measureAgendaHeroMin(root: Element): number {
 }
 
 export function updatePhotoHeroHeight(root: Element): void {
+  const el = root as HTMLElement;
+
+  if (root.hasAttribute('data-activities-calendar')) {
+    el.style.height = '';
+    const agendaMin = measureAgendaHeroMin(root);
+    el.style.minHeight = agendaMin > 0 ? `${agendaMin}px` : '';
+    return;
+  }
+
   const img = root.querySelector<HTMLImageElement>('[data-photo-hero-img]');
   if (!img) return;
 
@@ -24,14 +33,10 @@ export function updatePhotoHeroHeight(root: Element): void {
   if (!img.naturalWidth || !img.naturalHeight) return;
 
   const scaledHeight = viewportWidth * (img.naturalHeight / img.naturalWidth);
-  let height = Math.min(viewportHeight, scaledHeight);
+  const height = Math.min(viewportHeight, scaledHeight);
 
-  if (root.hasAttribute('data-activities-calendar')) {
-    const agendaMin = measureAgendaHeroMin(root);
-    if (agendaMin > 0) height = Math.max(height, agendaMin);
-  }
-
-  (root as HTMLElement).style.height = `${height}px`;
+  el.style.minHeight = '';
+  el.style.height = `${height}px`;
 }
 
 export function bindPhotoHeroHeights(signal: AbortSignal): void {
@@ -44,17 +49,21 @@ export function bindPhotoHeroHeights(signal: AbortSignal): void {
 
     const setHeight = () => updatePhotoHeroHeight(root);
 
-    const whenReady = () =>
-      new Promise<void>((resolve) => {
-        if (img.complete) {
-          resolve();
-          return;
-        }
-        img.addEventListener('load', () => resolve(), { once: true });
-        img.addEventListener('error', () => resolve(), { once: true });
-      });
+    if (root.hasAttribute('data-activities-calendar')) {
+      setHeight();
+    } else {
+      const whenReady = () =>
+        new Promise<void>((resolve) => {
+          if (img.complete) {
+            resolve();
+            return;
+          }
+          img.addEventListener('load', () => resolve(), { once: true });
+          img.addEventListener('error', () => resolve(), { once: true });
+        });
 
-    whenReady().then(setHeight);
+      whenReady().then(setHeight);
+    }
 
     if (root.hasAttribute('data-activities-calendar')) {
       const shell = root.querySelector('.activities-cal-shell');
