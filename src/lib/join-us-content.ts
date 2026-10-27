@@ -1,5 +1,7 @@
 import type { Locale } from '../i18n/ui';
 
+export const JOIN_US_HERO_IMAGE = '/images/events/join-us-hero.jpg';
+
 export type JoinFaqItem = { question: string; answer: string };
 
 export type JoinUsContent = {

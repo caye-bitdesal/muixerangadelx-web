@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import JoinUsPage from '../../components/JoinUsPage.astro';
 import { getLocaleFromUrl } from '../../i18n/utils';
-import { getJoinUsContent } from '../../lib/join-us-content';
+import { getJoinUsContent, JOIN_US_HERO_IMAGE } from '../../lib/join-us-content';
 import { getNextAssaig, listAllEvents } from '../../lib/events';
 import { buildEventSlugIndex, eventSlug } from '../../lib/event-slug';
 
@@ -11,7 +11,7 @@ const copy = getJoinUsContent(locale);
 const events = await listAllEvents();
 const nextAssaig = getNextAssaig(events);
 const nextAssaigSlug = nextAssaig ? eventSlug(nextAssaig, buildEventSlugIndex(events)) : undefined;
-const ogImage = '/images/events/assaig.jpg';
+const ogImage = JOIN_US_HERO_IMAGE;
 ---
 
 <BaseLayout

@@ -30,6 +30,43 @@ body {
   background: #ffffff;
 }
 
+/* Bootstrap subratlla els enllaços; els botons / CTAs no han de semblar links de text */
+a.btn,
+button:not(#tt-m-menu-toggle-btn):not(.mobile-nav-dropdown-trigger),
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.carousel-cta,
+a[class*="bg-elx-dark"]:not([class*="rounded-full"]):not(.lang-switch-link),
+a[class*="bg-elx-red"]:not([class*="rounded-full"]):not(.lang-switch-link),
+a[class*="uppercase"][class*="tracking-wide"][class*="px-"]:not([class*="rounded-full"]):not(
+    .lang-switch-link
+  ),
+a[class*="font-semibold"][class*="px-6"][class*="py-3"]:not([class*="rounded-full"]),
+a[class*="font-semibold"][class*="px-4"][class*="py-2"]:not([class*="rounded-full"]) {
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+a.btn:hover,
+a.btn:focus-visible,
+button:hover,
+button:focus-visible,
+.carousel-cta:hover,
+.carousel-cta:focus-visible,
+a[class*="bg-elx-dark"]:hover,
+a[class*="bg-elx-dark"]:focus-visible,
+a[class*="bg-elx-red"]:hover,
+a[class*="bg-elx-red"]:focus-visible,
+a[class*="uppercase"][class*="tracking-wide"][class*="px-"]:hover,
+a[class*="uppercase"][class*="tracking-wide"][class*="px-"]:focus-visible,
+a[class*="font-semibold"][class*="px-6"][class*="py-3"]:hover,
+a[class*="font-semibold"][class*="px-6"][class*="py-3"]:focus-visible,
+a[class*="font-semibold"][class*="px-4"][class*="py-2"]:hover,
+a[class*="font-semibold"][class*="px-4"][class*="py-2"]:focus-visible {
+  text-decoration: none;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -54,6 +91,14 @@ img {
   width: 100%;
   height: 100%;
   object-fit: fill;
+}
+
+.join-hero__media {
+  max-width: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
 }
 
 .page-hero__media--cover {
@@ -354,9 +399,24 @@ img {
   padding-left: 2.5rem;
 }
 
-.header-lang a,
-.mobile-lang a {
+.header-lang,
+.mobile-lang {
+  display: inline-flex;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 9999px;
+}
+
+.header-lang > a,
+.mobile-lang > a {
   text-decoration: none;
+  border-radius: 0 !important;
+  border-right: none !important;
+}
+
+.header-lang > a:not(:first-child),
+.mobile-lang > a:not(:first-child) {
+  box-shadow: inset 1px 0 0 rgb(255 255 255 / 0.5);
 }
 
 .header-lang a.lang-active,
@@ -804,7 +864,7 @@ img {
   --bs-btn-hover-border-color: #9a1a22;
   --bs-btn-active-bg: #80161c;
   --bs-btn-active-border-color: #80161c;
-  border-radius: 0;
+  border-radius: 5px;
   font-weight: 600;
   padding: 0.75rem 1.5rem;
 }

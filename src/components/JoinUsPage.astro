@@ -1,6 +1,6 @@
 ---
 import type { Locale } from '../i18n/ui';
-import { getJoinUsContent } from '../lib/join-us-content';
+import { getJoinUsContent, JOIN_US_HERO_IMAGE } from '../lib/join-us-content';
 import { contactJoinPath } from '../i18n/utils';
 import type { MuixerangaEvent } from '../lib/events';
 import NextAssaigBlock from './NextAssaigBlock.astro';
@@ -16,19 +16,22 @@ const { locale, nextAssaig, nextAssaigSlug } = Astro.props;
 const copy = getJoinUsContent(locale);
 const instagram = socialLinks.find((link) => link.id === 'instagram');
 
-const heroImage = '/images/events/assaig.jpg';
+const heroImage = JOIN_US_HERO_IMAGE;
 const sideImage = '/images/events/join-us-pinya-enxaneta.jpg';
 
 ---
 
 <article class="join-us-page bg-white">
-  <section class="join-hero relative overflow-hidden bg-elx-dark text-white" data-hero-perf-scope="join-us">
+  <section
+    class="join-hero relative h-[55vh] min-h-[360px] max-h-[560px] w-full overflow-hidden bg-elx-dark text-white"
+    data-hero-perf-scope="join-us"
+  >
     <img
       src={heroImage}
       alt={copy.heroImageAlt}
-      class="absolute inset-0 h-full w-full max-w-none object-cover object-center"
-      width="1600"
-      height="900"
+      class="join-hero__media absolute inset-0 h-full w-full"
+      width="1024"
+      height="768"
       fetchpriority="high"
     />
     <div
@@ -36,7 +39,7 @@ const sideImage = '/images/events/join-us-pinya-enxaneta.jpg';
       aria-hidden="true"
     ></div>
 
-    <div class="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-14 lg:py-16">
+    <div class="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-center px-4 py-8 sm:px-6 sm:py-10">
       <div class="max-w-3xl">
         <h1 class="text-2xl font-bold leading-tight sm:text-4xl lg:text-5xl">{copy.heroTitle}</h1>
         <p class="mt-3 text-sm leading-relaxed text-white/95 sm:mt-4 sm:text-lg">{copy.heroSubtitle}</p>

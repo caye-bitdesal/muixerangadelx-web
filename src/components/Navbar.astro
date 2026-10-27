@@ -13,22 +13,28 @@ const { locale, overlay = false, currentPath } = Astro.props;
 type PrimaryLink =
   | { key: 'nav.portada' | 'nav.blog'; path: string }
   | { key: 'nav.historia'; historia: true }
-  | { key: 'nav.activitats'; activitats: true };
+  | { key: 'nav.activitats'; activitats: true }
+  | { key: 'nav.unete'; join: true };
 
 const primaryLinks: PrimaryLink[] = [
   { key: 'nav.portada', path: '/' },
   { key: 'nav.historia', historia: true },
   { key: 'nav.activitats', activitats: true },
   { key: 'nav.blog', path: '/blog' },
+  { key: 'nav.unete', join: true },
 ];
 
 function primaryHref(link: PrimaryLink): string {
   if ('historia' in link) return historiaPath(locale);
   if ('activitats' in link) return activitatsPath(locale);
+  if ('join' in link) return joinUsPath(locale);
   return localizedPath(locale, link.path);
 }
 
 function isPrimaryLinkActive(link: PrimaryLink): boolean {
+  if ('join' in link) {
+    return currentPath === joinHref || currentPath.startsWith(`${joinHref}/`);
+  }
   if ('historia' in link) {
     const href = historiaPath(locale);
     return currentPath === href || currentPath.startsWith(`${href}/`);
@@ -51,14 +57,13 @@ const joinHref = joinUsPath(locale);
 const docsHref = localizedPath(locale, '/documentacio');
 
 type ContactSubItem = {
-  key: 'nav.contacte.info' | 'nav.unete' | 'nav.documentacio';
+  key: 'nav.contacte.info' | 'nav.documentacio';
   href: string;
-  id: 'contact' | 'join' | 'docs';
+  id: 'contact' | 'docs';
 };
 
 const contactSubItems: ContactSubItem[] = [
   { key: 'nav.contacte.info', href: contactHref, id: 'contact' },
-  { key: 'nav.unete', href: joinHref, id: 'join' },
   { key: 'nav.documentacio', href: docsHref, id: 'docs' },
 ];
 
@@ -73,9 +78,6 @@ function isPrimaryActive(path: string): boolean {
 function isContactSubActive(id: ContactSubItem['id']): boolean {
   if (id === 'contact') {
     return currentPath === contactHref || currentPath.startsWith(`${contactHref}/`);
-  }
-  if (id === 'join') {
-    return currentPath === joinHref || currentPath.startsWith(`${joinHref}/`);
   }
   return currentPath === docsHref || currentPath.startsWith(`${docsHref}/`);
 }
@@ -146,14 +148,13 @@ const contactMenuActive = contactSubItems.some((item) => isContactSubActive(item
       <div class="header-attributes">
         <div class="header-lang hidden sm:flex items-center rounded-full bg-elx-dark px-1 py-1">
           {
-            (Object.keys(languages) as Locale[]).map((lang, index, langs) => (
+            (Object.keys(languages) as Locale[]).map((lang) => (
               <a
                 href={switchLocalePath(Astro.url, lang)}
+                data-astro-reload
                 class:list={[
-                  'px-2.5 py-0.5 uppercase tracking-wide text-sm no-underline',
-                  index < langs.length - 1 && 'border-r border-white/50',
-                  lang === locale && 'lang-active',
-                  lang !== locale && 'lang-inactive',
+                  'lang-switch-link px-2.5 py-0.5 uppercase tracking-wide text-sm no-underline',
+                  lang === locale ? 'lang-active' : 'lang-inactive',
                 ]}
                 hreflang={lang}
               >
@@ -211,14 +212,13 @@ const contactMenuActive = contactSubItems.some((item) => isContactSubActive(item
     </ul>
     <div class="mobile-lang flex items-center rounded-full bg-elx-dark px-1 py-1 mx-4 mb-4 sm:hidden w-fit">
       {
-        (Object.keys(languages) as Locale[]).map((lang, index, langs) => (
+        (Object.keys(languages) as Locale[]).map((lang) => (
           <a
             href={switchLocalePath(Astro.url, lang)}
+            data-astro-reload
             class:list={[
-              'px-3 py-1 uppercase text-sm no-underline',
-              index < langs.length - 1 && 'border-r border-white/50',
-              lang === locale && 'lang-active',
-              lang !== locale && 'lang-inactive',
+              'lang-switch-link px-3 py-1 uppercase text-sm no-underline',
+              lang === locale ? 'lang-active' : 'lang-inactive',
             ]}
             hreflang={lang}
           >
