@@ -9,9 +9,9 @@ title:
   es: "Actuación de la Muixeranga d'Elx en el Intercanvi de llavors"
   en: "Muixeranga d'Elx at the Intercanvi de llavors seed exchange"
 
-date: 2026-10-31
+date: 2026-10-03
 
-author: "Sílvia"
+author: "Sílvia Soto Tarí"
 
 description:
   va: "Actuació de la Muixeranga d'Elx en la jornada d'Intercanvi de llavors al Raval, el 3 d'octubre."
