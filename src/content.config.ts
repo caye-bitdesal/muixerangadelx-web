@@ -21,6 +21,7 @@ const contentBlock = z.discriminatedUnion('type', [
   z.object({
     type: z.literal('images'),
     images: z.array(z.string()).default([]),
+    caption: z.string().optional(),
   }),
   z.object({
     type: z.literal('embed'),

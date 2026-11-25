@@ -29,11 +29,16 @@ const hasInstagramEmbed = blocks.some(
               ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
               : 'grid grid-cols-1 sm:grid-cols-2';
         return (
-          <div class:list={['gap-4', gridClass]}>
-            {block.images.map((src) => (
-              <img src={src} alt="" class="w-full object-cover bg-neutral-100" loading="lazy" />
-            ))}
-          </div>
+          <figure class="space-y-2">
+            <div class:list={['grid', 'gap-4', gridClass]}>
+              {block.images.map((src) => (
+                <img src={src} alt="" class="w-full object-cover bg-neutral-100" loading="lazy" />
+              ))}
+            </div>
+            {block.caption && (
+              <figcaption class="text-center text-sm italic text-elx-muted">{block.caption}</figcaption>
+            )}
+          </figure>
         );
       }
 

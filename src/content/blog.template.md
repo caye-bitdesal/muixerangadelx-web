@@ -33,6 +33,10 @@ content:
     - type: images
       images:
         - /images/blog/exemple-1.jpg
+      caption: Pie de foto opcional sota el bloc d'imatges
+
+    - type: images
+      images:
         - /images/blog/exemple-2.jpg
 
     - type: text
